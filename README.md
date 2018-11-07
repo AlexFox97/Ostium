@@ -2,7 +2,7 @@
 Mobile Applications Development Module for Sheffield Hallam University
 
 Authors:
-Alex Fox
-Aran Bacall
-Alasdair Geary
-Katherine Martin
+- Alex Fox
+- Aran Bacall
+- Alasdair Geary
+- Katherine Martin
