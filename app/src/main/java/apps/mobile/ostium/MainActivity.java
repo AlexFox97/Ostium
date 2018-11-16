@@ -1,20 +1,13 @@
 package apps.mobile.ostium;
 
-
-import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
-
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
-import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,26 +17,16 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import TransferObjects.GetLocationRequest;
+import Objects.GetLocationRequest;
 
 public class MainActivity extends AppCompatActivity
 {
+    private static final int PermissionCorrect = 1;
     private final int GPSPingTime = 2000;
     private final int GPSDistance = 0;
 
     private TextView t;
     private GPSModule GPS;
-
-
-//Check permissions in activities before any calls are made
-/*
-    private static final int MY_CAL_REQ = 1;
-    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)
-    {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, MY_CAL_REQ);
-    }
-*/
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -54,20 +37,15 @@ public class MainActivity extends AppCompatActivity
         t = findViewById(R.id.textView);
 
         initializeGPS();
-
+        //initializeCal();
     }
 
-    private class CalendaresultReceiver extends ResultReceiver {
-
-        public CalendaresultReceiver(Handler handler) {
-            super(handler);
+    private void initializeCal()
+    {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, PermissionCorrect);
         }
-
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-            //TODO: Handle data received from service
-        }
-
     }
 
     private void initializeGPS()
@@ -106,10 +84,9 @@ public class MainActivity extends AppCompatActivity
         // check for permissions
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
-            // if below ver 23 don't need to sak for permissions
+            // if below ver 23 don't need to ask for permissions
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},1);
             }
             return;
         }
@@ -120,8 +97,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
+        // TODO
+        // this may break when you try to get the calender permissions,
+        // unless we get all permissions at the same time
+
         // if it returns expected request code permissions are good
-        if(requestCode == 1)
+        if(requestCode == PermissionCorrect)
         {
             GPS.StartLocationUpdates(GPSPingTime, GPSDistance);
         }

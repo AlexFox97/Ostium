@@ -1,4 +1,4 @@
-package TransferObjects;
+package Objects;
 
 import android.location.Location;
 
