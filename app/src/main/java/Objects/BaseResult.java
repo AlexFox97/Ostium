@@ -1,4 +1,4 @@
-package TransferObjects;
+package Objects;
 
 public class BaseResult
 {
