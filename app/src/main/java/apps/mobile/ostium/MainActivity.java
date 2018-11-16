@@ -1,5 +1,12 @@
 package apps.mobile.ostium;
 
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
+
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,6 +24,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import TransferObjects.GetLocationRequest;
 
 public class MainActivity extends AppCompatActivity
@@ -27,14 +35,39 @@ public class MainActivity extends AppCompatActivity
     private TextView t;
     private GPSModule GPS;
 
+
+//Check permissions in activities before any calls are made
+/*
+    private static final int MY_CAL_REQ = 1;
+    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)
+    {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, MY_CAL_REQ);
+    }
+*/
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
         t = findViewById(R.id.textView);
 
         initializeGPS();
+
+    }
+
+    private class CalendaresultReceiver extends ResultReceiver {
+
+        public CalendaresultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            //TODO: Handle data received from service
+        }
+
     }
 
     private void initializeGPS()
@@ -110,5 +143,6 @@ public class MainActivity extends AppCompatActivity
             default:
                 Toast.makeText(getApplicationContext(), "Problem, an unknown problem has occurred", Toast.LENGTH_SHORT);
         }
+
     }
 }
