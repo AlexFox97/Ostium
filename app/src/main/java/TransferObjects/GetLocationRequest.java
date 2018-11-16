@@ -1,19 +1,24 @@
 package TransferObjects;
 
+import android.location.Location;
+
 public class GetLocationRequest extends BaseResult
 {
-    public double longitude;
-    public double latitude;
+    public Location location;
 
     public GetLocationRequest(ResultStatus result)
     {
         super(result);
     }
 
-    public GetLocationRequest(ResultStatus result, double longitude, double latitude)
+    public GetLocationRequest(ResultStatus result, Exception e)
+    {
+        super(result, e);
+    }
+
+    public GetLocationRequest(ResultStatus result, Location location)
     {
         super(result);
-        this.longitude = longitude;
-        this.latitude = latitude;
+        this.location = location;
     }
 }

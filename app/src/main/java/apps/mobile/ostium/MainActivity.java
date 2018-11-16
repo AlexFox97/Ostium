@@ -1,7 +1,6 @@
 package apps.mobile.ostium;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -15,15 +14,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import TransferObjects.GetLocationRequest;
 
-    private Button b;
+public class MainActivity extends AppCompatActivity
+{
+    private final int GPSPingTime = 2000;
+    private final int GPSDistance = 0;
+
     private TextView t;
-    private LocationManager locationManager;
-    private LocationListener listener;
+    private GPSModule GPS;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -31,84 +33,82 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         t = findViewById(R.id.textView);
-        b = findViewById(R.id.button);
 
         initializeGPS();
     }
 
     private void initializeGPS()
     {
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        listener = new LocationListener() {
+        LocationListener listener = new LocationListener()
+        {
             @Override
-            public void onLocationChanged(Location location) {
-                displayLocation(location);
+            public void onLocationChanged(Location location)
+            {
+                t.append("\n " + location.getLongitude() + " " + location.getLatitude());
             }
 
             @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-
-            }
+            public void onStatusChanged(String s, int i, Bundle bundle) {}
 
             @Override
-            public void onProviderEnabled(String s) {
-
-            }
+            public void onProviderEnabled(String s) {}
 
             @Override
-            public void onProviderDisabled(String s) {
-                // if gps isnt enable at all send user too setting to enable it
+            public void onProviderDisabled(String s)
+            {
+                // if gps isn't enable at all send user too setting to enable it
                 Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(i);
             }
         };
 
+        GPS = new GPSModule(locationManager, listener);
         checkPermissions();
     }
 
     private void checkPermissions()
     {
         // check for permissions
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET}
-                        , 10);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            // if below ver 23 don't need to sak for permissions
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},1);
             }
             return;
         }
         // then get the location
-        GetLocation(null);
+        GPS.StartLocationUpdates(GPSPingTime, GPSDistance);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
         // if it returns expected request code permissions are good
-        if(requestCode == 10)
+        if(requestCode == 1)
         {
-            GetLocation(null);
+            GPS.StartLocationUpdates(GPSPingTime, GPSDistance);
         }
     }
 
-    @SuppressLint("MissingPermission")
-    public void GetLoctionNow(View view)
+    // when you press the onscreen button
+    public void GetLocationNow(View view)
     {
-        Location l = locationManager.getLastKnownLocation("gps");
-        if(l != null)
+        GetLocationRequest l = GPS.GetLocationNow();
+
+        switch (l.result)
         {
-            displayLocation(l);
+            case Success:
+                t.append("\n " + l.location.getLongitude() + " " + l.location.getLatitude());
+                break;
+            case Failed:
+                Toast.makeText(getApplicationContext(), "Error getting last known location!!!", Toast.LENGTH_SHORT);
+                break;
+            default:
+                Toast.makeText(getApplicationContext(), "Problem, an unknown problem has occurred", Toast.LENGTH_SHORT);
         }
-    }
-
-    @SuppressLint("MissingPermission")
-    public void GetLocation(View view)
-    {
-        locationManager.requestLocationUpdates("gps", 2000, 0, listener);
-    }
-
-    public void displayLocation(Location l)
-    {
-        t.append("\n " + l.getLongitude() + " " + l.getLatitude());
     }
 }
