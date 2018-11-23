@@ -1,4 +1,4 @@
-package Objects;
+package Objects.Result;
 
 public class BaseResult
 {

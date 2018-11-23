@@ -1,5 +1,10 @@
 package apps.mobile.ostium;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.Manifest;
@@ -12,12 +17,15 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import Objects.GetLocationRequest;
+import Objects.Request.GetLocationRequest;
+import apps.mobile.ostium.Module.GPSModule;
+import apps.mobile.ostium.Module.NotificationModule;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -26,7 +34,9 @@ public class MainActivity extends AppCompatActivity
     private final int GPSDistance = 0;
 
     private TextView t;
+
     private GPSModule GPS;
+    private NotificationModule notifications;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -37,7 +47,15 @@ public class MainActivity extends AppCompatActivity
         t = findViewById(R.id.textView);
 
         initializeGPS();
+        initializeNotifications();
         //initializeCal();
+    }
+
+    private void initializeNotifications()
+    {
+        // setup a new channel for R26 <
+        NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        notifications = new NotificationModule(notificationManager, this);
     }
 
     private void initializeCal()
@@ -116,7 +134,9 @@ public class MainActivity extends AppCompatActivity
         switch (l.result)
         {
             case Success:
-                t.append("\n " + l.location.getLongitude() + " " + l.location.getLatitude());
+                String message = "long: " +l.location.getLongitude() + " Lat: " + l.location.getLatitude();
+                t.append("\n " + message);
+                notifications.pushNotification("Current Location", message);
                 break;
             case Failed:
                 Toast.makeText(getApplicationContext(), "Error getting last known location!!!", Toast.LENGTH_SHORT);
@@ -124,6 +144,5 @@ public class MainActivity extends AppCompatActivity
             default:
                 Toast.makeText(getApplicationContext(), "Problem, an unknown problem has occurred", Toast.LENGTH_SHORT);
         }
-
     }
 }
