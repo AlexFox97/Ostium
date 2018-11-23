@@ -1,4 +1,4 @@
-package apps.mobile.ostium;
+package apps.mobile.ostium.Module;
 
 import android.app.IntentService;
 import android.content.ContentResolver;

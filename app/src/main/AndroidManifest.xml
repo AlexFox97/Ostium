@@ -32,7 +32,7 @@
         </activity>
 
         <service
-            android:name=".androidCalendarHandle"
+            android:name=".Module.androidCalendarHandle"
             android:exported="false"/>
     </application>
 </manifest>

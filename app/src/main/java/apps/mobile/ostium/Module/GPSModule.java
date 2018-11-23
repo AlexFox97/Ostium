@@ -1,11 +1,11 @@
-package apps.mobile.ostium;
+package apps.mobile.ostium.Module;
 
 import android.annotation.SuppressLint;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import Objects.GetLocationRequest;
-import Objects.ResultStatus;
+import Objects.Request.GetLocationRequest;
+import Objects.Result.ResultStatus;
 
 public class GPSModule
 {
