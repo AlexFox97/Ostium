@@ -1,5 +1,9 @@
 package apps.mobile.ostium;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.Manifest;
@@ -12,6 +16,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
@@ -26,7 +31,10 @@ public class MainActivity extends AppCompatActivity
     private final int GPSDistance = 0;
 
     private TextView t;
+
     private GPSModule GPS;
+    private NotificationManager notificationManager;
+    private String notificationChannelId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -37,7 +45,65 @@ public class MainActivity extends AppCompatActivity
         t = findViewById(R.id.textView);
 
         initializeGPS();
+        initializeNotifications();
         //initializeCal();
+    }
+
+    private void initializeNotifications()
+    {
+        // setup a new channel for R26 <
+        notificationChannelId = createNotificationChannel(this.getApplicationContext());
+        notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+    }
+
+    private String createNotificationChannel(Context context)
+    {
+        // NotificationChannels are required for Notifications on O (API 26) and above.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String channelId = "channel_Main_Ostium";
+            CharSequence channelName = "Main Ostium";
+            String channelDescription = "Main Ostium Description";
+
+            int channelImportance = NotificationManager.IMPORTANCE_DEFAULT;
+            boolean channelEnableVibrate = false;
+            int channelLockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC;
+
+            // Initializes NotificationChannel.
+            NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, channelImportance);
+            notificationChannel.setDescription(channelDescription);
+            notificationChannel.enableVibration(channelEnableVibrate);
+            notificationChannel.setLockscreenVisibility(channelLockscreenVisibility);
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(notificationChannel);
+
+            return channelId;
+        }
+        else
+        {
+            // Returns null for pre-O (26) devices.
+            return null;
+        }
+    }
+
+    private void pushNotification(String title, String message)
+    {
+        // TODO
+        // made this work for R26 > but for R26 < needs to take a channelId in the builder
+        // but doesn't seem to work for me
+        // Bean
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this.getApplicationContext());
+        notificationBuilder.setContentTitle(title);
+        notificationBuilder.setContentText(message);
+        // our apps main image as the notification image can change later if you want...
+        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher_round);
+
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent contentIntent =  PendingIntent.getActivities(this, 0, new Intent[] {notificationIntent}, PendingIntent.FLAG_UPDATE_CURRENT);
+        notificationBuilder.setContentIntent(contentIntent);
+
+        notificationManager.notify(0, notificationBuilder.build());
     }
 
     private void initializeCal()
@@ -116,7 +182,9 @@ public class MainActivity extends AppCompatActivity
         switch (l.result)
         {
             case Success:
-                t.append("\n " + l.location.getLongitude() + " " + l.location.getLatitude());
+                String message = "long: " +l.location.getLongitude() + " Lat: " + l.location.getLatitude();
+                t.append("\n " + message);
+                pushNotification("Got A Location", message );
                 break;
             case Failed:
                 Toast.makeText(getApplicationContext(), "Error getting last known location!!!", Toast.LENGTH_SHORT);
