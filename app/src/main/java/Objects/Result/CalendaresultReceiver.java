@@ -1,4 +1,4 @@
-package Objects;
+package Objects.Result;
 
 import android.os.Bundle;
 import android.os.Handler;

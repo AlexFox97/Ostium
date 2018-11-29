@@ -1,6 +1,9 @@
-package Objects;
+package Objects.Request;
 
 import android.location.Location;
+
+import Objects.Result.BaseResult;
+import Objects.Result.ResultStatus;
 
 public class GetLocationRequest extends BaseResult
 {
