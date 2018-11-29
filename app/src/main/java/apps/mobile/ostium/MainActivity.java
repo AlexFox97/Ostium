@@ -1,10 +1,6 @@
 package apps.mobile.ostium;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.Manifest;
@@ -17,7 +13,6 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
@@ -42,9 +37,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.recycler_ostiumcardholders);
-        
-        t = findViewById(R.id.textView);
+        setContentView(R.layout.activity_main);
 
         initializeGPS();
         initializeNotifications();
@@ -75,7 +68,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onLocationChanged(Location location)
             {
-                t.append("\n " + location.getLongitude() + " " + location.getLatitude());
+                // unsafe atm
+                //  t.append("\n " + location.getLongitude() + " " + location.getLatitude());
             }
 
             @Override
@@ -129,6 +123,7 @@ public class MainActivity extends AppCompatActivity
     // when you press the onscreen button
     public void GetLocationNow(View view)
     {
+
         GetLocationRequest l = GPS.GetLocationNow();
 
         switch (l.result)
@@ -139,10 +134,16 @@ public class MainActivity extends AppCompatActivity
                 notifications.pushNotification("Current Location", message);
                 break;
             case Failed:
-                Toast.makeText(getApplicationContext(), "Error getting last known location!!!", Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(), "Error getting last known location!!!", Toast.LENGTH_SHORT).show();
                 break;
             default:
-                Toast.makeText(getApplicationContext(), "Problem, an unknown problem has occurred", Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(), "Problem, an unknown problem has occurred", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void GoLocationPage(View view)
+    {
+        setContentView(R.layout.getlocation_page);
+        t = findViewById(R.id.textView);
     }
 }
