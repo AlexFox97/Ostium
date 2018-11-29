@@ -1,129 +1,127 @@
 package apps.mobile.ostium;
 
-import android.os.Build;
-import android.os.Bundle;
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Toast;
 
-import Objects.GetLocationRequest;
+//        Main Activity
+//        Home Activity
+//        Settings Activity
+//        Location Activity
+//        Map Activity
+//        Dev Activity One
+//        Dev Activity Two
+//        Dev Activity Three
 
-public class MainActivity extends AppCompatActivity
-{
-    private static final int PermissionCorrect = 1;
-    private final int GPSPingTime = 2000;
-    private final int GPSDistance = 0;
-
-    private TextView t;
-    private GPSModule GPS;
+public class MainActivity extends AppCompatActivity {
+    private DrawerLayout dl;
+    private ActionBarDrawerToggle t;
+    private NavigationView nv;
+    private static final String LogTagClass = MainActivity.class.getSimpleName();
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.recycler_ostiumcardholders);
-        
-        t = findViewById(R.id.textView);
+        setContentView(R.layout.activity_main);
 
-        initializeGPS();
-        //initializeCal();
-    }
+        dl = (DrawerLayout) findViewById(R.id.activity_main);
+        t = new ActionBarDrawerToggle(this, dl, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
-    private void initializeCal()
-    {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, PermissionCorrect);
-        }
-    }
+        dl.addDrawerListener(t);
+        t.syncState();
 
-    private void initializeGPS()
-    {
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        LocationListener listener = new LocationListener()
-        {
+        nv = (NavigationView) findViewById(R.id.nv);
+        nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onLocationChanged(Location location)
-            {
-                t.append("\n " + location.getLongitude() + " " + location.getLatitude());
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.nav_home:
+                        gotoHome(nv);
+                        break;
+                    case R.id.nav_location:
+                        gotoLocation(nv);
+                        break;
+                    case R.id.nav_map:
+                        gotoMap(nv);
+                        break;
+                    case R.id.nav_settings:
+                        gotoSettings(nv);
+                        break;
+                    case R.id.nav_dev_one:
+                        gotoDevOne(nv);
+                        break;
+                    case R.id.nav_dev_two:
+                        gotoDevTwo(nv);
+                        break;
+                    case R.id.nav_dev_three:
+                        gotoDevThree(nv);
+                        break;
+                    default:
+                        return true;
+                }
+                return false;
             }
+        });
 
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {}
 
-            @Override
-            public void onProviderEnabled(String s) {}
-
-            @Override
-            public void onProviderDisabled(String s)
-            {
-                // if gps isn't enable at all send user too setting to enable it
-                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(i);
-            }
-        };
-
-        GPS = new GPSModule(locationManager, listener);
-        checkPermissions();
-    }
-
-    private void checkPermissions()
-    {
-        // check for permissions
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {
-            // if below ver 23 don't need to ask for permissions
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            {
-            }
-            return;
-        }
-        // then get the location
-        GPS.StartLocationUpdates(GPSPingTime, GPSDistance);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
-        // TODO
-        // this may break when you try to get the calender permissions,
-        // unless we get all permissions at the same time
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-        // if it returns expected request code permissions are good
-        if(requestCode == PermissionCorrect)
-        {
-            GPS.StartLocationUpdates(GPSPingTime, GPSDistance);
-        }
+        if (t.onOptionsItemSelected(item))
+            return true;
+
+        return super.onOptionsItemSelected(item);
     }
 
-    // when you press the onscreen button
-    public void GetLocationNow(View view)
-    {
-        GetLocationRequest l = GPS.GetLocationNow();
-
-        switch (l.result)
-        {
-            case Success:
-                t.append("\n " + l.location.getLongitude() + " " + l.location.getLatitude());
-                break;
-            case Failed:
-                Toast.makeText(getApplicationContext(), "Error getting last known location!!!", Toast.LENGTH_SHORT);
-                break;
-            default:
-                Toast.makeText(getApplicationContext(), "Problem, an unknown problem has occurred", Toast.LENGTH_SHORT);
-        }
-
+    public void gotoHome(View view) {
+        Log.d(LogTagClass, "Button Home clicked!");
+        startActivity(new Intent(this, MainActivity.class));
     }
+
+    public void gotoSettings(View view) {
+        Log.d(LogTagClass, "Button Settings clicked!");
+        startActivity(new Intent(this, SettingsActivity.class));
+    }
+
+    public void gotoLocation(View view) {
+        Log.d(LogTagClass, "Button Location clicked!");
+        startActivity(new Intent(this, LocationActivity.class));
+    }
+
+    public void gotoMap(View view) {
+        Log.d(LogTagClass, "Button Map clicked!");
+        startActivity(new Intent(this, MapActivity.class));
+    }
+
+    public void gotoDevOne(View view) {
+        Log.d(LogTagClass, "Button Dev One clicked!");
+        startActivity(new Intent(this, DevActivityOne.class));
+    }
+
+    public void gotoDevTwo(View view) {
+        Log.d(LogTagClass, "Button Dev Two clicked!");
+        startActivity(new Intent(this, DevActivityTwo.class));
+    }
+
+    public void gotoDevThree(View view) {
+        Log.d(LogTagClass, "Button Dev Three clicked!");
+        startActivity(new Intent(this, DevActivityThree.class));
+    }
+
+
 }
