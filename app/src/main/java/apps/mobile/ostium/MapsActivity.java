@@ -11,8 +11,6 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,29 +21,28 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements
-        OnMapReadyCallback,
-        GoogleMap.OnInfoWindowClickListener { //New
+import Objects.Request.GetLocationRequest;
+import apps.mobile.ostium.Module.GPSModule;
 
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener
+{
     private GoogleMap mMap;
     private GPSModule GPS;
 
     private final int GPSPingTime = 2000;
     private final int GPSDistance = 0;
-    private static final int MY_REQUEST_INT = 177;
-    private static final int PermissionCorrect = 1;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
-    private void intializeGPS() {
+    private void intializeGPS()
+    {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         LocationListener listener = new LocationListener()
@@ -55,8 +52,8 @@ public class MapsActivity extends FragmentActivity implements
             {
                 //t.append("\n " + location.getLongitude() + " " + location.getLatitude());
                 mMap.clear();
-                Objects.GetLocationRequest l = GPS.GetLocationNow();
-                String locationStats = "Latitude: "+l.location.getLatitude()+" Longitude: "+l.location.getLongitude();
+                GetLocationRequest l = GPS.GetLocationNow();
+                String locationStats = "Latitude: " + l.location.getLatitude() + " Longitude: " + l.location.getLongitude();
                 LatLng currentLocation = new LatLng(l.location.getLatitude(), l.location.getLongitude());
 
                 mMap.addMarker(new MarkerOptions().position(currentLocation).title(locationStats));
@@ -115,8 +112,8 @@ public class MapsActivity extends FragmentActivity implements
         // Hardcoded version of "currentLocation" in case there are errors
         //LatLng currentLocation = new LatLng(53.369660, -1.484200);
 
-        Objects.GetLocationRequest l = GPS.GetLocationNow();
-        String locationStats = "Latitude: "+l.location.getLatitude()+" Longitude: "+l.location.getLongitude();
+        GetLocationRequest l = GPS.GetLocationNow();
+        String locationStats = "Latitude: " + l.location.getLatitude() + " Longitude: " + l.location.getLongitude();
         LatLng currentLocation = new LatLng(l.location.getLatitude(), l.location.getLongitude());
 
         mMap.addMarker(new MarkerOptions().position(currentLocation).title(locationStats));
