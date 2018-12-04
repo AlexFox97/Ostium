@@ -1,6 +1,8 @@
 package apps.mobile.ostium;
 
+import android.app.AlertDialog;
 import android.app.NotificationManager;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.Manifest;
@@ -20,12 +22,14 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import Objects.Request.GetLocationRequest;
+import apps.mobile.ostium.Module.CalendarHandler;
+import apps.mobile.ostium.Module.CalendarProviderIntentService;
 import apps.mobile.ostium.Module.GPSModule;
 import apps.mobile.ostium.Module.NotificationModule;
-import apps.mobile.ostium.Module.androidCalendarHandle;
 
 
 public class MainActivity extends AppCompatActivity
@@ -41,6 +45,8 @@ public class MainActivity extends AppCompatActivity
 
     CalendarResultReceiver calendarResultHandler;
 
+    ArrayList mSelectedItems;
+
     private ArrayList<String> eventTitles = new ArrayList<>();
 
     @Override
@@ -51,7 +57,66 @@ public class MainActivity extends AppCompatActivity
 
         initializeGPS();
         initializeNotifications();
-        //initializeCal();
+        initializeCal();
+
+        calendarSelection();
+    }
+
+    void calendarSelection()
+    {
+        // where we will store or remove selected items
+        mSelectedItems = new ArrayList<Integer>();
+
+        //Create DialogBuilder and set title
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+
+        //Retrieve list of calendars and convert to pass to AlertDialog
+        ArrayList tempCal =  CalendarHandler.getCalendarList(getApplicationContext());
+        final CharSequence[] calendars = (CharSequence[]) tempCal.toArray(new CharSequence[tempCal.size()]);
+
+
+        builder.setTitle("Please select your used calendars:");
+
+        builder.setMultiChoiceItems(calendars,null ,new DialogInterface.OnMultiChoiceClickListener()
+        {
+            public void onClick(DialogInterface dialog, int item, boolean isChecked)
+            {
+                //Handle clicked calendars
+                if (isChecked) {
+                    // if the user checked the item, add it to the selected items
+                    mSelectedItems.add(item);
+                }
+
+                else if (mSelectedItems.contains(item)) {
+                    // else if the item is already in the array, remove it
+                    mSelectedItems.remove(Integer.valueOf(item));
+                }
+            }
+        });
+
+        builder.setPositiveButton("Done", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                //Save mSelectedItems somewhere
+            }
+        });
+
+        //Set cancel button so it cancels
+        builder.setNegativeButton("Cancel", null);
+
+        //Show AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public interface multiChoiceListDialogListener
+    {
+        public void OnOkay(ArrayList<Integer> arrayList);
+        public void onCancel();
+
     }
 
     private void initializeNotifications()
@@ -70,8 +135,7 @@ public class MainActivity extends AppCompatActivity
 
         calendarResultHandler = new CalendarResultReceiver(new Handler());
 
-        Intent startIntent = new Intent(MainActivity.this,
-                androidCalendarHandle.class);
+        Intent startIntent = new Intent(MainActivity.this, CalendarProviderIntentService.class);
         startIntent.putExtra("receiver", calendarResultHandler);
         startService(startIntent);
 
@@ -176,7 +240,7 @@ public class MainActivity extends AppCompatActivity
         {
             switch(resultCode)
             {
-                case androidCalendarHandle.RETRIEVE_SUCCESS:
+                case CalendarProviderIntentService.RETRIEVE_SUCCESS:
 
                     Integer eventCount = resultData.getInt("eventCount");
 
@@ -194,7 +258,7 @@ public class MainActivity extends AppCompatActivity
 
                     break;
 
-                case androidCalendarHandle.RETRIEVE_ERROR:
+                case CalendarProviderIntentService.RETRIEVE_ERROR:
                     t.setText("Loser");
 
             }
