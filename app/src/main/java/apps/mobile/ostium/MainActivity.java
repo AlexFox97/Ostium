@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,9 +20,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import Objects.Request.GetLocationRequest;
 import apps.mobile.ostium.Module.GPSModule;
 import apps.mobile.ostium.Module.NotificationModule;
+import apps.mobile.ostium.Module.androidCalendarHandle;
+
 
 public class MainActivity extends AppCompatActivity
 {
@@ -32,6 +38,10 @@ public class MainActivity extends AppCompatActivity
 
     private GPSModule GPS;
     private NotificationModule notifications;
+
+    CalendarResultReceiver calendarResultHandler;
+
+    private ArrayList<String> eventTitles = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -57,6 +67,14 @@ public class MainActivity extends AppCompatActivity
         {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, PermissionCorrect);
         }
+
+        calendarResultHandler = new CalendarResultReceiver(new Handler());
+
+        Intent startIntent = new Intent(MainActivity.this,
+                androidCalendarHandle.class);
+        startIntent.putExtra("receiver", calendarResultHandler);
+        startService(startIntent);
+
     }
 
     private void initializeGPS()
@@ -145,5 +163,44 @@ public class MainActivity extends AppCompatActivity
     {
         setContentView(R.layout.getlocation_page);
         t = findViewById(R.id.textView);
+    }
+
+    private class CalendarResultReceiver extends ResultReceiver
+    {
+        public CalendarResultReceiver(Handler handler)
+        {
+            super(handler);
+        }
+
+        protected void onReceiveResult(int resultCode, Bundle resultData)
+        {
+            switch(resultCode)
+            {
+                case androidCalendarHandle.RETRIEVE_SUCCESS:
+
+                    Integer eventCount = resultData.getInt("eventCount");
+
+                    for(int i = 1; i <= eventCount; i++)
+                    {
+                        String key = Integer.toString(i);
+                        eventTitles.add(resultData.getString(key));
+                    }
+
+                    for(String item: eventTitles)
+                    {
+
+                        t.append("\n" + item);
+                    }
+
+                    break;
+
+                case androidCalendarHandle.RETRIEVE_ERROR:
+                    t.setText("Loser");
+
+            }
+            super.onReceiveResult(resultCode, resultData);
+        }
+
+
     }
 }
