@@ -36,6 +36,8 @@ public class CalendarProviderIntentService extends IntentService
         // Get ResultReceiver from the Intent passed to service
         final ResultReceiver receiver = intent.getParcelableExtra("receiver");
 
+
+
         // Create bundle to store data to send back
         Bundle bundle = new Bundle();
 
@@ -44,6 +46,47 @@ public class CalendarProviderIntentService extends IntentService
          * TODO: Implement success and fail cases for receiver.send
          * */
         receiver.send(RETRIEVE_SUCCESS, bundle);
+    }
+
+    @SuppressLint("MissingPermission")
+    private ArrayList getEvents(ArrayList<String> calendarNames)
+    {
+        ArrayList<eventGeneric> returnList = new ArrayList<>();
+
+        Cursor cur;
+        ContentResolver cr = getContentResolver();
+
+        String[] mProjection =
+                {
+                        "_id",
+                        CalendarContract.Events.TITLE,
+                        CalendarContract.Events.ACCOUNT_TYPE,
+                        CalendarContract.Events.DESCRIPTION,
+                        CalendarContract.Events.DTSTART,
+                        CalendarContract.Events.DTEND
+                };
+
+        Uri uri = CalendarContract.Events.CONTENT_URI;
+
+        for(String item : calendarNames) {
+            //Suppressing check for permissions here, all permissions should be granted before this function is called
+            cur = cr.query(uri, mProjection, "ACCOUNT_TYPE = " + item, null, null);
+
+            ArrayList calendars = new ArrayList<String>();
+
+            while (cur.moveToNext()) {
+
+                //TODO: Create genericEvent and add to returnList
+
+                String title = cur.getString(cur.getColumnIndex(CalendarContract.Events.TITLE));
+
+            }
+        }
+
+        //TODO: Sort returnList by start time
+
+        return returnList;
+
     }
 
 
