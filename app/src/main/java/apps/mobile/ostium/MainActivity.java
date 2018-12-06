@@ -1,6 +1,8 @@
 package apps.mobile.ostium;
 
+import android.app.AlertDialog;
 import android.app.NotificationManager;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.Manifest;
@@ -9,6 +11,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,9 +22,15 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import Objects.Request.GetLocationRequest;
+import apps.mobile.ostium.Module.CalendarHandler;
+import apps.mobile.ostium.Module.CalendarProviderIntentService;
 import apps.mobile.ostium.Module.GPSModule;
 import apps.mobile.ostium.Module.NotificationModule;
+
 
 public class MainActivity extends AppCompatActivity
 {
@@ -33,6 +43,12 @@ public class MainActivity extends AppCompatActivity
     private GPSModule GPS;
     private NotificationModule notifications;
 
+    CalendarResultReceiver calendarResultHandler;
+
+    ArrayList mSelectedItems;
+
+    private ArrayList<String> eventTitles = new ArrayList<>();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
@@ -41,7 +57,68 @@ public class MainActivity extends AppCompatActivity
 
         initializeGPS();
         initializeNotifications();
-        //initializeCal();
+        initializeCal();
+
+        //calendarSelection();
+    }
+
+    void calendarSelection()
+    {
+        //TODO: pass back calendarID rather than displayName
+
+        // where we will store or remove selected items
+        mSelectedItems = new ArrayList<Integer>();
+
+        //Create DialogBuilder and set title
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+
+        //Retrieve list of calendars and convert to pass to AlertDialog
+        ArrayList tempCal =  CalendarHandler.getCalendarList(getApplicationContext());
+        final CharSequence[] calendars = (CharSequence[]) tempCal.toArray(new CharSequence[tempCal.size()]);
+
+
+        builder.setTitle("Please select your used calendars:");
+
+        builder.setMultiChoiceItems(calendars,null ,new DialogInterface.OnMultiChoiceClickListener()
+        {
+            public void onClick(DialogInterface dialog, int item, boolean isChecked)
+            {
+                //Handle clicked calendars
+                if (isChecked) {
+                    // if the user checked the item, add it to the selected items
+                    mSelectedItems.add(item);
+                }
+
+                else if (mSelectedItems.contains(item)) {
+                    // else if the item is already in the array, remove it
+                    mSelectedItems.remove(Integer.valueOf(item));
+                }
+            }
+        });
+
+        builder.setPositiveButton("Done", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                //Save mSelectedItems somewhere
+            }
+        });
+
+        //Set cancel button so it cancels
+        builder.setNegativeButton("Cancel", null);
+
+        //Show AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public interface multiChoiceListDialogListener
+    {
+        public void OnOkay(ArrayList<Integer> arrayList);
+        public void onCancel();
+
     }
 
     private void initializeNotifications()
@@ -57,6 +134,13 @@ public class MainActivity extends AppCompatActivity
         {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, PermissionCorrect);
         }
+
+        calendarResultHandler = new CalendarResultReceiver(new Handler());
+
+        Intent startIntent = new Intent(MainActivity.this, CalendarProviderIntentService.class);
+        startIntent.putExtra("receiver", calendarResultHandler);
+        startService(startIntent);
+
     }
 
     private void initializeGPS()
@@ -145,5 +229,44 @@ public class MainActivity extends AppCompatActivity
     {
         setContentView(R.layout.getlocation_page);
         t = findViewById(R.id.textView);
+    }
+
+    private class CalendarResultReceiver extends ResultReceiver
+    {
+        public CalendarResultReceiver(Handler handler)
+        {
+            super(handler);
+        }
+
+        protected void onReceiveResult(int resultCode, Bundle resultData)
+        {
+            switch(resultCode)
+            {
+                case CalendarProviderIntentService.RETRIEVE_SUCCESS:
+
+                    Integer eventCount = resultData.getInt("eventCount");
+
+                    for(int i = 1; i <= eventCount; i++)
+                    {
+                        String key = Integer.toString(i);
+                        eventTitles.add(resultData.getString(key));
+                    }
+
+                    for(String item: eventTitles)
+                    {
+
+                        t.append("\n" + item);
+                    }
+
+                    break;
+
+                case CalendarProviderIntentService.RETRIEVE_ERROR:
+                    t.setText("Loser");
+
+            }
+            super.onReceiveResult(resultCode, resultData);
+        }
+
+
     }
 }

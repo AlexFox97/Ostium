@@ -30,7 +30,7 @@
         </activity>
 
         <service
-            android:name=".Module.androidCalendarHandle"
+            android:name=".Module.CalendarProviderIntentService"
             android:exported="false"/>
       <!--
              The API key for Google Maps-based APIs is defined as a string resource.
