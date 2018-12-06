@@ -59,11 +59,13 @@ public class MainActivity extends AppCompatActivity
         initializeNotifications();
         initializeCal();
 
-        calendarSelection();
+        //calendarSelection();
     }
 
     void calendarSelection()
     {
+        //TODO: pass back calendarID rather than displayName
+
         // where we will store or remove selected items
         mSelectedItems = new ArrayList<Integer>();
 

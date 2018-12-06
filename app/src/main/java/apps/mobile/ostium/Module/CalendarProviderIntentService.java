@@ -49,8 +49,9 @@ public class CalendarProviderIntentService extends IntentService
     }
 
     @SuppressLint("MissingPermission")
-    private ArrayList getEvents(ArrayList<String> calendarNames)
+    private ArrayList getEvents(ArrayList<Integer> calendarIDs)
     {
+
         ArrayList<eventGeneric> returnList = new ArrayList<>();
 
         Cursor cur;
@@ -60,7 +61,7 @@ public class CalendarProviderIntentService extends IntentService
                 {
                         "_id",
                         CalendarContract.Events.TITLE,
-                        CalendarContract.Events.ACCOUNT_TYPE,
+                        CalendarContract.Events.CALENDAR_ID,
                         CalendarContract.Events.DESCRIPTION,
                         CalendarContract.Events.DTSTART,
                         CalendarContract.Events.DTEND
@@ -68,20 +69,31 @@ public class CalendarProviderIntentService extends IntentService
 
         Uri uri = CalendarContract.Events.CONTENT_URI;
 
-        for(String item : calendarNames) {
+        for(Integer item : calendarIDs) {
             //Suppressing check for permissions here, all permissions should be granted before this function is called
-            cur = cr.query(uri, mProjection, "ACCOUNT_TYPE = " + item, null, null);
+            cur = cr.query(uri, mProjection, CalendarContract.Events.CALENDAR_ID + " =  '" + item + "'", null, null);
 
-            ArrayList calendars = new ArrayList<String>();
+
 
             while (cur.moveToNext()) {
 
-                //TODO: Create genericEvent and add to returnList
-
                 String title = cur.getString(cur.getColumnIndex(CalendarContract.Events.TITLE));
+                String accountType = cur.getString(cur.getColumnIndex(CalendarContract.Events.CALENDAR_ID));
+                String desc = cur.getString(cur.getColumnIndex(CalendarContract.Events.DESCRIPTION));
+                String start = cur.getString(cur.getColumnIndex(CalendarContract.Events.DTSTART));
+                String end = cur.getString(cur.getColumnIndex(CalendarContract.Events.DTEND));
 
+
+                eventGeneric event = new eventGeneric(title, accountType);
+                event.setDescription(desc);
+                event.setStartTime(start);
+                event.setEndTime(end);
+
+                returnList.add(event);
             }
         }
+
+        System.out.print(1);
 
         //TODO: Sort returnList by start time
 

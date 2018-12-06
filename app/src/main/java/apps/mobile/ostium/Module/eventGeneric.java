@@ -4,8 +4,8 @@ public class eventGeneric {
     private String title;
     private String eventType;
     private String description;
-    private Integer startTime;
-    private Integer endTime;
+    private String startTime;
+    private String endTime;
     private Float longitude;
     private Float latitude;
 
@@ -25,11 +25,11 @@ public class eventGeneric {
         this.description = description;
     }
 
-    public void setStartTime(Integer startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public void setEndTime(Integer endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
@@ -45,11 +45,11 @@ public class eventGeneric {
         return description;
     }
 
-    public Integer getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public Integer getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
