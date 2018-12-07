@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Ostium</string>
+    <string name="button">Button</string>
+    <string name="mapScreenName">Map</string>
+    <string name="devTwoScreenName">DevTwo</string>
+    <string name="devThreeScreenName">DevThree</string>
+    <string name="devOneScreenName">DevOne</string>
+    <string name="locationScreenName">Location</string>
+    <string name="homeScreenName">Home</string>
+    <string name="settingsScreenName">Settings</string>
+</resources>

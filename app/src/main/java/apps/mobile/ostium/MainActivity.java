@@ -14,13 +14,18 @@ import android.location.LocationManager;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.provider.Settings;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -31,197 +36,208 @@ import apps.mobile.ostium.Module.CalendarProviderIntentService;
 import apps.mobile.ostium.Module.GPSModule;
 import apps.mobile.ostium.Module.NotificationModule;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity
-{
-    private static final int PermissionCorrect = 1;
-    private final int GPSPingTime = 2000;
-    private final int GPSDistance = 0;
+//        Main Activity
+//        Home Activity
+//        Settings Activity
+//        Location Activity
+//        Map Activity
+//        Dev Activity One
+//        Dev Activity Two
+//        Dev Activity Three
 
-    private TextView t;
 
-    private GPSModule GPS;
-    private NotificationModule notifications;
-
-    CalendarResultReceiver calendarResultHandler;
-
-    ArrayList mSelectedItems;
-
-    private ArrayList<String> eventTitles = new ArrayList<>();
+public class MainActivity extends AppCompatActivity {
+    private static final String LogTagClass = MainActivity.class.getSimpleName();
+    private DrawerLayout dl;
+    private ActionBarDrawerToggle t;
+    private NavigationView nv;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initializeGPS();
-        initializeNotifications();
-        initializeCal();
+        // region Drawer - onCreate
+        dl = (DrawerLayout) findViewById(R.id.activity_main);
+        t = new ActionBarDrawerToggle(this, dl, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
-        //calendarSelection();
-    }
+        dl.addDrawerListener(t);
+        t.syncState();
 
-    void calendarSelection()
-    {
-        //TODO: pass back calendarID rather than displayName
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // where we will store or remove selected items
-        mSelectedItems = new ArrayList<Integer>();
-
-        //Create DialogBuilder and set title
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-
-
-        //Retrieve list of calendars and convert to pass to AlertDialog
-        ArrayList tempCal =  CalendarHandler.getCalendarList(getApplicationContext());
-        final CharSequence[] calendars = (CharSequence[]) tempCal.toArray(new CharSequence[tempCal.size()]);
-
-
-        builder.setTitle("Please select your used calendars:");
-
-        builder.setMultiChoiceItems(calendars,null ,new DialogInterface.OnMultiChoiceClickListener()
-        {
-            public void onClick(DialogInterface dialog, int item, boolean isChecked)
-            {
-                //Handle clicked calendars
-                if (isChecked) {
-                    // if the user checked the item, add it to the selected items
-                    mSelectedItems.add(item);
+        nv = (NavigationView) findViewById(R.id.nv);
+        nv.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        int id = item.getItemId();
+                        switch (id) {
+                            case R.id.nav_home:
+                                gotoHome(nv);
+                                break;
+                            case R.id.nav_location:
+                                gotoLocation(nv);
+                                break;
+                            case R.id.nav_map:
+                                gotoMap(nv);
+                                break;
+                            case R.id.nav_settings:
+                                gotoSettings(nv);
+                                break;
+                            case R.id.nav_dev_one:
+                                gotoDevOne(nv);
+                                break;
+                            case R.id.nav_dev_two:
+                                gotoDevTwo(nv);
+                                break;
+                            case R.id.nav_dev_three:
+                                gotoDevThree(nv);
+                                break;
+                            default:
+                                return true;
+                        }
+                        return false;
+                    }
                 }
 
-                else if (mSelectedItems.contains(item)) {
-                    // else if the item is already in the array, remove it
-                    mSelectedItems.remove(Integer.valueOf(item));
-                }
-            }
-        });
 
-        builder.setPositiveButton("Done", new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                //Save mSelectedItems somewhere
-            }
-        });
+        );
+        // endregion Drawer
 
-        //Set cancel button so it cancels
-        builder.setNegativeButton("Cancel", null);
+        // region CardRecycler - onCreate
+        RecyclerView recCardList = (RecyclerView) findViewById(R.id.cardList);
+        recCardList.setHasFixedSize(true);
+        LinearLayoutManager llmCard = new LinearLayoutManager(this);
+        llmCard.setOrientation(LinearLayoutManager.VERTICAL);
+        recCardList.setLayoutManager(llmCard);
 
-        //Show AlertDialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        CardAdapter ca = new CardAdapter(createCardList(8));
+        recCardList.setAdapter(ca);
+
+        // region ListRecycler - onCreate
+        RecyclerView recTagList = (RecyclerView) recCardList.findViewById(R.id.tagList);
+        recTagList.setHasFixedSize(true);
+        LinearLayoutManager llmTag = new LinearLayoutManager(this);
+        llmTag.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recTagList.setLayoutManager(llmTag);
+
+        TagAdapter ta = new TagAdapter(createTagList(8));
+        recTagList.setAdapter(ta);
+
+        // endregion Recycler
+
+//        //region extra recyclers
+//        // region Recycler - onCreate
+//        RecyclerView recList1 = (RecyclerView) findViewById(R.id.cardList2);
+//        recList1.setHasFixedSize(true);
+//        LinearLayoutManager llm1 = new LinearLayoutManager(this);
+//        llm.setOrientation(LinearLayoutManager.VERTICAL);
+//        recList1.setLayoutManager(llm1);
+//
+//        CardAdapter ca1 = new CardAdapter(createCardList(3));
+//        recList1.setAdapter(ca1);
+//
+//        // region Recycler - onCreate
+//        RecyclerView recList2 = (RecyclerView) findViewById(R.id.cardList3);
+//        recList2.setHasFixedSize(true);
+//        LinearLayoutManager llm2 = new LinearLayoutManager(this);
+//        llm.setOrientation(LinearLayoutManager.VERTICAL);
+//        recList2.setLayoutManager(llm);
+//
+//        CardAdapter ca2 = new CardAdapter(createCardList(3));
+//        recList2.setAdapter(ca2);
+//
+//        // region Recycler - onCreate
+//        RecyclerView recList3 = (RecyclerView) findViewById(R.id.cardList4);
+//        recList3.setHasFixedSize(true);
+//        LinearLayoutManager llm3 = new LinearLayoutManager(this);
+//        llm.setOrientation(LinearLayoutManager.VERTICAL);
+//        recList3.setLayoutManager(llm3);
+//
+//        CardAdapter ca3 = new CardAdapter(createCardList(3));
+//        recList3.setAdapter(ca3);
+
+
+        //endregion extra recyclers
     }
 
-    public interface multiChoiceListDialogListener
-    {
-        public void OnOkay(ArrayList<Integer> arrayList);
-        public void onCancel();
-
-    }
-
-    private void initializeNotifications()
-    {
-        // setup a new channel for R26 <
-        NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        notifications = new NotificationModule(notificationManager, this);
-    }
-
-    private void initializeCal()
-    {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, PermissionCorrect);
-        }
-
-        calendarResultHandler = new CalendarResultReceiver(new Handler());
-
-        Intent startIntent = new Intent(MainActivity.this, CalendarProviderIntentService.class);
-        startIntent.putExtra("receiver", calendarResultHandler);
-        startService(startIntent);
-
-    }
-
-    private void initializeGPS()
-    {
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        LocationListener listener = new LocationListener()
-        {
-            @Override
-            public void onLocationChanged(Location location)
-            {
-                // unsafe atm
-                //  t.append("\n " + location.getLongitude() + " " + location.getLatitude());
-            }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {}
-
-            @Override
-            public void onProviderEnabled(String s) {}
-
-            @Override
-            public void onProviderDisabled(String s)
-            {
-                // if gps isn't enable at all send user too setting to enable it
-                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(i);
-            }
-        };
-
-        GPS = new GPSModule(locationManager, listener);
-        checkPermissions();
-    }
-
-    private void checkPermissions()
-    {
-        // check for permissions
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {
-            // if below ver 23 don't need to ask for permissions
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            {
-            }
-            return;
-        }
-        // then get the location
-        GPS.StartLocationUpdates(GPSPingTime, GPSDistance);
-    }
-
+    //region Drawer
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
-        // TODO
-        // this may break when you try to get the calender permissions,
-        // unless we get all permissions at the same time
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-        // if it returns expected request code permissions are good
-        if(requestCode == PermissionCorrect)
-        {
-            GPS.StartLocationUpdates(GPSPingTime, GPSDistance);
-        }
+        if (t.onOptionsItemSelected(item))
+            return true;
+
+        return super.onOptionsItemSelected(item);
     }
 
-    // when you press the onscreen button
-    public void GetLocationNow(View view)
-    {
+    public void gotoHome(View view) {
+        Log.d(LogTagClass, "Button Home clicked!");
+        startActivity(new Intent(this, MainActivity.class));
+    }
 
-        GetLocationRequest l = GPS.GetLocationNow();
+    public void gotoSettings(View view) {
+        Log.d(LogTagClass, "Button Settings clicked!");
+        startActivity(new Intent(this, SettingsActivity.class));
+    }
 
-        switch (l.result)
-        {
-            case Success:
-                String message = "long: " +l.location.getLongitude() + " Lat: " + l.location.getLatitude();
-                t.append("\n " + message);
-                notifications.pushNotification("Current Location", message);
-                break;
-            case Failed:
-                Toast.makeText(getApplicationContext(), "Error getting last known location!!!", Toast.LENGTH_SHORT).show();
-                break;
-            default:
-                Toast.makeText(getApplicationContext(), "Problem, an unknown problem has occurred", Toast.LENGTH_SHORT).show();
+    public void gotoLocation(View view) {
+        Log.d(LogTagClass, "Button Location clicked!");
+        startActivity(new Intent(this, LocationActivity.class));
+    }
+
+    public void gotoMap(View view) {
+        Log.d(LogTagClass, "Button Map clicked!");
+        startActivity(new Intent(this, MapActivity.class));
+    }
+
+    public void gotoDevOne(View view) {
+        Log.d(LogTagClass, "Button Dev One clicked!");
+        startActivity(new Intent(this, DevActivityOne.class));
+    }
+
+    public void gotoDevTwo(View view) {
+        Log.d(LogTagClass, "Button Dev Two clicked!");
+        startActivity(new Intent(this, DevActivityTwo.class));
+    }
+
+    public void gotoDevThree(View view) {
+        Log.d(LogTagClass, "Button Dev Three clicked!");
+        startActivity(new Intent(this, DevActivityThree.class));
+    }
+    //endregion Drawer
+
+    private List<CardInfo> createCardList(int size) {
+
+        List<CardInfo> result = new ArrayList<CardInfo>();
+        for (int i = 1; i <= size; i++) {
+            CardInfo ci = new CardInfo();
+//            ci.name = (CardInfo.NAME_PREFIX) + " title title title title title title title title title title title title title title title title title title title title title title title title title title title title title title title title " + i;
+//            ci.surname = CardInfo.SURNAME_PREFIX + " content content content content content content content content content content content content content content content content content content content content content content content"+ i;
+//            ci.email = CardInfo.EMAIL_PREFIX + " other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other "+i + "@test.com";
+            ci.title = "Buy Almond milk, bread and bananas";
+            ci.details = "get gluten free bread!!";
+            ci.date = "03/12/2018";
+            result.add(ci);
+
+        }
+
+        return result;
+    }
+
+
+
+    private List<TagInfo> createTagList(int size) {
+
+        List<TagInfo> result = new ArrayList<TagInfo>();
+        for (int i = 1; i <= size; i++) {
+            TagInfo ci = new TagInfo();
+            ci.locationName = "Shops";
+            result.add(ci);
         }
     }
 
@@ -268,5 +284,8 @@ public class MainActivity extends AppCompatActivity
         }
 
 
+        return result;
     }
+
+
 }
