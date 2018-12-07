@@ -119,14 +119,14 @@ public class MainActivity extends AppCompatActivity {
         recCardList.setAdapter(ca);
 
         // region ListRecycler - onCreate
-        RecyclerView recTagList = (RecyclerView) recCardList.findViewById(R.id.tagList);
-        recTagList.setHasFixedSize(true);
-        LinearLayoutManager llmTag = new LinearLayoutManager(this);
-        llmTag.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recTagList.setLayoutManager(llmTag);
-
-        TagAdapter ta = new TagAdapter(createTagList(8));
-        recTagList.setAdapter(ta);
+//        RecyclerView recTagList = (RecyclerView) recCardList.findViewById(R.id.tagList);
+//        recTagList.setHasFixedSize(true);
+//        LinearLayoutManager llmTag = new LinearLayoutManager(this);
+//        llmTag.setOrientation(LinearLayoutManager.HORIZONTAL);
+//        recTagList.setLayoutManager(llmTag);
+//
+//        TagAdapter ta = new TagAdapter(createTagList(8));
+//        recTagList.setAdapter(ta);
 
         // endregion Recycler
 
@@ -239,53 +239,7 @@ public class MainActivity extends AppCompatActivity {
             ci.locationName = "Shops";
             result.add(ci);
         }
-    }
-
-    public void GoLocationPage(View view)
-    {
-        setContentView(R.layout.getlocation_page);
-        t = findViewById(R.id.textView);
-    }
-
-    private class CalendarResultReceiver extends ResultReceiver
-    {
-        public CalendarResultReceiver(Handler handler)
-        {
-            super(handler);
-        }
-
-        protected void onReceiveResult(int resultCode, Bundle resultData)
-        {
-            switch(resultCode)
-            {
-                case CalendarProviderIntentService.RETRIEVE_SUCCESS:
-
-                    Integer eventCount = resultData.getInt("eventCount");
-
-                    for(int i = 1; i <= eventCount; i++)
-                    {
-                        String key = Integer.toString(i);
-                        eventTitles.add(resultData.getString(key));
-                    }
-
-                    for(String item: eventTitles)
-                    {
-
-                        t.append("\n" + item);
-                    }
-
-                    break;
-
-                case CalendarProviderIntentService.RETRIEVE_ERROR:
-                    t.setText("Loser");
-
-            }
-            super.onReceiveResult(resultCode, resultData);
-        }
-
-
         return result;
     }
-
 
 }

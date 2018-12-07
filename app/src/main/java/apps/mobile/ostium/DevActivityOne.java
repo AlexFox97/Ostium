@@ -17,7 +17,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import Objects.GetLocationRequest;
+import Objects.Request.GetLocationRequest;
+import apps.mobile.ostium.Module.GPSModule;
 
 public class DevActivityOne extends AppCompatActivity
 {
