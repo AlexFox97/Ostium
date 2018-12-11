@@ -33,7 +33,7 @@ public class DevActivityOne extends AppCompatActivity
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dev_activity_one);
+        setContentView(R.layout.activity_dev_one);
         
         t = findViewById(R.id.textView);
 

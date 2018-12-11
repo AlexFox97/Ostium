@@ -1,19 +1,5 @@
 package apps.mobile.ostium;
 
-import android.app.AlertDialog;
-import android.app.NotificationManager;
-import android.content.DialogInterface;
-import android.os.Build;
-import android.os.Bundle;
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Handler;
-import android.os.ResultReceiver;
-import android.provider.Settings;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,15 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
-import Objects.Request.GetLocationRequest;
-import apps.mobile.ostium.Module.CalendarHandler;
-import apps.mobile.ostium.Module.CalendarProviderIntentService;
-import apps.mobile.ostium.Module.GPSModule;
-import apps.mobile.ostium.Module.NotificationModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,14 +37,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        ActionBar actionBar = getActionBar();
+//        actionBar.setDisplayShowTitleEnabled(false); // Hide the action bar title
+//        actionBar.setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         // region Drawer - onCreate
-        dl = (DrawerLayout) findViewById(R.id.activity_main);
+        dl = findViewById(R.id.activity_main);
         t = new ActionBarDrawerToggle(this, dl, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
         dl.addDrawerListener(t);
         t.syncState();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         nv = (NavigationView) findViewById(R.id.nv);
         nv.setNavigationItemSelectedListener(
@@ -106,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         );
+
         // endregion Drawer
 
         // region CardRecycler - onCreate
@@ -165,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         //endregion extra recyclers
     }
 
-    //region Drawer
+    //region Drawer Methods
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -211,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
     }
     //endregion Drawer
 
+
     private List<CardInfo> createCardList(int size) {
 
         List<CardInfo> result = new ArrayList<CardInfo>();
@@ -228,7 +212,6 @@ public class MainActivity extends AppCompatActivity {
 
         return result;
     }
-
 
 
     private List<TagInfo> createTagList(int size) {

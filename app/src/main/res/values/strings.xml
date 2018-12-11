@@ -24,4 +24,23 @@
     <string name="locationScreenName">Location</string>
     <string name="homeScreenName">Home</string>
     <string name="settingsScreenName">Settings</string>
+
+    <string-array name="theme_array">
+        <item>OSTIUM</item>
+        <item>OSTIUM_DARK</item>
+        <item>OSTIUM_TWO</item>
+        <item>OSTIUM_DARK_TWO</item>
+
+    </string-array>
+
+    <string name="settings_text_select_theme">Select Theme:</string>
+    <string name="settings_text_credentials">Credentials</string>
+    <string name="settings_text_username_hint">username</string>
+    <string name="settings_text_password_hint">password</string>
+    <string name="settings_text_sync_automatically">Sync automatically</string>
+    <string name="settings_text_location">Location</string>
+    <string name="settings_text_state_on">On</string>
+    <string name="settings_text_state_off">Off</string>
+    <string name="settings_text_clear_data">Clear Data</string>
+
 </resources>

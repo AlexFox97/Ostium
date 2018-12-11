@@ -7,7 +7,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="?android:colorPrimaryDark"
     android:fitsSystemWindows="true"
     >
 
@@ -28,23 +28,63 @@
             tools:context=".MainActivity"
             >
 
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appBarLayout"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                >
+                <!--style/AppTheme.AppBarOverlay-->
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    />
+
+                <!--@style/AppTheme.PopupOverlay-->
+
+            </android.support.design.widget.AppBarLayout>
+
+            <TextView
+                android:id="@+id/cardssource"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:inputType="none"
+                android:selectAllOnFocus="false"
+                android:singleLine="true"
+                android:text="Card Source"
+                android:textColor="@color/colorText1"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toTopOf="@+id/cardList"
+                app:layout_constraintEnd_toEndOf="@+id/cardList"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/cardList"
+                app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+                app:layout_constraintVertical_bias="0.0"
+                />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/cardList"
-                android:layout_width="229dp"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
 
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginStart="@dimen/component_padding"
+                android:layout_marginTop="@dimen/component_padding"
+                android:layout_marginEnd="@dimen/component_padding"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/guideline3"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toTopOf="@+id/guideline"
-                app:layout_constraintVertical_bias="1.0"
+                app:layout_constraintTop_toBottomOf="@+id/cardssource"
                 tools:itemCount="8"
                 tools:listitem="@layout/card_layout_ostium"
-                />
+                >
+
+            </android.support.v7.widget.RecyclerView>
 
             <android.support.constraint.Guideline
                 android:id="@+id/guideline"
@@ -116,7 +156,7 @@
         </android.support.constraint.ConstraintLayout>
     </FrameLayout>
 
-    <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
+     <!--Container for contents of drawer - use NavigationView to make configuration easier -->
     <android.support.design.widget.NavigationView
         android:id="@+id/nv"
         android:layout_width="wrap_content"

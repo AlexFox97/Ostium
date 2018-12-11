@@ -31,7 +31,7 @@ public class NotificationModule
         // but doesn't seem to work for me
         // Bean
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mainActivity.getApplicationContext()/*, notificationChannelId*/);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mainActivity.getApplicationContext(), "channelID");
         notificationBuilder.setContentTitle(title);
         notificationBuilder.setContentText(message);
 
