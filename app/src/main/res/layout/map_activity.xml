@@ -1,9 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:map="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/map"
-android:name="com.google.android.gms.maps.SupportMapFragment"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context=".MapActivity" />
+
+<RelativeLayout xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent">
+
+
+    <EditText
+        android:id="@+id/TF_location"
+        android:layout_width="280dp"
+        android:layout_height="45dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Search for Saved Place"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true" />
+
+    <Button
+        android:id="@+id/B_search"
+        android:layout_width="110dp"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/TF_location"
+        android:layout_toRightOf="@+id/TF_location"
+        android:onClick="onSearch"
+        android:text="Search"/>
+
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        map:cameraBearing="112.5"
+        map:cameraTilt="30"
+        map:cameraZoom="17"
+        map:mapType="normal"
+        map:uiRotateGestures="true"
+        map:uiScrollGestures="false"
+        map:uiTiltGestures="true"
+        map:uiZoomControls="true"
+        map:uiZoomGestures="true"
+        tools:context=".MapActivity"
+        android:layout_below="@id/B_places"/>
+
+    <Button
+        android:id="@+id/B_places"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/TF_location"
+        android:layout_alignParentLeft="true"
+        android:onClick="onClick"
+        android:text="Places"/>
+
+    <Button
+        android:id="@+id/B_work"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/TF_location"
+        android:layout_toEndOf="@id/B_places"
+        android:layout_toRightOf="@id/B_places"
+        android:onClick="onClick"
+        android:text="Work" />
+
+    <Button
+        android:id="@+id/B_shops"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/TF_location"
+        android:layout_toEndOf="@id/B_work"
+        android:layout_toRightOf="@id/B_work"
+        android:onClick="onClick"
+        android:text="Shops" />
+
+    <Button
+        android:id="@+id/B_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/B_shops"
+        android:layout_toEndOf="@id/B_shops"
+        android:layout_toRightOf="@id/B_shops"
+        android:onClick="changeType"
+        android:text="Type" />
+
+</RelativeLayout>
