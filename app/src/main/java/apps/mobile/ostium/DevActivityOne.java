@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,13 +20,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import Objects.Request.GetLocationRequest;
+import apps.mobile.ostium.Module.CalendarProviderIntentService;
 import apps.mobile.ostium.Module.GPSModule;
+
+import java.util.ArrayList;
 
 public class DevActivityOne extends AppCompatActivity
 {
     private static final int PermissionCorrect = 1;
     private final int GPSPingTime = 2000;
     private final int GPSDistance = 0;
+
+    CalendarResultReceiver calendarResultHandler;
+
+    private ArrayList<String> eventTitles = new ArrayList<>();
 
     private TextView t;
     private GPSModule GPS;
@@ -47,7 +56,54 @@ public class DevActivityOne extends AppCompatActivity
         {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, PermissionCorrect);
         }
+
+        calendarResultHandler = new CalendarResultReceiver(new Handler());
+
+        Intent startIntent = new Intent(MainActivity.this, CalendarProviderIntentService.class);
+        startIntent.putExtra("receiver", calendarResultHandler);
+        startService(startIntent);
+
     }
+
+    private class CalendarResultReceiver extends ResultReceiver
+    {
+        public CalendarResultReceiver(Handler handler)
+        {
+            super(handler);
+        }
+
+        protected void onReceiveResult(int resultCode, Bundle resultData)
+        {
+            switch(resultCode)
+            {
+                case CalendarProviderIntentService.RETRIEVE_SUCCESS:
+
+                    Integer eventCount = resultData.getInt("eventCount");
+
+                    for(int i = 1; i <= eventCount; i++)
+                    {
+                        String key = Integer.toString(i);
+                        eventTitles.add(resultData.getString(key));
+                    }
+
+                    for(String item: eventTitles)
+                    {
+
+                        t.append("\n" + item);
+                    }
+
+                    break;
+
+                case CalendarProviderIntentService.RETRIEVE_ERROR:
+                    t.setText("Loser");
+
+            }
+            super.onReceiveResult(resultCode, resultData);
+        }
+
+
+    }
+
 
     private void initializeGPS()
     {
