@@ -20,6 +20,7 @@ public class CalendarHandler {
         String[] mProjection =
                 {
                         "_id",
+                        CalendarContract.Calendars._ID,
                         CalendarContract.Calendars.CALENDAR_DISPLAY_NAME
 
                 };
@@ -33,7 +34,7 @@ public class CalendarHandler {
 
         while (cur.moveToNext())
         {
-            String value = cur.getString(cur.getColumnIndex(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME));
+            String value = cur.getString(cur.getColumnIndex(CalendarContract.Calendars._ID)) + " : " + cur.getString(cur.getColumnIndex(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME));
             if(!calendars.contains(value))
             {
                 calendars.add(value);

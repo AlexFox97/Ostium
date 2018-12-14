@@ -6,8 +6,7 @@ public class eventGeneric {
     private String description;
     private String startTime;
     private String endTime;
-    private Float longitude;
-    private Float latitude;
+    private Place location;
 
     public eventGeneric(String title, String eventType)
     {
@@ -17,8 +16,7 @@ public class eventGeneric {
 
     public void setLocation(Float longi,Float lati)
     {
-        longitude = longi;
-        latitude = lati;
+        //Set location in place
     }
 
     public void setDescription(String description) {
@@ -51,13 +49,5 @@ public class eventGeneric {
 
     public String getEndTime() {
         return endTime;
-    }
-
-    public Float getLongitude() {
-        return longitude;
-    }
-
-    public Float getLatitude() {
-        return latitude;
     }
 }

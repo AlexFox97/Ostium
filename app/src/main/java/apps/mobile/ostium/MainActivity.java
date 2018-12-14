@@ -12,8 +12,13 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import apps.mobile.ostium.Module.eventGeneric;
 
+import java.text.DateFormat;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //        Main Activity
@@ -32,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle t;
     private NavigationView nv;
 
+    public ArrayList<eventGeneric> userEvents = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
 //        actionBar.setDisplayShowTitleEnabled(false); // Hide the action bar title
 //        actionBar.setDisplayHomeAsUpEnabled(true);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //LOAD EVENTS FROM SAVED EVENTS
+
+
+
 
         // region Drawer - onCreate
         dl = findViewById(R.id.activity_main);
@@ -198,14 +210,17 @@ public class MainActivity extends AppCompatActivity {
     private List<CardInfo> createCardList(int size) {
 
         List<CardInfo> result = new ArrayList<CardInfo>();
-        for (int i = 1; i <= size; i++) {
+        for (eventGeneric item : userEvents) {
             CardInfo ci = new CardInfo();
 //            ci.name = (CardInfo.NAME_PREFIX) + " title title title title title title title title title title title title title title title title title title title title title title title title title title title title title title title title " + i;
 //            ci.surname = CardInfo.SURNAME_PREFIX + " content content content content content content content content content content content content content content content content content content content content content content content"+ i;
 //            ci.email = CardInfo.EMAIL_PREFIX + " other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other "+i + "@test.com";
-            ci.title = "Buy Almond milk, bread and bananas";
-            ci.details = "get gluten free bread!!";
-            ci.date = "03/12/2018";
+            ci.title = item.getTitle();
+            ci.details = item.getDescription();
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+
+            ci.date = dateFormat.format(new Date(Long.parseLong(item.getStartTime())));
             result.add(ci);
 
         }
