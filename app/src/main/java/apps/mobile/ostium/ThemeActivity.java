@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
-public class SettingsActivity extends AppCompatActivity {
+public class ThemeActivity extends AppCompatActivity {
     private Spinner spThemes;
 
     // Here we set the theme for the activity
@@ -17,7 +17,7 @@ public class SettingsActivity extends AppCompatActivity {
         // MUST BE SET BEFORE setContentView
         Utils.onActivityCreateSetTheme(this);
         // AFTER SETTING THEME
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_theme);
         setupSpinnerItemSelection();
     }
 
@@ -32,7 +32,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 if (ThemeApplication.currentPosition != position) {
-                    Utils.changeToTheme(SettingsActivity.this, position);
+                    Utils.changeToTheme(ThemeActivity.this, position);
                 }
                 ThemeApplication.currentPosition = position;
             }

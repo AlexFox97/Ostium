@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android = "http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    xmlns:tools = "http://schemas.android.com/tools"
+    tools:context = ".MainActivity"
+    >
+
+    <group android:id = "@+id/group_main_only">
+        <item
+            android:icon = "@drawable/ic_menu_white_24dp"
+            android:id = "@+id/action_drawer"
+            android:orderInCategory = "100"
+            android:title = "Drawer"
+            />
+    </group>
+
+    <group android:id = "@+id/group_non_main_only">
+        <item
+            android:icon = "@drawable/ic_arrow_back_black_24dp"
+            android:id = "@+id/action_back"
+            android:orderInCategory = "101"
+            android:title = "Back"
+            />
+    </group>
+
+    <item
+        android:id = "@+id/action_title"
+        android:orderInCategory = "200"
+        android:title = "Ostium"
+        app:showAsAction = "withText"
+        />
+
+    <item
+        android:id = "@+id/action_settings"
+        android:orderInCategory = "201"
+        android:title = "@string/action_settings"
+        app:showAsAction = "never"
+        />
+    <item
+        android:icon = "@drawable/ic_search_black_24dp"
+        android:id = "@+id/action_search"
+        android:orderInCategory = "202"
+        android:title = "Search"
+        app:showAsAction = "ifRoom"
+
+        />
+    <item
+        android:icon = "@drawable/ic_notifications_black_24dp"
+        android:id = "@+id/action_notification_settings"
+        android:orderInCategory = "203"
+        android:title = "Notifications"
+        app:showAsAction = "ifRoom"
+
+        />
+</menu>

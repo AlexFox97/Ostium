@@ -11,14 +11,14 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class LocationActivity extends AppCompatActivity implements recyclerViewAdapter.ItemClickListener {
+public class SettingActivity extends AppCompatActivity implements recyclerViewAdapter.ItemClickListener {
 
     recyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_location);
+        setContentView(R.layout.activity_setting);
 
         //region Layout
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -28,17 +28,17 @@ public class LocationActivity extends AppCompatActivity implements recyclerViewA
 
         //region Main
         // data to populate the RecyclerView with
-        ArrayList<String> locationSampleNames = new ArrayList<>();
-        locationSampleNames.add("Home");
-        locationSampleNames.add("Work");
-        locationSampleNames.add("Gym");
-        locationSampleNames.add("Uni");
-        locationSampleNames.add("Shop");
+        ArrayList<String> listData = new ArrayList<>();
+        listData.add("Home");
+        listData.add("Work");
+        listData.add("Gym");
+        listData.add("Uni");
+        listData.add("Shop");
 
         // set up the RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.LocationList);
+        RecyclerView recyclerView = findViewById(R.id.SettingsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new recyclerViewAdapter(this, locationSampleNames);
+        adapter = new recyclerViewAdapter(this, listData);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
         //endregion Main

@@ -21,7 +21,7 @@
     <string name="devTwoScreenName">DevTwo</string>
     <string name="devThreeScreenName">DevThree</string>
     <string name="devOneScreenName">DevOne</string>
-    <string name="locationScreenName">Location</string>
+    <string name = "locationScreenName">Locations</string>
     <string name="homeScreenName">Home</string>
     <string name="settingsScreenName">Settings</string>
 
