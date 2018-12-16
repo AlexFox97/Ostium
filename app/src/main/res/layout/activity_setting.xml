@@ -5,7 +5,7 @@
     xmlns:tools = "http://schemas.android.com/tools"
     android:layout_height = "match_parent"
     android:layout_width = "match_parent"
-    tools:context = ".LocationActivity"
+    tools:context = ".SettingActivity"
     >
 
     <android.support.design.widget.AppBarLayout
@@ -26,7 +26,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id = "@+id/LocationList"
+        android:id = "@+id/SettingsList"
         android:layout_height = "0dp"
         android:layout_marginBottom = "8dp"
         android:layout_marginEnd = "8dp"

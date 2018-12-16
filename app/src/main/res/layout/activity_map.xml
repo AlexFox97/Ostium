@@ -1,94 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:map="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent">
+<android.support.constraint.ConstraintLayout
+    xmlns:android = "http://schemas.android.com/apk/res/android"
+    xmlns:map = "http://schemas.android.com/apk/res-auto"
+    xmlns:tools = "http://schemas.android.com/tools"
+    android:id = "@+id/relativeLayout"
+    android:layout_height = "match_parent"
+    android:layout_width = "match_parent"
+    >
 
+    <android.support.design.widget.AppBarLayout
+        android:id = "@+id/nav_map_toolbar"
+        android:layout_height = "wrap_content"
+        android:layout_width = "0dp"
+        map:layout_constraintEnd_toEndOf = "parent"
+        map:layout_constraintStart_toStartOf = "parent"
+        map:layout_constraintTop_toTopOf = "parent"
+        >
+
+        <android.support.v7.widget.Toolbar
+            android:background = "?attr/colorPrimary"
+            android:elevation = "4dp"
+            android:id = "@+id/toolbar"
+            android:layout_height = "wrap_content"
+            android:layout_width = "match_parent"
+            android:theme = "@style/ThemeOverlay.AppCompat.ActionBar"
+            />
+    </android.support.design.widget.AppBarLayout>
 
     <EditText
-        android:id="@+id/TF_location"
-        android:layout_width="280dp"
-        android:layout_height="45dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Search for Saved Place"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true" />
+        android:ems = "10"
+        android:hint = "Search for Saved Place"
+        android:id = "@+id/TF_location"
+        android:imeOptions = "actionDone"
+        android:inputType = "textPersonName"
+        android:layout_height = "wrap_content"
+        android:layout_marginStart = "8dp"
+        android:layout_marginTop = "8dp"
+        android:layout_width = "wrap_content"
+        android:singleLine = "true"
+        map:layout_constraintStart_toStartOf = "parent"
+        map:layout_constraintTop_toBottomOf = "@+id/B_work"
+        />
+
+    <!-- change: delete this -->
+    <Button
+        android:id = "@+id/B_search"
+        android:layout_height = "wrap_content"
+        android:layout_marginEnd = "8dp"
+        android:layout_marginStart = "8dp"
+        android:layout_marginTop = "8dp"
+        android:layout_width = "wrap_content"
+        android:onClick = "onSearch"
+        android:text = "Search"
+        map:layout_constraintEnd_toEndOf = "parent"
+        map:layout_constraintStart_toEndOf = "@+id/TF_location"
+        map:layout_constraintTop_toBottomOf = "@+id/B_type"
+        />
+
+    <fragment
+        xmlns:android = "http://schemas.android.com/apk/res/android"
+        xmlns:map = "http://schemas.android.com/apk/res-auto"
+        xmlns:tools = "http://schemas.android.com/tools"
+        android:id = "@+id/map"
+        android:layout_height = "0dp"
+        android:layout_marginBottom = "8dp"
+        android:layout_marginEnd = "8dp"
+        android:layout_marginStart = "8dp"
+        android:layout_marginTop = "8dp"
+        android:layout_width = "0dp"
+        android:name = "com.google.android.gms.maps.SupportMapFragment"
+        tools:context = ".MapActivity"
+        map:cameraBearing = "112.5"
+        map:cameraTilt = "30"
+        map:cameraZoom = "17"
+        map:layout_constraintBottom_toBottomOf = "parent"
+        map:layout_constraintEnd_toEndOf = "parent"
+        map:layout_constraintStart_toStartOf = "parent"
+        map:layout_constraintTop_toBottomOf = "@+id/TF_location"
+        map:mapType = "normal"
+        map:uiRotateGestures = "true"
+        map:uiScrollGestures = "false"
+        map:uiTiltGestures = "true"
+        map:uiZoomControls = "true"
+        map:uiZoomGestures = "true"
+        />
 
     <Button
-        android:id="@+id/B_search"
-        android:layout_width="110dp"
-        android:layout_height="45dp"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/TF_location"
-        android:layout_toRightOf="@+id/TF_location"
-        android:onClick="onSearch"
-        android:text="Search"/>
-
-
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        map:cameraBearing="112.5"
-        map:cameraTilt="30"
-        map:cameraZoom="17"
-        map:mapType="normal"
-        map:uiRotateGestures="true"
-        map:uiScrollGestures="false"
-        map:uiTiltGestures="true"
-        map:uiZoomControls="true"
-        map:uiZoomGestures="true"
-        tools:context=".MapActivity"
-        android:layout_below="@id/B_places"/>
+        android:id = "@+id/B_places"
+        android:layout_height = "wrap_content"
+        android:layout_marginTop = "8dp"
+        android:layout_width = "wrap_content"
+        android:onClick = "onClick"
+        android:text = "Places"
+        map:layout_constraintEnd_toStartOf = "@+id/B_type"
+        map:layout_constraintHorizontal_bias = "0.5"
+        map:layout_constraintStart_toEndOf = "@+id/B_work"
+        map:layout_constraintTop_toBottomOf = "@+id/nav_map_toolbar"
+        />
 
     <Button
-        android:id="@+id/B_places"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/TF_location"
-        android:layout_alignParentLeft="true"
-        android:onClick="onClick"
-        android:text="Places"/>
+        android:id = "@+id/B_work"
+        android:layout_height = "wrap_content"
+        android:layout_marginTop = "8dp"
+        android:layout_width = "wrap_content"
+        android:onClick = "onClick"
+        android:text = "Work"
+        map:layout_constraintEnd_toStartOf = "@+id/B_places"
+        map:layout_constraintHorizontal_bias = "0.5"
+        map:layout_constraintStart_toEndOf = "@+id/B_shops"
+        map:layout_constraintTop_toBottomOf = "@+id/nav_map_toolbar"
+        />
 
     <Button
-        android:id="@+id/B_work"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/TF_location"
-        android:layout_toEndOf="@id/B_places"
-        android:layout_toRightOf="@id/B_places"
-        android:onClick="onClick"
-        android:text="Work" />
+        android:id = "@+id/B_shops"
+        android:layout_height = "wrap_content"
+        android:layout_marginTop = "8dp"
+        android:layout_width = "wrap_content"
+        android:onClick = "onClick"
+        android:text = "Shops"
+        map:layout_constraintEnd_toStartOf = "@+id/B_work"
+        map:layout_constraintHorizontal_bias = "0.5"
+        map:layout_constraintStart_toStartOf = "parent"
+        map:layout_constraintTop_toBottomOf = "@+id/nav_map_toolbar"
+        />
 
     <Button
-        android:id="@+id/B_shops"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/TF_location"
-        android:layout_toEndOf="@id/B_work"
-        android:layout_toRightOf="@id/B_work"
-        android:onClick="onClick"
-        android:text="Shops" />
+        android:id = "@+id/B_type"
+        android:layout_height = "wrap_content"
+        android:layout_marginTop = "8dp"
+        android:layout_width = "wrap_content"
+        android:onClick = "changeType"
+        android:text = "Type"
+        map:layout_constraintEnd_toEndOf = "parent"
+        map:layout_constraintHorizontal_bias = "0.5"
+        map:layout_constraintStart_toEndOf = "@+id/B_places"
+        map:layout_constraintTop_toBottomOf = "@+id/nav_map_toolbar"
+        />
 
-    <Button
-        android:id="@+id/B_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/B_shops"
-        android:layout_toEndOf="@id/B_shops"
-        android:layout_toRightOf="@id/B_shops"
-        android:onClick="changeType"
-        android:text="Type" />
-
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

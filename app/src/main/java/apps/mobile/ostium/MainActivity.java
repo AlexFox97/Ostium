@@ -1,15 +1,19 @@
 package apps.mobile.ostium;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -26,70 +30,29 @@ import java.util.List;
 //        Dev Activity Three
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String LogTagClass = MainActivity.class.getSimpleName();
-    private DrawerLayout dl;
-    private ActionBarDrawerToggle t;
-    private NavigationView nv;
+    private DrawerLayout drawer;
+    private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        ActionBar actionBar = getActionBar();
-//        actionBar.setDisplayShowTitleEnabled(false); // Hide the action bar title
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        // region Drawer - onCreate
-        dl = findViewById(R.id.activity_main);
-        t = new ActionBarDrawerToggle(this, dl, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
 
-        dl.addDrawerListener(t);
-        t.syncState();
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        nv = (NavigationView) findViewById(R.id.nv);
-        nv.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        int id = item.getItemId();
-                        switch (id) {
-                            case R.id.nav_home:
-                                gotoHome(nv);
-                                break;
-                            case R.id.nav_location:
-                                gotoLocation(nv);
-                                break;
-                            case R.id.nav_map:
-                                gotoMap(nv);
-                                break;
-                            case R.id.nav_settings:
-                                gotoSettings(nv);
-                                break;
-                            case R.id.nav_dev_one:
-                                gotoDevOne(nv);
-                                break;
-                            case R.id.nav_dev_two:
-                                gotoDevTwo(nv);
-                                break;
-                            case R.id.nav_dev_three:
-                                gotoDevThree(nv);
-                                break;
-                            default:
-                                return true;
-                        }
-                        return false;
-                    }
-                }
-
-
-        );
-
-        // endregion Drawer
 
         // region CardRecycler - onCreate
         RecyclerView recCardList = (RecyclerView) findViewById(R.id.cardList);
@@ -113,86 +76,85 @@ public class MainActivity extends AppCompatActivity {
 
         // endregion Recycler
 
-//        //region extra recyclers
-//        // region Recycler - onCreate
-//        RecyclerView recList1 = (RecyclerView) findViewById(R.id.cardList2);
-//        recList1.setHasFixedSize(true);
-//        LinearLayoutManager llm1 = new LinearLayoutManager(this);
-//        llm.setOrientation(LinearLayoutManager.VERTICAL);
-//        recList1.setLayoutManager(llm1);
-//
-//        CardAdapter ca1 = new CardAdapter(createCardList(3));
-//        recList1.setAdapter(ca1);
-//
-//        // region Recycler - onCreate
-//        RecyclerView recList2 = (RecyclerView) findViewById(R.id.cardList3);
-//        recList2.setHasFixedSize(true);
-//        LinearLayoutManager llm2 = new LinearLayoutManager(this);
-//        llm.setOrientation(LinearLayoutManager.VERTICAL);
-//        recList2.setLayoutManager(llm);
-//
-//        CardAdapter ca2 = new CardAdapter(createCardList(3));
-//        recList2.setAdapter(ca2);
-//
-//        // region Recycler - onCreate
-//        RecyclerView recList3 = (RecyclerView) findViewById(R.id.cardList4);
-//        recList3.setHasFixedSize(true);
-//        LinearLayoutManager llm3 = new LinearLayoutManager(this);
-//        llm.setOrientation(LinearLayoutManager.VERTICAL);
-//        recList3.setLayoutManager(llm3);
-//
-//        CardAdapter ca3 = new CardAdapter(createCardList(3));
-//        recList3.setAdapter(ca3);
-
-
-        //endregion extra recyclers
+        int currentOrientation = getResources().getConfiguration().orientation;
+        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        }
     }
 
-    //region Drawer Methods
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (t.onOptionsItemSelected(item))
+//        if (mdrawerLayout.isDrawerOpen(GravityCompat.START)) {
+//            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
+//            drawer.closeDrawer(GravityCompat.START);
+//
+//        }
+//        switch (item.getItemId()) {
+//            // This is the up button
+//            case android.R.id.home:
+//                mdrawerLayout.openDrawer(GravityCompat.START);
+//                // overridePendingTransition(R.animator.anim_left, R.animator.anim_right);
+//                return true;
+//        }
+        if (toggle.onOptionsItemSelected(item))
             return true;
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void gotoHome(View view) {
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        toggle.syncState();
+    }
+
+    //region Drawer Methods
+
+    public void goToHome(View view) {
         Log.d(LogTagClass, "Button Home clicked!");
         startActivity(new Intent(this, MainActivity.class));
     }
 
-    public void gotoSettings(View view) {
+    public void goToSettings(View view) {
         Log.d(LogTagClass, "Button Settings clicked!");
-        startActivity(new Intent(this, SettingsActivity.class));
+        startActivity(new Intent(this, SettingActivity.class));
     }
 
-    public void gotoLocation(View view) {
+    public void goToLocation(View view) {
         Log.d(LogTagClass, "Button Location clicked!");
         startActivity(new Intent(this, LocationActivity.class));
     }
 
-    public void gotoMap(View view) {
+    public void goToMap(View view) {
         Log.d(LogTagClass, "Button Map clicked!");
         startActivity(new Intent(this, MapActivity.class));
     }
 
-    public void gotoDevOne(View view) {
+    public void goToDevOne(View view) {
         Log.d(LogTagClass, "Button Dev One clicked!");
         startActivity(new Intent(this, DevActivityOne.class));
     }
 
-    public void gotoDevTwo(View view) {
+    public void goToDevTwo(View view) {
         Log.d(LogTagClass, "Button Dev Two clicked!");
         startActivity(new Intent(this, DevActivityTwo.class));
     }
 
-    public void gotoDevThree(View view) {
+    public void goToDevThree(View view) {
         Log.d(LogTagClass, "Button Dev Three clicked!");
         startActivity(new Intent(this, DevActivityThree.class));
     }
     //endregion Drawer
+
+    // Activity's overrided method used to set the menu file
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activity_main_toolbar, menu);
+        return true;
+    }
 
 
     private List<CardInfo> createCardList(int size) {
@@ -225,4 +187,28 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_location) {
+            goToLocation(navigationView);
+        } else if (id == R.id.nav_map) {
+            goToMap(navigationView);
+        } else if (id == R.id.nav_settings) {
+            goToSettings(navigationView);
+        } else if (id == R.id.nav_dev_one) {
+            goToDevOne(navigationView);
+        } else if (id == R.id.nav_dev_two) {
+            goToDevTwo(navigationView);
+        } else if (id == R.id.nav_dev_three) {
+            goToDevThree(navigationView);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 }
