@@ -1,9 +1,16 @@
 package apps.mobile.ostium;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,8 +19,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import apps.mobile.ostium.Module.CalendarProviderIntentService;
 import apps.mobile.ostium.Module.eventGeneric;
 
+import java.io.ObjectInputStream;
 import java.text.DateFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -37,7 +46,13 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle t;
     private NavigationView nv;
 
-    public ArrayList<eventGeneric> userEvents = new ArrayList<>();
+    private static final int PermissionCorrect = 1;
+
+    public static ArrayList<eventGeneric> userSelectedEvents = new ArrayList<>();
+
+    public ArrayList<eventGeneric> userCalendarEvents = new ArrayList<>();
+
+    CalendarResultReceiver calendarResultHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         //LOAD EVENTS FROM SAVED EVENTS
 
 
-
+        getEventList();
 
         // region Drawer - onCreate
         dl = findViewById(R.id.activity_main);
@@ -210,15 +225,16 @@ public class MainActivity extends AppCompatActivity {
     private List<CardInfo> createCardList(int size) {
 
         List<CardInfo> result = new ArrayList<CardInfo>();
-        for (eventGeneric item : userEvents) {
+        for (eventGeneric item : userSelectedEvents) {
             CardInfo ci = new CardInfo();
-//            ci.name = (CardInfo.NAME_PREFIX) + " title title title title title title title title title title title title title title title title title title title title title title title title title title title title title title title title " + i;
-//            ci.surname = CardInfo.SURNAME_PREFIX + " content content content content content content content content content content content content content content content content content content content content content content content"+ i;
-//            ci.email = CardInfo.EMAIL_PREFIX + " other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other "+i + "@test.com";
+//            ci.name = (CardInfo.NAME_PREFIX) + " title " + i;
+//            ci.surname = CardInfo.SURNAME_PREFIX + ""+ i;
+//            ci.email = CardInfo.EMAIL_PREFIX + "other "+i + "@test.com";
+
             ci.title = item.getTitle();
             ci.details = item.getDescription();
 
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+            DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy hh:mm:ss");
 
             ci.date = dateFormat.format(new Date(Long.parseLong(item.getStartTime())));
             result.add(ci);
@@ -238,6 +254,71 @@ public class MainActivity extends AppCompatActivity {
             result.add(ci);
         }
         return result;
+    }
+
+    public void addEvent(View v)
+    {
+        //On click of text in main activity
+        //TODO: Show AlertDialog to select an event and then set location and return
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Please select an event:");
+
+        String[] eventsList = {};
+
+        builder.setSingleChoiceItems(eventsList, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+
+    }
+
+    private void getEventList()
+    {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, PermissionCorrect);
+        }
+
+        calendarResultHandler = new CalendarResultReceiver(new Handler());
+
+        Intent startIntent = new Intent(this, CalendarProviderIntentService.class);
+        startIntent.putExtra("receiver", calendarResultHandler);
+        startService(startIntent);
+
+    }
+
+    private class CalendarResultReceiver extends ResultReceiver
+    {
+        public CalendarResultReceiver(Handler handler)
+        {
+            super(handler);
+        }
+
+        protected void onReceiveResult(int resultCode, Bundle resultData)
+        {
+            switch(resultCode)
+            {
+                case CalendarProviderIntentService.RETRIEVE_SUCCESS:
+
+
+                    if(resultData != null)
+                        userCalendarEvents = ((ArrayList) resultData.getSerializable("events"));
+
+                    break;
+
+                case CalendarProviderIntentService.RETRIEVE_ERROR:
+                    //TODO: Handle failure
+
+            }
+            super.onReceiveResult(resultCode, resultData);
+        }
+
+
     }
 
 }

@@ -41,6 +41,13 @@ public class CalendarProviderIntentService extends IntentService
         // Create bundle to store data to send back
         Bundle bundle = new Bundle();
 
+        ArrayList<String> tempIn = new ArrayList<>();
+        tempIn.add("4");
+
+        ArrayList<eventGeneric> events = getEvents(tempIn);
+
+        bundle.putSerializable("events", events);
+
         /*
          * Send data back to UI
          * TODO: Implement success and fail cases for receiver.send
@@ -49,7 +56,7 @@ public class CalendarProviderIntentService extends IntentService
     }
 
     @SuppressLint("MissingPermission")
-    private ArrayList getEvents(ArrayList<Integer> calendarIDs)
+    private ArrayList getEvents(ArrayList<String> calendarIDs)
     {
 
         ArrayList<eventGeneric> returnList = new ArrayList<>();
@@ -69,7 +76,7 @@ public class CalendarProviderIntentService extends IntentService
 
         Uri uri = CalendarContract.Events.CONTENT_URI;
 
-        for(Integer item : calendarIDs) {
+        for(String item : calendarIDs) {
             //Suppressing check for permissions here, all permissions should be granted before this function is called
             cur = cr.query(uri, mProjection, CalendarContract.Events.CALENDAR_ID + " =  '" + item + "'", null, null);
 

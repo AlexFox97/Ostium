@@ -31,9 +31,7 @@ public class DevActivityOne extends AppCompatActivity
     private final int GPSPingTime = 2000;
     private final int GPSDistance = 0;
 
-    CalendarResultReceiver calendarResultHandler;
 
-    private ArrayList<String> eventTitles = new ArrayList<>();
 
     private TextView t;
     private GPSModule GPS;
@@ -50,59 +48,7 @@ public class DevActivityOne extends AppCompatActivity
         //initializeCal();
     }
 
-    private void initializeCal()
-    {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, PermissionCorrect);
-        }
 
-        calendarResultHandler = new CalendarResultReceiver(new Handler());
-
-        Intent startIntent = new Intent(MainActivity.this, CalendarProviderIntentService.class);
-        startIntent.putExtra("receiver", calendarResultHandler);
-        startService(startIntent);
-
-    }
-
-    private class CalendarResultReceiver extends ResultReceiver
-    {
-        public CalendarResultReceiver(Handler handler)
-        {
-            super(handler);
-        }
-
-        protected void onReceiveResult(int resultCode, Bundle resultData)
-        {
-            switch(resultCode)
-            {
-                case CalendarProviderIntentService.RETRIEVE_SUCCESS:
-
-                    Integer eventCount = resultData.getInt("eventCount");
-
-                    for(int i = 1; i <= eventCount; i++)
-                    {
-                        String key = Integer.toString(i);
-                        eventTitles.add(resultData.getString(key));
-                    }
-
-                    for(String item: eventTitles)
-                    {
-
-                        t.append("\n" + item);
-                    }
-
-                    break;
-
-                case CalendarProviderIntentService.RETRIEVE_ERROR:
-                    t.setText("Loser");
-
-            }
-            super.onReceiveResult(resultCode, resultData);
-        }
-
-
-    }
 
 
     private void initializeGPS()

@@ -1,7 +1,7 @@
 <resources>
 
     <!--Themes-->
-    <style name="Theme.Ostium" parent="Theme.AppCompat.NoActionBar">
+    <style name="Theme.Ostium" parent="Base.Theme.AppCompat.Light">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
@@ -12,6 +12,8 @@
         <item name="android:textColorSecondary">@color/secondary_text1</item>
         <item name="android:icon">@color/icons1</item>
         <item name="android:divider">@color/divider1</item>
+        <item name="navigationViewStyle">@style/Widget.Design.NavigationView</item>
+
     </style>
 
     <style name="Theme.Ostium_Dark" parent="Theme.AppCompat.NoActionBar">
