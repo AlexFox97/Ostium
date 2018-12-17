@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="apps.mobile.ostium">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="apps.mobile.ostium"
+    >
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -16,37 +18,108 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat">
+        android:theme = "@style/Ostium_Light_2"
+
+
+        tools:ignore="GoogleAppIndexingWarning"
+        >
+
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"
+            />
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name = ".MainActivity"
+            android:theme = "@style/Ostium_Light_2"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name = ".SettingActivity"
+            android:label="SettingsActivity"
+            android:parentActivityName=".MainActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="apps.mobile.ostium.MainActivity"
+                />
+        </activity>
+        <activity
+            android:name=".LocationActivity"
+            android:label="LocationActivity"
+            android:parentActivityName=".MainActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="apps.mobile.ostium.MainActivity"
+                />
+        </activity>
+        <activity
+            android:name=".DevActivityOne"
+            android:label="DevActivityOne"
+            android:parentActivityName=".MainActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="apps.mobile.ostium.MainActivity"
+                />
+        </activity>
+        <activity
+            android:name=".DevActivityTwo"
+            android:label="DevActivityTwo"
+            android:parentActivityName=".MainActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="apps.mobile.ostium.MainActivity"
+                />
+        </activity>
+        <activity
+            android:name=".DevActivityThree"
+            android:label="DevActivityThree"
+            android:parentActivityName=".MainActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="apps.mobile.ostium.MainActivity"
+                />
+        </activity>
+        <activity
+            android:name=".MapActivity"
+
+            android:label="MapActivity"
+            android:parentActivityName=".LocationActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="apps.mobile.ostium.LocationActivity"
+                />
+        </activity>
 
         <service
-            android:name=".Module.androidCalendarHandle"
-            android:exported="false"/>
-      <!--
-             The API key for Google Maps-based APIs is defined as a string resource.
-             (See the file "res/values/google_maps_api.xml").
-             Note that the API key is linked to the encryption key used to sign the APK.
-             You need a different API key for each encryption key, including the release key that is used to
-             sign the APK for publishing.
-             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
-        -->
+
+            android:name=".Module.CalendarProviderIntentService"
+            android:exported="false"
+            />
+        <!--
+               The API key for Google Maps-based APIs is defined as a string resource.
+               (See the file "res/values/google_maps_api.xml").
+               Note that the API key is linked to the encryption key used to sign the APK.
+               You need a different API key for each encryption key, including the release key that is used to
+               sign the APK for publishing.
+               You can define the keys for the debug and release targets in src/debug/ and src/release/.
+          -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="@string/google_maps_key"
+            />
 
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+
     </application>
 
 </manifest>

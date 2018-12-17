@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android = "http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    xmlns:tools = "http://schemas.android.com/tools"
+    android:layout_height = "match_parent"
+    android:layout_width = "match_parent"
+    tools:context = ".SettingActivity"
+    tools:layout_editor_absoluteY = "25dp"
+    >
+
+    <android.support.design.widget.AppBarLayout
+        android:id = "@+id/nav_settings_toolbar"
+        android:layout_height = "wrap_content"
+        android:layout_width = "0dp"
+        app:layout_constraintEnd_toEndOf = "parent"
+        app:layout_constraintStart_toStartOf = "parent"
+        app:layout_constraintTop_toTopOf = "parent"
+        >
+
+        <android.support.v7.widget.Toolbar
+            android:elevation = "4dp"
+            android:id = "@+id/toolbar"
+            android:layout_height = "wrap_content"
+            android:layout_width = "match_parent"
+            />
+    </android.support.design.widget.AppBarLayout>
+
+    <TextView
+        android:id = "@+id/tvSelectTheme"
+        android:layout_height = "wrap_content"
+        android:layout_width = "0dp"
+        android:text = "@string/settings_text_select_theme"
+        app:layout_constraintEnd_toEndOf = "parent"
+        app:layout_constraintStart_toStartOf = "parent"
+        app:layout_constraintTop_toBottomOf = "@+id/nav_settings_toolbar"
+        style = "?textLarge"
+        />
+
+    <Spinner
+        android:entries = "@array/theme_array"
+        android:id = "@+id/spThemes"
+        android:layout_alignBaseline = "@+id/tvSelectTheme"
+        android:layout_alignParentRight = "true"
+        android:layout_height = "wrap_content"
+        android:layout_marginTop = "24dp"
+        android:layout_toRightOf = "@+id/tvSelectTheme"
+        android:layout_width = "0dp"
+        android:spinnerMode = "dropdown"
+        app:layout_constraintEnd_toEndOf = "parent"
+        app:layout_constraintHorizontal_bias = "0.5"
+        app:layout_constraintStart_toStartOf = "parent"
+        app:layout_constraintTop_toBottomOf = "@+id/tvSelectTheme"
+        style = "?spinner"
+        />
+
+    <RelativeLayout
+        android:id = "@+id/rlCredentials"
+        android:layout_below = "@+id/tvSelectTheme"
+        android:layout_height = "wrap_content"
+        android:layout_marginTop = "25dp"
+        android:layout_width = "wrap_content"
+        app:layout_constraintEnd_toEndOf = "parent"
+        app:layout_constraintHorizontal_bias = "0.5"
+        app:layout_constraintStart_toStartOf = "parent"
+        app:layout_constraintTop_toBottomOf = "@+id/spThemes"
+        >
+
+        <TextView
+            android:id = "@+id/tvCredentials"
+            android:layout_height = "wrap_content"
+            android:layout_width = "wrap_content"
+            android:text = "@string/settings_text_credentials"
+            />
+
+        <EditText
+            android:hint = "@string/settings_text_username_hint"
+            android:id = "@+id/tvUsername"
+            android:inputType = "text"
+            android:layout_below = "@+id/tvCredentials"
+            android:layout_height = "wrap_content"
+            android:layout_width = "match_parent"
+            android:lines = "1"
+            />
+
+        <EditText
+            android:hint = "@string/settings_text_password_hint"
+            android:id = "@+id/tvpassword"
+            android:inputType = "textPassword"
+            android:layout_below = "@+id/tvUsername"
+            android:layout_height = "wrap_content"
+            android:layout_width = "match_parent"
+            android:lines = "1"
+            />
+    </RelativeLayout>
+
+    <TextView
+        android:id = "@+id/tvSync"
+        android:layout_below = "@+id/rlCredentials"
+        android:layout_height = "wrap_content"
+        android:layout_marginBottom = "30dp"
+        android:layout_marginTop = "25dp"
+        android:layout_width = "wrap_content"
+        android:text = "@string/settings_text_sync_automatically"
+        android:textSize = "17sp"
+        app:layout_constraintBottom_toTopOf = "@+id/checkbox_sync_automatically"
+        app:layout_constraintEnd_toEndOf = "parent"
+        app:layout_constraintHorizontal_bias = "0.5"
+        app:layout_constraintStart_toStartOf = "parent"
+        app:layout_constraintTop_toBottomOf = "@+id/rlCredentials"
+        />
+
+    <CheckBox
+        android:checked = "true"
+        android:id = "@+id/checkbox_sync_automatically"
+        android:layout_alignBaseline = "@+id/tvSync"
+        android:layout_alignParentRight = "true"
+        android:layout_height = "wrap_content"
+        android:layout_marginBottom = "30dp"
+        android:layout_marginTop = "25dp"
+        android:layout_width = "wrap_content"
+        app:layout_constraintBottom_toTopOf = "@+id/tvLocation"
+        app:layout_constraintEnd_toEndOf = "parent"
+        app:layout_constraintHorizontal_bias = "0.5"
+        app:layout_constraintStart_toStartOf = "parent"
+        app:layout_constraintTop_toBottomOf = "@+id/tvSync"
+        />
+
+    <TextView
+        android:id = "@+id/tvLocation"
+        android:layout_below = "@+id/tvSync"
+        android:layout_height = "wrap_content"
+        android:layout_marginBottom = "30dp"
+        android:layout_marginTop = "25dp"
+        android:layout_width = "wrap_content"
+        android:text = "@string/settings_text_location"
+        android:textSize = "17sp"
+        app:layout_constraintBottom_toTopOf = "@+id/toggle_google"
+        app:layout_constraintEnd_toEndOf = "parent"
+        app:layout_constraintHorizontal_bias = "0.5"
+        app:layout_constraintStart_toStartOf = "parent"
+        app:layout_constraintTop_toBottomOf = "@+id/checkbox_sync_automatically"
+        />
+
+    <Switch
+        android:id = "@+id/toggle_google"
+        android:layout_alignBaseline = "@+id/tvLocation"
+        android:layout_alignParentRight = "true"
+        android:layout_height = "wrap_content"
+        android:layout_marginBottom = "31dp"
+        android:layout_marginTop = "25dp"
+        android:layout_toRightOf = "@+id/tvLocation"
+        android:layout_width = "wrap_content"
+        android:textOff = "@string/settings_text_state_off"
+        android:textOn = "@string/settings_text_state_on"
+        app:layout_constraintBottom_toTopOf = "@+id/btnClearData"
+        app:layout_constraintEnd_toEndOf = "parent"
+        app:layout_constraintHorizontal_bias = "0.5"
+        app:layout_constraintStart_toStartOf = "parent"
+        app:layout_constraintTop_toBottomOf = "@+id/tvLocation"
+        />
+
+    <Button
+        android:id = "@+id/btnClearData"
+        android:layout_alignParentBottom = "true"
+        android:layout_centerHorizontal = "true"
+        android:layout_height = "wrap_content"
+        android:layout_marginBottom = "160dp"
+        android:layout_marginTop = "25dp"
+        android:layout_width = "wrap_content"
+        android:text = "@string/settings_text_clear_data"
+        app:layout_constraintBottom_toBottomOf = "parent"
+        app:layout_constraintEnd_toEndOf = "parent"
+        app:layout_constraintHorizontal_bias = "0.5"
+        app:layout_constraintStart_toStartOf = "parent"
+        app:layout_constraintTop_toBottomOf = "@+id/toggle_google"
+        />
+
+</android.support.constraint.ConstraintLayout>

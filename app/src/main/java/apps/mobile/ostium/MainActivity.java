@@ -1,149 +1,214 @@
 package apps.mobile.ostium;
 
-import android.app.NotificationManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import Objects.Request.GetLocationRequest;
-import apps.mobile.ostium.Module.GPSModule;
-import apps.mobile.ostium.Module.NotificationModule;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity
-{
-    private static final int PermissionCorrect = 1;
-    private final int GPSPingTime = 2000;
-    private final int GPSDistance = 0;
+//        Main Activity
+//        Home Activity
+//        Settings Activity
+//        Location Activity
+//        Map Activity
+//        Dev Activity One
+//        Dev Activity Two
+//        Dev Activity Three
 
-    private TextView t;
 
-    private GPSModule GPS;
-    private NotificationModule notifications;
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String LogTagClass = MainActivity.class.getSimpleName();
+    private DrawerLayout drawer;
+    private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initializeGPS();
-        initializeNotifications();
-        //initializeCal();
-    }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-    private void initializeNotifications()
-    {
-        // setup a new channel for R26 <
-        NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        notifications = new NotificationModule(notificationManager, this);
-    }
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
 
-    private void initializeCal()
-    {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, PermissionCorrect);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+        // region CardRecycler - onCreate
+        RecyclerView recCardList = (RecyclerView) findViewById(R.id.cardList);
+        recCardList.setHasFixedSize(true);
+        LinearLayoutManager llmCard = new LinearLayoutManager(this);
+        llmCard.setOrientation(LinearLayoutManager.VERTICAL);
+        recCardList.setLayoutManager(llmCard);
+
+        CardAdapter ca = new CardAdapter(createCardList(8));
+        recCardList.setAdapter(ca);
+
+        // region ListRecycler - onCreate
+//        RecyclerView recTagList = (RecyclerView) recCardList.findViewById(R.id.tagList);
+//        recTagList.setHasFixedSize(true);
+//        LinearLayoutManager llmTag = new LinearLayoutManager(this);
+//        llmTag.setOrientation(LinearLayoutManager.HORIZONTAL);
+//        recTagList.setLayoutManager(llmTag);
+//
+//        TagAdapter ta = new TagAdapter(createTagList(8));
+//        recTagList.setAdapter(ta);
+
+        // endregion Recycler
+
+        int currentOrientation = getResources().getConfiguration().orientation;
+        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
-    }
-
-    private void initializeGPS()
-    {
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        LocationListener listener = new LocationListener()
-        {
-            @Override
-            public void onLocationChanged(Location location)
-            {
-                // unsafe atm
-                //  t.append("\n " + location.getLongitude() + " " + location.getLatitude());
-            }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {}
-
-            @Override
-            public void onProviderEnabled(String s) {}
-
-            @Override
-            public void onProviderDisabled(String s)
-            {
-                // if gps isn't enable at all send user too setting to enable it
-                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(i);
-            }
-        };
-
-        GPS = new GPSModule(locationManager, listener);
-        checkPermissions();
-    }
-
-    private void checkPermissions()
-    {
-        // check for permissions
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {
-            // if below ver 23 don't need to ask for permissions
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            {
-            }
-            return;
-        }
-        // then get the location
-        GPS.StartLocationUpdates(GPSPingTime, GPSDistance);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
-        // TODO
-        // this may break when you try to get the calender permissions,
-        // unless we get all permissions at the same time
+    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (mdrawerLayout.isDrawerOpen(GravityCompat.START)) {
+//            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
+//            drawer.closeDrawer(GravityCompat.START);
+//
+//        }
+//        switch (item.getItemId()) {
+//            // This is the up button
+//            case android.R.id.home:
+//                mdrawerLayout.openDrawer(GravityCompat.START);
+//                // overridePendingTransition(R.animator.anim_left, R.animator.anim_right);
+//                return true;
+//        }
+        if (toggle.onOptionsItemSelected(item))
+            return true;
 
-        // if it returns expected request code permissions are good
-        if(requestCode == PermissionCorrect)
-        {
-            GPS.StartLocationUpdates(GPSPingTime, GPSDistance);
-        }
+        return super.onOptionsItemSelected(item);
     }
 
-    // when you press the onscreen button
-    public void GetLocationNow(View view)
-    {
-
-        GetLocationRequest l = GPS.GetLocationNow();
-
-        switch (l.result)
-        {
-            case Success:
-                String message = "long: " +l.location.getLongitude() + " Lat: " + l.location.getLatitude();
-                t.append("\n " + message);
-                notifications.pushNotification("Current Location", message);
-                break;
-            case Failed:
-                Toast.makeText(getApplicationContext(), "Error getting last known location!!!", Toast.LENGTH_SHORT).show();
-                break;
-            default:
-                Toast.makeText(getApplicationContext(), "Problem, an unknown problem has occurred", Toast.LENGTH_SHORT).show();
-        }
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        toggle.syncState();
     }
 
-    public void GoLocationPage(View view)
-    {
-        setContentView(R.layout.getlocation_page);
-        t = findViewById(R.id.textView);
+    //region Drawer Methods
+
+    public void goToHome(View view) {
+        Log.d(LogTagClass, "Button Home clicked!");
+        startActivity(new Intent(this, MainActivity.class));
+    }
+
+    public void goToSettings(View view) {
+        Log.d(LogTagClass, "Button Settings clicked!");
+        startActivity(new Intent(this, SettingActivity.class));
+    }
+
+    public void goToLocation(View view) {
+        Log.d(LogTagClass, "Button Location clicked!");
+        startActivity(new Intent(this, LocationActivity.class));
+    }
+
+    public void goToMap(View view) {
+        Log.d(LogTagClass, "Button Map clicked!");
+        startActivity(new Intent(this, MapActivity.class));
+    }
+
+    public void goToDevOne(View view) {
+        Log.d(LogTagClass, "Button Dev One clicked!");
+        startActivity(new Intent(this, DevActivityOne.class));
+    }
+
+    public void goToDevTwo(View view) {
+        Log.d(LogTagClass, "Button Dev Two clicked!");
+        startActivity(new Intent(this, DevActivityTwo.class));
+    }
+
+    public void goToDevThree(View view) {
+        Log.d(LogTagClass, "Button Dev Three clicked!");
+        startActivity(new Intent(this, DevActivityThree.class));
+    }
+    //endregion Drawer
+
+    // Activity's overrided method used to set the menu file
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activity_main_toolbar, menu);
+        return true;
+    }
+
+
+    private List<CardInfo> createCardList(int size) {
+
+        List<CardInfo> result = new ArrayList<CardInfo>();
+        for (int i = 1; i <= size; i++) {
+            CardInfo ci = new CardInfo();
+//            ci.name = (CardInfo.NAME_PREFIX) + " title title title title title title title title title title title title title title title title title title title title title title title title title title title title title title title title " + i;
+//            ci.surname = CardInfo.SURNAME_PREFIX + " content content content content content content content content content content content content content content content content content content content content content content content"+ i;
+//            ci.email = CardInfo.EMAIL_PREFIX + " other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other "+i + "@test.com";
+            ci.title = "Buy Almond milk, bread and bananas";
+            ci.details = "get gluten free bread!!";
+            ci.date = "03/12/2018";
+            result.add(ci);
+
+        }
+
+        return result;
+    }
+
+
+    private List<TagInfo> createTagList(int size) {
+
+        List<TagInfo> result = new ArrayList<TagInfo>();
+        for (int i = 1; i <= size; i++) {
+            TagInfo ci = new TagInfo();
+            ci.locationName = "Shops";
+            result.add(ci);
+        }
+        return result;
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_location) {
+            goToLocation(navigationView);
+        } else if (id == R.id.nav_map) {
+            goToMap(navigationView);
+        } else if (id == R.id.nav_settings) {
+            goToSettings(navigationView);
+        } else if (id == R.id.nav_dev_one) {
+            goToDevOne(navigationView);
+        } else if (id == R.id.nav_dev_two) {
+            goToDevTwo(navigationView);
+        } else if (id == R.id.nav_dev_three) {
+            goToDevThree(navigationView);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android = "http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id = "@+id/nav_location"
+
+        android:title = "@string/locationScreenName"
+        />
+
+    <item
+        android:id = "@+id/nav_map"
+
+        android:title = "@string/mapScreenName"
+        />
+
+    <item
+        android:id = "@+id/nav_settings"
+
+        android:title = "@string/settingsScreenName"
+        />
+
+    <item
+        android:id = "@+id/nav_dev_one"
+
+        android:title = "@string/devOneScreenName"
+        />
+    <item
+        android:id = "@+id/nav_dev_two"
+
+        android:title = "@string/devTwoScreenName"
+        />
+    <item
+        android:id = "@+id/nav_dev_three"
+
+        android:title = "@string/devThreeScreenName"
+        />
+
+</menu>
