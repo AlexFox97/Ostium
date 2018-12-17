@@ -25,10 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import apps.mobile.ostium.Module.GPSModule;
 import apps.mobile.ostium.Module.Place;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -66,8 +63,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         //endregion Layout
 
         //region Map
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        MapFragment map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map));
+        map.getMapAsync(this);
         places = new ArrayList<>();
 
         EditText edit_txt = (EditText) findViewById(R.id.TF_location);
