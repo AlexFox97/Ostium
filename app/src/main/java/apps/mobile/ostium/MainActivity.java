@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void gotoSettings(View view) {
         Log.d(LogTagClass, "Button Settings clicked!");
-        startActivity(new Intent(this, SettingsActivity.class));
+        startActivity(new Intent(this, SettingActivity.class));
     }
 
     public void gotoLocation(View view) {

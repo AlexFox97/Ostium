@@ -1,72 +1,106 @@
 package apps.mobile.ostium;
 
+import Objects.Request.GetLocationRequest;
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.content.res.Configuration;
+import android.location.*;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
-
+import apps.mobile.ostium.Module.GPSModule;
+import apps.mobile.ostium.Module.Place;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import Objects.Request.GetLocationRequest;
-import apps.mobile.ostium.Module.GPSModule;
-import apps.mobile.ostium.Module.Place;
-
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback
-{
-    private GoogleMap mMap;
-    private GPSModule GPS;
-
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private final int GPSPingTime = 2000;
     private final int GPSDistance = 0;
-
-    List<Place> places;
-
+    ArrayList<Place> places;
     boolean showSavedPlaces = false;
     boolean showShops = false;
     boolean showWork = false;
     boolean search = false;
+    private GoogleMap mMap;
+    private GPSModule GPS;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        //region Layout
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        int currentOrientation = getResources().getConfiguration().orientation;
+        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        }
+        //endregion Layout
+
+        //region Map
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        places = new ArrayList<>();
+
+        EditText edit_txt = (EditText) findViewById(R.id.TF_location);
+
+        edit_txt.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    onSearch(v);
+                    return true;
+                }
+                return false;
+            }
+        });
+        //endregion Map
     }
 
-    private void intializeGPS()
-    {
+    //region Layout Methods
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        //getMenuInflater().inflate(R.menu.activity_map_toolbar, menu);
+        return true;
+    }
+    //endregion
+
+    // region Map
+    private void intializeGPS() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        LocationListener listener = new LocationListener()
-        {
+        LocationListener listener = new LocationListener() {
             @Override
-            public void onLocationChanged(Location location)
-            {
+            public void onLocationChanged(Location location) {
                 mMap.clear();
                 GetLocationRequest l = GPS.GetLocationNow();
                 //String locationStats = "Latitude: " + l.location.getLatitude() + " Longitude: " + l.location.getLongitude();
@@ -74,38 +108,38 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
 
                 String s = getCompleteAddressString(l.location.getLatitude(), l.location.getLongitude()); //new
 
-                if(showSavedPlaces==true) {
+                if (showSavedPlaces == true) {
                     //iterate through places array where type is savedPlace
-                    for(int i=0;i<places.size();i++) {
+                    for (int i = 0; i < places.size(); i++) {
                         mMap.addMarker(new MarkerOptions().position(new LatLng(places.get(i).getLat(), places.get(i).getLongt())).title(places.get(i).getTitle()));
                     }
                 }
 
-                if(showShops==true) {
+                if (showShops == true) {
                     //iterate through places array where type is Shop
-                    for(int i=0;i<places.size();i++) {
-                        if(places.get(i).getPlaceType().equals("Shop")) {
+                    for (int i = 0; i < places.size(); i++) {
+                        if (places.get(i).getPlaceType().equals("Shop")) {
                             mMap.addMarker(new MarkerOptions().position(new LatLng(places.get(i).getLat(), places.get(i).getLongt())).title(places.get(i).getTitle()));
                         }
                     }
                 }
 
-                if(showWork==true) {
+                if (showWork == true) {
                     //iterate through places array where type is work
-                    for(int i=0;i<places.size();i++) {
-                        if(places.get(i).getPlaceType().equals("Work")) {
+                    for (int i = 0; i < places.size(); i++) {
+                        if (places.get(i).getPlaceType().equals("Work")) {
                             mMap.addMarker(new MarkerOptions().position(new LatLng(places.get(i).getLat(), places.get(i).getLongt())).title(places.get(i).getTitle()));
                         }
                     }
                 }
 
 
-                if(search==true) {
+                if (search == true) {
                     //iterate through places array where type is house
-                    EditText location_tf =  findViewById(R.id.TF_location);
+                    EditText location_tf = findViewById(R.id.TF_location);
                     String searchLoc = location_tf.getText().toString();
-                    for(int i=0; i<places.size();i++) {
-                        if(places.get(i).getTitle().contains(searchLoc)) {
+                    for (int i = 0; i < places.size(); i++) {
+                        if (places.get(i).getTitle().contains(searchLoc)) {
                             mMap.addMarker(new MarkerOptions().position(new LatLng(places.get(i).getLat(), places.get(i).getLongt())).title(places.get(i).getTitle()));
                         }
                     }
@@ -115,14 +149,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
             @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {}
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+            }
 
             @Override
-            public void onProviderEnabled(String s) {}
+            public void onProviderEnabled(String s) {
+            }
 
             @Override
-            public void onProviderDisabled(String s)
-            {
+            public void onProviderDisabled(String s) {
                 // if GPS isn't enabled at all send user too setting to enable it
                 Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(i);
@@ -133,25 +168,19 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
         checkPermissions();
     }
 
-
-
-    public void changeType(View view)
-    {
-        if(mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL) {
+    public void changeType(View view) {
+        if (mMap.getMapType() == GoogleMap.MAP_TYPE_NORMAL) {
             mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         } else {
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         }
     }
 
-    private void checkPermissions()
-    {
+    private void checkPermissions() {
         // check for permissions
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // if below ver 23 don't need to ask for permissions
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             }
             return;
         }
@@ -160,8 +189,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     //This will be updated when "adding a location" functionality is completed
-    public void setUpPlacesList()
-    {
+    public void setUpPlacesList() {
         //Places to add to list
         Place cantorBuilding = new Place("Cantor", 53.3769219, -1.4677611345050374, "Work");
         Place aldiSheffield = new Place("Aldi Sheffield", 53.372670, -1.475285, "Shop");
@@ -177,6 +205,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
         places.add(4, owenBuilding);
         places.add(5, asdaQueensRoad);
     }
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -211,17 +240,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation)); //currentLocation
     }
 
-    private String getCompleteAddressString(double latitude, double longitude)
-    {
+    private String getCompleteAddressString(double latitude, double longitude) {
         String strAdd = "";
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            if(addresses != null) {
+            if (addresses != null) {
                 Address returnedAddress = addresses.get(0);
                 StringBuilder strReturnedAddress = new StringBuilder("");
 
-                for(int i=0;i <= returnedAddress.getMaxAddressLineIndex(); i++) {
+                for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
                     strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
                 }
                 strAdd = strReturnedAddress.toString();
@@ -237,9 +265,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
         return strAdd;
     }
 
-    public void onSearch(View view)
-    {
-        if(!search) {
+    public void onSearch(View view) {
+        if (!search) {
 
             EditText location_tf = findViewById(R.id.TF_location);
             String location = location_tf.getText().toString();
@@ -251,34 +278,30 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
             }
             Toast.makeText(MapActivity.this, "Showing Searched Place", Toast.LENGTH_SHORT).show();
             search = true;
-        }
-        else {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        } else {
             search = false;
             Toast.makeText(MapActivity.this, "Hiding Searched Place", Toast.LENGTH_SHORT).show();
             mMap.clear();
         }
     }
 
-    public void onClick(View v)
-    {
-        switch(v.getId())
-        {
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.B_search:
                 EditText tf_location = findViewById(R.id.TF_location);
                 String location = tf_location.getText().toString();
                 List<Address> addressList;
 
-                if(!location.equals(""))
-                {
+                if (!location.equals("")) {
                     Geocoder geocoder = new Geocoder(this);
 
                     try {
                         addressList = geocoder.getFromLocationName(location, 5);
 
-                        if(addressList != null)
-                        {
-                            for(int i = 0; i<addressList.size();i++)
-                            {
+                        if (addressList != null) {
+                            for (int i = 0; i < addressList.size(); i++) {
                                 LatLng latlng = new LatLng(addressList.get(i).getLatitude(), addressList.get(i).getLongitude());
                                 MarkerOptions markerOptions = new MarkerOptions();
                                 markerOptions.position(latlng);
@@ -295,15 +318,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
                 break;
 
             case R.id.B_places:
-                if(!showSavedPlaces) {
+                if (!showSavedPlaces) {
 
-                    for(int i=0;i<places.size();i++) {
+                    for (int i = 0; i < places.size(); i++) {
                         mMap.addMarker(new MarkerOptions().position(new LatLng(places.get(i).getLat(), places.get(i).getLongt())).title(places.get(i).getTitle()));
                     }
                     Toast.makeText(MapActivity.this, "Showing Nearby Saved Places", Toast.LENGTH_SHORT).show();
-                    showSavedPlaces=true;
-                }
-                else {
+                    showSavedPlaces = true;
+                } else {
                     Toast.makeText(MapActivity.this, "Hiding Nearby Saved Places", Toast.LENGTH_SHORT).show();
                     mMap.clear();
                     showSavedPlaces = false;
@@ -311,16 +333,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
                 break;
             case R.id.B_work:
                 mMap.clear();
-                if(!showWork) {
-                    for(int i=0;i<places.size();i++) {
-                        if(places.get(i).getPlaceType().equals("Work")) {
+                if (!showWork) {
+                    for (int i = 0; i < places.size(); i++) {
+                        if (places.get(i).getPlaceType().equals("Work")) {
                             mMap.addMarker(new MarkerOptions().position(new LatLng(places.get(i).getLat(), places.get(i).getLongt())).title(places.get(i).getTitle()));
                         }
                     }
                     Toast.makeText(MapActivity.this, "Showing Work", Toast.LENGTH_SHORT).show();
                     showWork = true;
-                }
-                else {
+                } else {
                     Toast.makeText(MapActivity.this, "Hiding Work", Toast.LENGTH_SHORT).show();
                     mMap.clear();
                     showWork = false;
@@ -328,16 +349,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
                 break;
             case R.id.B_shops:
                 mMap.clear();
-                if(!showShops) {
-                    for(int i=0;i<places.size();i++) {
-                        if(places.get(i).getPlaceType().equals("Shop")) {
+                if (!showShops) {
+                    for (int i = 0; i < places.size(); i++) {
+                        if (places.get(i).getPlaceType().equals("Shop")) {
                             mMap.addMarker(new MarkerOptions().position(new LatLng(places.get(i).getLat(), places.get(i).getLongt())).title(places.get(i).getTitle()));
                         }
                     }
                     Toast.makeText(MapActivity.this, "Showing Nearby Shops", Toast.LENGTH_SHORT).show();
                     showShops = true;
-                }
-                else {
+                } else {
                     Toast.makeText(MapActivity.this, "Hiding Nearby Shops", Toast.LENGTH_SHORT).show();
                     mMap.clear();
                     showShops = false;
@@ -345,4 +365,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback
                 break;
         }
     }
+
+    // endregion Map
+
 }

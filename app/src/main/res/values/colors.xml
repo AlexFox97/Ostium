@@ -54,5 +54,7 @@
     <color name="Accent4">#eeeeee</color>
 
     <color name="red">#ff0000</color>
+    <color name = "primary_material_light">#ff1744</color>
+    <color name = "primary_dark_material_light">#c4001d</color>
 
 </resources>
