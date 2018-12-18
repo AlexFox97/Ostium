@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,13 +20,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import Objects.Request.GetLocationRequest;
+import apps.mobile.ostium.Module.CalendarProviderIntentService;
 import apps.mobile.ostium.Module.GPSModule;
+
+import java.util.ArrayList;
 
 public class DevActivityOne extends AppCompatActivity
 {
     private static final int PermissionCorrect = 1;
     private final int GPSPingTime = 2000;
     private final int GPSDistance = 0;
+
+
 
     private TextView t;
     private GPSModule GPS;
@@ -41,13 +48,8 @@ public class DevActivityOne extends AppCompatActivity
         //initializeCal();
     }
 
-    private void initializeCal()
-    {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, PermissionCorrect);
-        }
-    }
+
+
 
     private void initializeGPS()
     {

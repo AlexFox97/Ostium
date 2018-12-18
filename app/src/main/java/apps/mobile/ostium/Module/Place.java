@@ -1,6 +1,8 @@
 package apps.mobile.ostium.Module;
 
-public class Place {
+import java.io.Serializable;
+
+public class Place implements Serializable{
     double latitude;
     double longitude;
     String title;
@@ -12,6 +14,14 @@ public class Place {
         latitude = lat;
         longitude = longt;
         placeType = pType;
+    }
+
+    public Place(){}
+
+    public void setPlace(double lat, double longi)
+    {
+        latitude = lat;
+        longitude = longi;
     }
 
     public double getLat()

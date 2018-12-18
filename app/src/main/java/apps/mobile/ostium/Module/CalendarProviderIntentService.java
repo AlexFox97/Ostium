@@ -14,7 +14,10 @@ import android.provider.CalendarContract;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class CalendarProviderIntentService extends IntentService
 {
@@ -41,6 +44,13 @@ public class CalendarProviderIntentService extends IntentService
         // Create bundle to store data to send back
         Bundle bundle = new Bundle();
 
+        ArrayList<String> tempIn = new ArrayList<>();
+        tempIn.add("4");
+
+        ArrayList<eventGeneric> events = getEvents(tempIn);
+
+        bundle.putSerializable("events", events);
+
         /*
          * Send data back to UI
          * TODO: Implement success and fail cases for receiver.send
@@ -49,7 +59,7 @@ public class CalendarProviderIntentService extends IntentService
     }
 
     @SuppressLint("MissingPermission")
-    private ArrayList getEvents(ArrayList<Integer> calendarIDs)
+    private ArrayList getEvents(ArrayList<String> calendarIDs)
     {
 
         ArrayList<eventGeneric> returnList = new ArrayList<>();
@@ -69,7 +79,7 @@ public class CalendarProviderIntentService extends IntentService
 
         Uri uri = CalendarContract.Events.CONTENT_URI;
 
-        for(Integer item : calendarIDs) {
+        for(String item : calendarIDs) {
             //Suppressing check for permissions here, all permissions should be granted before this function is called
             cur = cr.query(uri, mProjection, CalendarContract.Events.CALENDAR_ID + " =  '" + item + "'", null, null);
 
@@ -95,7 +105,22 @@ public class CalendarProviderIntentService extends IntentService
 
         System.out.print(1);
 
-        //TODO: Sort returnList by start time
+        DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy hh:mm:ss");
+
+        double timeNow = System.currentTimeMillis();
+
+        for(eventGeneric item: new ArrayList<>(returnList))
+        {
+
+            if( Double.parseDouble( item.getStartTime()) < timeNow)
+                returnList.remove(item);
+            else {
+                item.setStartTime(dateFormat.format(new Date(Long.parseLong(item.getStartTime()))));
+                item.setEndTime(dateFormat.format(new Date(Long.parseLong(item.getEndTime()))));
+            }
+        }
+
+
 
         return returnList;
 

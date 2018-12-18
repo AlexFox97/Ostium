@@ -1,10 +1,19 @@
 package apps.mobile.ostium;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,11 +22,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import apps.mobile.ostium.Module.CalendarProviderIntentService;
+import apps.mobile.ostium.Module.eventGeneric;
 
+import java.io.ObjectInputStream;
+import java.text.DateFormat;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //        Main Activity
@@ -32,9 +47,22 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String LogTagClass = MainActivity.class.getSimpleName();
+    private DrawerLayout dl;
+    private ActionBarDrawerToggle t;
+    private NavigationView nv;
+
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
+    private static final int PermissionCorrect = 1;
+
+    public static eventGeneric selectedEvent;
+
+    public static ArrayList<eventGeneric> userSelectedEvents = new ArrayList<>();
+
+    public ArrayList<eventGeneric> userCalendarEvents = new ArrayList<>();
+
+    CalendarResultReceiver calendarResultHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        getEventList();
+        selectedEvent = null;
 
         // region CardRecycler - onCreate
         RecyclerView recCardList = (RecyclerView) findViewById(R.id.cardList);
@@ -84,33 +114,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    //region Drawer Methods
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        if (mdrawerLayout.isDrawerOpen(GravityCompat.START)) {
-//            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main);
-//            drawer.closeDrawer(GravityCompat.START);
-//
-//        }
-//        switch (item.getItemId()) {
-//            // This is the up button
-//            case android.R.id.home:
-//                mdrawerLayout.openDrawer(GravityCompat.START);
-//                // overridePendingTransition(R.animator.anim_left, R.animator.anim_right);
-//                return true;
-//        }
-        if (toggle.onOptionsItemSelected(item))
+
+        if (t.onOptionsItemSelected(item))
             return true;
 
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        toggle.syncState();
-    }
-
-    //region Drawer Methods
 
     public void goToHome(View view) {
         Log.d(LogTagClass, "Button Home clicked!");
@@ -148,26 +160,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
     //endregion Drawer
 
-    // Activity's overrided method used to set the menu file
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_main_toolbar, menu);
-        return true;
-    }
-
 
     private List<CardInfo> createCardList(int size) {
 
         List<CardInfo> result = new ArrayList<CardInfo>();
-        for (int i = 1; i <= size; i++) {
+        for (eventGeneric item : userSelectedEvents) {
             CardInfo ci = new CardInfo();
-//            ci.name = (CardInfo.NAME_PREFIX) + " title title title title title title title title title title title title title title title title title title title title title title title title title title title title title title title title " + i;
-//            ci.surname = CardInfo.SURNAME_PREFIX + " content content content content content content content content content content content content content content content content content content content content content content content"+ i;
-//            ci.email = CardInfo.EMAIL_PREFIX + " other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other other "+i + "@test.com";
-            ci.title = "Buy Almond milk, bread and bananas";
-            ci.details = "get gluten free bread!!";
-            ci.date = "03/12/2018";
+//            ci.name = (CardInfo.NAME_PREFIX) + " title " + i;
+//            ci.surname = CardInfo.SURNAME_PREFIX + ""+ i;
+//            ci.email = CardInfo.EMAIL_PREFIX + "other "+i + "@test.com";
+
+            ci.title = item.getTitle();
+            ci.details = item.getDescription();
+
+            ci.date = item.getStartTime();
             result.add(ci);
 
         }
@@ -185,6 +191,73 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             result.add(ci);
         }
         return result;
+    }
+
+    public void addEvent(View v)
+    {
+        //On click of text in main activity
+        //TODO: Show AlertDialog to select an event and then set location and return
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Please select an event:");
+
+        ArrayList<String> eventTitlesTemp = new ArrayList<>();
+
+
+        for(eventGeneric event: userCalendarEvents)
+        {
+            eventTitlesTemp.add(event.getTitle());
+        }
+
+        String[] eventsTitles = GetStringArray(eventTitlesTemp);
+
+        builder.setSingleChoiceItems(eventsTitles, 0, null);
+
+        builder.setPositiveButton("Add Event", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                selectedEvent = userCalendarEvents.get(which);
+                dialog.dismiss();
+
+                //TODO: Handle selected event
+
+            }
+        });
+
+        AlertDialog addEventAlert = builder.create();
+        addEventAlert.show();
+    }
+
+    private String[] GetStringArray(ArrayList<String> arr)
+    {
+
+        // declaration and initialise String Array
+        String str[] = new String[arr.size()];
+
+        // ArrayList to Array Conversion
+        for (int j = 0; j < arr.size(); j++) {
+
+            // Assign each value to String array
+            str[j] = arr.get(j);
+        }
+
+        return str;
+    }
+
+    private void getEventList()
+    {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, PermissionCorrect);
+        }
+
+        calendarResultHandler = new CalendarResultReceiver(new Handler());
+
+        Intent startIntent = new Intent(this, CalendarProviderIntentService.class);
+        startIntent.putExtra("receiver", calendarResultHandler);
+        startService(startIntent);
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -211,4 +284,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private class CalendarResultReceiver extends ResultReceiver
+    {
+        public CalendarResultReceiver(Handler handler)
+        {
+            super(handler);
+        }
+
+        protected void onReceiveResult(int resultCode, Bundle resultData)
+        {
+            switch(resultCode)
+            {
+                case CalendarProviderIntentService.RETRIEVE_SUCCESS:
+
+
+                    if(resultData != null)
+                        userCalendarEvents = ((ArrayList) resultData.getSerializable("events"));
+
+                    break;
+
+                case CalendarProviderIntentService.RETRIEVE_ERROR:
+                    //TODO: Handle failure
+
+            }
+            super.onReceiveResult(resultCode, resultData);
+        }
+
+
+    }
+
 }
