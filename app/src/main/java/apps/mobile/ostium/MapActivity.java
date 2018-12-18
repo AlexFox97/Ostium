@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -63,8 +64,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         //endregion Layout
 
         //region Map
-        MapFragment map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map));
-        map.getMapAsync(this);
+        SupportMapFragment mapFragment = SupportMapFragment.newInstance();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.map_container, mapFragment).commit();
+//
+//        MapFragment map;
+//        map = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
         places = new ArrayList<>();
 
         EditText edit_txt = (EditText) findViewById(R.id.TF_location);
