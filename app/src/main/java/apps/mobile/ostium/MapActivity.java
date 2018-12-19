@@ -27,6 +27,7 @@ import android.widget.Toast;
 import apps.mobile.ostium.Module.GPSModule;
 import apps.mobile.ostium.Module.Place;
 import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -35,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
     private final int GPSPingTime = 2000;
     private final int GPSDistance = 0;
     ArrayList<Place> places;
@@ -43,8 +44,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     boolean showShops = false;
     boolean showWork = false;
     boolean search = false;
+    boolean onLongClickActive = false;
     private GoogleMap mMap;
     private GPSModule GPS;
+    LatLng longClickPoint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +89,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
         //endregion Map
+        intializeGPS();
+    }
+
+
+    @Override
+    public void onMapLongClick(LatLng point) {
+            if(!onLongClickActive) {
+                String address = getCompleteAddressString(point.latitude, point.longitude);
+                mMap.addMarker(new MarkerOptions()
+                        .position(point)
+                        .title(address)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                onLongClickActive = true;
+                longClickPoint = point;
+            }
+           else
+               onLongClickActive = false;
     }
 
     //region Layout Methods
@@ -111,14 +131,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                 String s = getCompleteAddressString(l.location.getLatitude(), l.location.getLongitude()); //new
 
-                if (showSavedPlaces == true) {
+                if (showSavedPlaces) {
                     //iterate through places array where type is savedPlace
                     for (int i = 0; i < places.size(); i++) {
                         mMap.addMarker(new MarkerOptions().position(new LatLng(places.get(i).getLat(), places.get(i).getLongt())).title(places.get(i).getTitle()));
                     }
                 }
 
-                if (showShops == true) {
+                if (showShops) {
                     //iterate through places array where type is Shop
                     for (int i = 0; i < places.size(); i++) {
                         if (places.get(i).getPlaceType().equals("Shop")) {
@@ -127,7 +147,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     }
                 }
 
-                if (showWork == true) {
+                if (showWork) {
                     //iterate through places array where type is work
                     for (int i = 0; i < places.size(); i++) {
                         if (places.get(i).getPlaceType().equals("Work")) {
@@ -137,7 +157,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
 
 
-                if (search == true) {
+                if (search) {
                     //iterate through places array where type is house
                     EditText location_tf = findViewById(R.id.TF_location);
                     String searchLoc = location_tf.getText().toString();
@@ -146,6 +166,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             mMap.addMarker(new MarkerOptions().position(new LatLng(places.get(i).getLat(), places.get(i).getLongt())).title(places.get(i).getTitle()));
                         }
                     }
+                }
+
+                if (onLongClickActive) {
+                    String address = getCompleteAddressString(longClickPoint.latitude, longClickPoint.longitude);
+                    mMap.addMarker(new MarkerOptions()
+                            .position(longClickPoint)
+                            .title(address)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
                 }
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation)); //currentLocation
@@ -221,6 +249,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnMapLongClickListener(MapActivity.this); //new
 
         setUpPlacesList();
 
@@ -235,12 +264,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             return;
         }
         mMap.setMyLocationEnabled(true);
+
         GetLocationRequest l = GPS.GetLocationNow();
         LatLng currentLocation = new LatLng(l.location.getLatitude(), l.location.getLongitude());
         String s = getCompleteAddressString(l.location.getLatitude(), l.location.getLongitude()); //new
 
         mMap.addMarker(new MarkerOptions().position(currentLocation).title(s));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation)); //currentLocation
+
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
     }
 
     private String getCompleteAddressString(double latitude, double longitude) {
