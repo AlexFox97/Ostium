@@ -10,8 +10,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -25,9 +23,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import apps.mobile.ostium.Module.CalendarProviderIntentService;
 import apps.mobile.ostium.Module.SaveModule;
 import apps.mobile.ostium.Module.eventGeneric;
+import apps.mobile.ostium.Module.CardObject;
+import apps.mobile.ostium.Module.LocationObject;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -35,7 +36,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import apps.mobile.ostium.Module.TaskModule;
@@ -52,24 +52,20 @@ import apps.mobile.ostium.Module.TaskModule;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String LogTagClass = MainActivity.class.getSimpleName();
+    private static final int PermissionCorrect = 1;
+    private static final String TAG = "main activity";
+    public static eventGeneric selectedEvent;
+    public static ArrayList<eventGeneric> userSelectedEvents = new ArrayList<>();
+    public static ArrayList<Integer> calendarID = new ArrayList<>();
+    public static ArrayList<LocationObject> savedLocations = new ArrayList<>();
+    public ArrayList<eventGeneric> userCalendarEvents = new ArrayList<>();
+    CalendarResultReceiver calendarResultHandler;
     private DrawerLayout dl;
     private ActionBarDrawerToggle t;
     private NavigationView nv;
-
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
-    private static final int PermissionCorrect = 1;
-
-    public static eventGeneric selectedEvent;
-
-    public static ArrayList<eventGeneric> userSelectedEvents = new ArrayList<>();
-
-    public ArrayList<eventGeneric> userCalendarEvents = new ArrayList<>();
-
-    public static ArrayList<Integer> calendarID = new ArrayList<>();
-
-    CalendarResultReceiver calendarResultHandler;
 
     private GoogleApiClient googleApiClient;
 
@@ -137,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (t.onOptionsItemSelected(item))
+        if (toggle.onOptionsItemSelected(item))
             return true;
 
         return super.onOptionsItemSelected(item);
@@ -180,11 +176,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //endregion Drawer
 
 
-    private List<CardInfo> createCardList(int size) {
+    private List<CardObject> createCardList(int size) {
 
-        List<CardInfo> result = new ArrayList<CardInfo>();
+        List<CardObject> result = new ArrayList<CardObject>();
         for (eventGeneric item : userSelectedEvents) {
-            CardInfo ci = new CardInfo();
+            CardObject ci = new CardObject();
 //            ci.name = (CardInfo.NAME_PREFIX) + " title " + i;
 //            ci.surname = CardInfo.SURNAME_PREFIX + ""+ i;
 //            ci.email = CardInfo.EMAIL_PREFIX + "other "+i + "@test.com";
@@ -200,8 +196,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return result;
     }
 
-    protected void onResume()
-    {
+    protected void onResume() {
+        super.onResume();
         getEventList();
     }
 
@@ -217,8 +213,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return result;
     }
 
-    public void addEvent(View v)
-    {
+    public void addEvent(View v) {
         //On click of text in main activity
         //TODO: Show AlertDialog to select an event and then set location and return
 
@@ -230,8 +225,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ArrayList<String> eventTitlesTemp = new ArrayList<>();
 
 
-        for(eventGeneric event: userCalendarEvents)
-        {
+        for (eventGeneric event : userCalendarEvents) {
             eventTitlesTemp.add(event.getTitle());
         }
 
@@ -254,8 +248,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         addEventAlert.show();
     }
 
-    private String[] GetStringArray(ArrayList<String> arr)
-    {
+    private String[] GetStringArray(ArrayList<String> arr) {
 
         // declaration and initialise String Array
         String str[] = new String[arr.size()];
@@ -270,10 +263,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return str;
     }
 
-    public void getEventList()
-    {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)
-        {
+    public void getEventList() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, PermissionCorrect);
         }
 
@@ -309,9 +300,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
+    } 
 
-    @Override
+     private class CalendarResultReceiver extends ResultReceiver {
+        public CalendarResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            switch (resultCode) {
+                case CalendarProviderIntentService.RETRIEVE_SUCCESS:
+
+
+                    if (resultData != null)
+                        userCalendarEvents = ((ArrayList) resultData.getSerializable("events"));
+
+                    break;
+
+                case CalendarProviderIntentService.RETRIEVE_ERROR:
+                    //TODO: Handle failure
+
+            }
+            super.onReceiveResult(resultCode, resultData);
+        }
+
+
+    }       
+
+    @Override 
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
@@ -331,34 +347,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     }
-
-    private class CalendarResultReceiver extends ResultReceiver
-    {
-        public CalendarResultReceiver(Handler handler)
-        {
-            super(handler);
-        }
-
-        protected void onReceiveResult(int resultCode, Bundle resultData)
-        {
-            switch(resultCode)
-            {
-                case CalendarProviderIntentService.RETRIEVE_SUCCESS:
-
-
-                    if(resultData != null)
-                        userCalendarEvents = ((ArrayList) resultData.getSerializable("events"));
-
-                    break;
-
-                case CalendarProviderIntentService.RETRIEVE_ERROR:
-                    //TODO: Handle failure
-
-            }
-            super.onReceiveResult(resultCode, resultData);
-        }
-
-
-    }
-
 }

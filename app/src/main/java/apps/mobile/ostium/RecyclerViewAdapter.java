@@ -6,18 +6,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import apps.mobile.ostium.Module.LocationObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class recyclerViewAdapter extends RecyclerView.Adapter<recyclerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private List<String> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    public recyclerViewAdapter(Context context, List<String> data) {
+    public RecyclerViewAdapter(Context context, ArrayList<LocationObject> locations) {
         this.mInflater = LayoutInflater.from(context);
+        ArrayList<String> titles = new ArrayList<>();
+        for (LocationObject temp : locations
+                ) {
+            titles.add(temp.getTitle());
+
+        }
+        this.mData = titles;
+    }
+
+    public RecyclerViewAdapter(ArrayList<String> data, Context context) {
+        this.mInflater = LayoutInflater.from(context);
+        ArrayList<String> titles = new ArrayList<>();
         this.mData = data;
     }
 

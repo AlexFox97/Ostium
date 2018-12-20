@@ -16,9 +16,9 @@ import java.util.ArrayList;
 
 import static apps.mobile.ostium.MainActivity.calendarID;
 
-public class SettingActivity extends AppCompatActivity implements recyclerViewAdapter.ItemClickListener {
+public class SettingActivity extends AppCompatActivity implements RecyclerViewAdapter.ItemClickListener {
 
-    recyclerViewAdapter adapter;
+    RecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class SettingActivity extends AppCompatActivity implements recyclerViewAd
         // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.SettingsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new recyclerViewAdapter(this, listData);
+        adapter = new RecyclerViewAdapter(listData, this);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
         //endregion Main
