@@ -14,7 +14,10 @@ import android.provider.CalendarContract;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class CalendarProviderIntentService extends IntentService
 {
@@ -35,11 +38,16 @@ public class CalendarProviderIntentService extends IntentService
     {
         // Get ResultReceiver from the Intent passed to service
         final ResultReceiver receiver = intent.getParcelableExtra("receiver");
-
+        final ArrayList<Integer> calendars = (ArrayList) intent.getSerializableExtra("calendars");
 
 
         // Create bundle to store data to send back
         Bundle bundle = new Bundle();
+
+
+        ArrayList<eventGeneric> events = getEvents(calendars);
+
+        bundle.putSerializable("events", events);
 
         /*
          * Send data back to UI
@@ -95,7 +103,22 @@ public class CalendarProviderIntentService extends IntentService
 
         System.out.print(1);
 
-        //TODO: Sort returnList by start time
+        DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy hh:mm:ss");
+
+        double timeNow = System.currentTimeMillis();
+
+        for(eventGeneric item: new ArrayList<>(returnList))
+        {
+//
+//            if( Double.parseDouble( item.getStartTime()) < timeNow)
+//                returnList.remove(item);
+//            else {
+                item.setStartTime(dateFormat.format(new Date(Long.parseLong(item.getStartTime()))));
+                item.setEndTime(dateFormat.format(new Date(Long.parseLong(item.getEndTime()))));
+//            }
+        }
+
+
 
         return returnList;
 

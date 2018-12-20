@@ -1,13 +1,14 @@
 package apps.mobile.ostium.Module;
 
-public class eventGeneric {
+import java.io.Serializable;
+
+public class eventGeneric implements Serializable{
     private String title;
     private String eventType;
     private String description;
     private String startTime;
     private String endTime;
-    private Float longitude;
-    private Float latitude;
+    private Place location;
 
     public eventGeneric(String title, String eventType)
     {
@@ -15,10 +16,10 @@ public class eventGeneric {
         this.eventType = eventType;
     }
 
-    public void setLocation(Float longi,Float lati)
+    public void setLocation(double lati,double longi)
     {
-        longitude = longi;
-        latitude = lati;
+        //Set location in place
+        location.setPlace(lati, longi);
     }
 
     public void setDescription(String description) {
@@ -51,13 +52,5 @@ public class eventGeneric {
 
     public String getEndTime() {
         return endTime;
-    }
-
-    public Float getLongitude() {
-        return longitude;
-    }
-
-    public Float getLatitude() {
-        return latitude;
     }
 }
