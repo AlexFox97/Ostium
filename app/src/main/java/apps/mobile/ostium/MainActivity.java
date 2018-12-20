@@ -232,9 +232,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         String[] eventsTitles = GetStringArray(eventTitlesTemp);
 
-        builder.setSingleChoiceItems(eventsTitles, 0, null);
-
-        builder.setPositiveButton("Add Event", new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(eventsTitles, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //todo alex fix this
@@ -244,6 +242,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ca.notifyItemInserted(0);
                 //TODO: Handle selected event
 
+                dialog.dismiss();
             }
         });
 
