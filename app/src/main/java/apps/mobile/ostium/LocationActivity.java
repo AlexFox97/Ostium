@@ -11,9 +11,11 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class LocationActivity extends AppCompatActivity implements recyclerViewAdapter.ItemClickListener {
+import static apps.mobile.ostium.MainActivity.savedLocations;
 
-    recyclerViewAdapter adapter;
+public class LocationActivity extends AppCompatActivity implements RecyclerViewAdapter.ItemClickListener {
+
+    RecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +37,11 @@ public class LocationActivity extends AppCompatActivity implements recyclerViewA
         locationSampleNames.add("Uni");
         locationSampleNames.add("Shop");
 
+
         // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.LocationList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new recyclerViewAdapter(this, locationSampleNames);
+        adapter = new RecyclerViewAdapter(this, savedLocations);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
         //endregion Main

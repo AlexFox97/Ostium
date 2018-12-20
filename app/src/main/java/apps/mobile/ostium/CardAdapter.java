@@ -5,14 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import apps.mobile.ostium.Module.CardObject;
 
 import java.util.List;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ContactViewHolder> {
 
-    private List<CardInfo> contactList;
+    private List<CardObject> contactList;
 
-    public CardAdapter(List<CardInfo> contactList) {
+    public CardAdapter(List<CardObject> contactList) {
         this.contactList = contactList;
     }
 
@@ -24,7 +25,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ContactViewHol
 
     @Override
     public void onBindViewHolder(ContactViewHolder contactViewHolder, int i) {
-        CardInfo ci = contactList.get(i);
+        CardObject ci = contactList.get(i);
         contactViewHolder.vTitle.setText(ci.title);
         contactViewHolder.vDetails.setText(ci.details);
         contactViewHolder.vDate.setText(ci.date);

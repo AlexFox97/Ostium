@@ -3,6 +3,7 @@ package apps.mobile.ostium;
 import Objects.Request.GetLocationRequest;
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -12,23 +13,29 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import apps.mobile.ostium.Module.GPSModule;
-import apps.mobile.ostium.Module.Place;
-import com.google.android.gms.maps.*;
+import apps.mobile.ostium.Module.LocationObject;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
@@ -37,22 +44,33 @@ import java.util.List;
 import java.util.Locale;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+    //Dialog
+    final Context context = this;
     private final int GPSPingTime = 2000;
     private final int GPSDistance = 0;
-    ArrayList<Place> places;
+    public ArrayList<LocationObject> savedLocations;
+    public ArrayList<Marker> Markers = new ArrayList<>();
+    public Marker tempMarker;
     boolean showSavedPlaces = false;
     boolean showShops = false;
     boolean showWork = false;
     boolean search = false;
     boolean onLongClickActive = false;
+    LatLng longClickPoint;
     private GoogleMap mMap;
     private GPSModule GPS;
-    LatLng longClickPoint;
+    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        //region Dialog
+
+
+        //endregion dialog
+
         //region Layout
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -74,7 +92,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 //        MapFragment map;
 //        map = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        places = new ArrayList<>();
 
         EditText edit_txt = (EditText) findViewById(R.id.TF_location);
 
@@ -94,18 +111,55 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
     @Override
-    public void onMapLongClick(LatLng point) {
-            if(!onLongClickActive) {
-                String address = getCompleteAddressString(point.latitude, point.longitude);
-                mMap.addMarker(new MarkerOptions()
-                        .position(point)
-                        .title(address)
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-                onLongClickActive = true;
-                longClickPoint = point;
-            }
-           else
-               onLongClickActive = false;
+    public void onMapLongClick(final LatLng point) {
+        if (!onLongClickActive) {
+            String address = getCompleteAddressString(point.latitude, point.longitude);
+//            mMap.addMarker(new MarkerOptions()
+//                    .position(point)
+//                    .title(address)
+//                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+
+            tempMarker = mMap.addMarker(new MarkerOptions()
+                    .position(point)
+                    .title(address)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+
+            Markers.add(tempMarker);
+
+            onLongClickActive = true;
+            longClickPoint = point;
+            AlertDialog dialog;
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            // Get the layout inflater
+            LayoutInflater inflater = this.getLayoutInflater();
+
+            View view = inflater.inflate(R.layout.dialog_confirm_location, null);
+            builder.setView(view);
+            final EditText userInput = (EditText) view.findViewById(R.id.locationName);
+
+            builder
+                    .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            String value = userInput.getText().toString().trim();
+                            MainActivity.savedLocations.add(new LocationObject(value, point.latitude, point.longitude, "userCreated"));
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            tempMarker.remove();
+                        }
+                    })
+                    .setCancelable(false)
+            ;
+//                builder.create();
+            dialog = builder.create();
+            dialog.show();
+
+        } else
+            onLongClickActive = false;
+
+
     }
 
     //region Layout Methods
@@ -132,38 +186,38 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 String s = getCompleteAddressString(l.location.getLatitude(), l.location.getLongitude()); //new
 
                 if (showSavedPlaces) {
-                    //iterate through places array where type is savedPlace
-                    for (int i = 0; i < places.size(); i++) {
-                        mMap.addMarker(new MarkerOptions().position(new LatLng(places.get(i).getLat(), places.get(i).getLongt())).title(places.get(i).getTitle()));
+                    //iterate through savedLocations array where type is savedPlace
+                    for (int i = 0; i < savedLocations.size(); i++) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(savedLocations.get(i).getLat(), savedLocations.get(i).getLongt())).title(savedLocations.get(i).getTitle()));
                     }
                 }
 
                 if (showShops) {
-                    //iterate through places array where type is Shop
-                    for (int i = 0; i < places.size(); i++) {
-                        if (places.get(i).getPlaceType().equals("Shop")) {
-                            mMap.addMarker(new MarkerOptions().position(new LatLng(places.get(i).getLat(), places.get(i).getLongt())).title(places.get(i).getTitle()));
+                    //iterate through savedLocations array where type is Shop
+                    for (int i = 0; i < savedLocations.size(); i++) {
+                        if (savedLocations.get(i).getPlaceType().equals("Shop")) {
+                            mMap.addMarker(new MarkerOptions().position(new LatLng(savedLocations.get(i).getLat(), savedLocations.get(i).getLongt())).title(savedLocations.get(i).getTitle()));
                         }
                     }
                 }
 
                 if (showWork) {
-                    //iterate through places array where type is work
-                    for (int i = 0; i < places.size(); i++) {
-                        if (places.get(i).getPlaceType().equals("Work")) {
-                            mMap.addMarker(new MarkerOptions().position(new LatLng(places.get(i).getLat(), places.get(i).getLongt())).title(places.get(i).getTitle()));
+                    //iterate through savedLocations array where type is work
+                    for (int i = 0; i < savedLocations.size(); i++) {
+                        if (savedLocations.get(i).getPlaceType().equals("Work")) {
+                            mMap.addMarker(new MarkerOptions().position(new LatLng(savedLocations.get(i).getLat(), savedLocations.get(i).getLongt())).title(savedLocations.get(i).getTitle()));
                         }
                     }
                 }
 
 
                 if (search) {
-                    //iterate through places array where type is house
+                    //iterate through savedLocations array where type is house
                     EditText location_tf = findViewById(R.id.TF_location);
                     String searchLoc = location_tf.getText().toString();
-                    for (int i = 0; i < places.size(); i++) {
-                        if (places.get(i).getTitle().contains(searchLoc)) {
-                            mMap.addMarker(new MarkerOptions().position(new LatLng(places.get(i).getLat(), places.get(i).getLongt())).title(places.get(i).getTitle()));
+                    for (int i = 0; i < savedLocations.size(); i++) {
+                        if (savedLocations.get(i).getTitle().contains(searchLoc)) {
+                            mMap.addMarker(new MarkerOptions().position(new LatLng(savedLocations.get(i).getLat(), savedLocations.get(i).getLongt())).title(savedLocations.get(i).getTitle()));
                         }
                     }
                 }
@@ -222,19 +276,27 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //This will be updated when "adding a location" functionality is completed
     public void setUpPlacesList() {
         //Places to add to list
-        Place cantorBuilding = new Place("Cantor", 53.3769219, -1.4677611345050374, "Work");
-        Place aldiSheffield = new Place("Aldi Sheffield", 53.372670, -1.475285, "Shop");
-        Place tescoExpress = new Place("Tesco Express", 53.379121, -1.467388, "Shop");
-        Place asdaQueensRoad = new Place("Asda Queens Road", 53.368411, -1.463179, "Shop");
-        Place moorMarket = new Place("Moor Market", 53.375677, -1.472894, "Shop");
-        Place owenBuilding = new Place("Owen Building", 53.379564, -1.465743, "Place");
+        LocationObject cantorBuilding = new LocationObject("Cantor", 53.3769219, -1.4677611345050374, "Work");
+        LocationObject aldiSheffield = new LocationObject("Aldi Sheffield", 53.372670, -1.475285, "Shop");
+        LocationObject tescoExpress = new LocationObject("Tesco Express", 53.379121, -1.467388, "Shop");
+        LocationObject asdaQueensRoad = new LocationObject("Asda Queens Road", 53.368411, -1.463179, "Shop");
+        LocationObject moorMarket = new LocationObject("Moor Market", 53.375677, -1.472894, "Shop");
+        LocationObject owenBuilding = new LocationObject("Owen Building", 53.379564, -1.465743, "Place");
 
-        places.add(0, cantorBuilding);
-        places.add(1, aldiSheffield);
-        places.add(2, tescoExpress);
-        places.add(3, moorMarket);
-        places.add(4, owenBuilding);
-        places.add(5, asdaQueensRoad);
+
+        MainActivity.savedLocations.add(aldiSheffield);
+        MainActivity.savedLocations.add(cantorBuilding);
+        MainActivity.savedLocations.add(tescoExpress);
+        MainActivity.savedLocations.add(moorMarket);
+        MainActivity.savedLocations.add(owenBuilding);
+        MainActivity.savedLocations.add(asdaQueensRoad);
+//
+//        savedLocations.add(0, cantorBuilding);
+//        savedLocations.add(1, aldiSheffield);
+//        savedLocations.add(2, tescoExpress);
+//        savedLocations.add(3, moorMarket);
+//        savedLocations.add(4, owenBuilding);
+//        savedLocations.add(5, asdaQueensRoad);
     }
 
     /**
@@ -306,9 +368,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             EditText location_tf = findViewById(R.id.TF_location);
             String location = location_tf.getText().toString();
             Toast.makeText(MapActivity.this, location, Toast.LENGTH_SHORT).show();
-            for (int i = 0; i < places.size(); i++) {
-                if (places.get(i).getTitle().contains(location)) {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(places.get(i).getLat(), places.get(i).getLongt())).title(places.get(i).getTitle()));
+            for (int i = 0; i < savedLocations.size(); i++) {
+                if (savedLocations.get(i).getTitle().contains(location)) {
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(savedLocations.get(i).getLat(), savedLocations.get(i).getLongt())).title(savedLocations.get(i).getTitle()));
                 }
             }
             Toast.makeText(MapActivity.this, "Showing Searched Place", Toast.LENGTH_SHORT).show();
@@ -355,8 +417,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             case R.id.B_places:
                 if (!showSavedPlaces) {
 
-                    for (int i = 0; i < places.size(); i++) {
-                        mMap.addMarker(new MarkerOptions().position(new LatLng(places.get(i).getLat(), places.get(i).getLongt())).title(places.get(i).getTitle()));
+                    for (int i = 0; i < savedLocations.size(); i++) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(savedLocations.get(i).getLat(), savedLocations.get(i).getLongt())).title(savedLocations.get(i).getTitle()));
                     }
                     Toast.makeText(MapActivity.this, "Showing Nearby Saved Places", Toast.LENGTH_SHORT).show();
                     showSavedPlaces = true;
@@ -369,9 +431,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             case R.id.B_work:
                 mMap.clear();
                 if (!showWork) {
-                    for (int i = 0; i < places.size(); i++) {
-                        if (places.get(i).getPlaceType().equals("Work")) {
-                            mMap.addMarker(new MarkerOptions().position(new LatLng(places.get(i).getLat(), places.get(i).getLongt())).title(places.get(i).getTitle()));
+                    for (int i = 0; i < savedLocations.size(); i++) {
+                        if (savedLocations.get(i).getPlaceType().equals("Work")) {
+                            mMap.addMarker(new MarkerOptions().position(new LatLng(savedLocations.get(i).getLat(), savedLocations.get(i).getLongt())).title(savedLocations.get(i).getTitle()));
                         }
                     }
                     Toast.makeText(MapActivity.this, "Showing Work", Toast.LENGTH_SHORT).show();
@@ -385,9 +447,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             case R.id.B_shops:
                 mMap.clear();
                 if (!showShops) {
-                    for (int i = 0; i < places.size(); i++) {
-                        if (places.get(i).getPlaceType().equals("Shop")) {
-                            mMap.addMarker(new MarkerOptions().position(new LatLng(places.get(i).getLat(), places.get(i).getLongt())).title(places.get(i).getTitle()));
+                    for (int i = 0; i < savedLocations.size(); i++) {
+                        if (savedLocations.get(i).getPlaceType().equals("Shop")) {
+                            mMap.addMarker(new MarkerOptions().position(new LatLng(savedLocations.get(i).getLat(), savedLocations.get(i).getLongt())).title(savedLocations.get(i).getTitle()));
                         }
                     }
                     Toast.makeText(MapActivity.this, "Showing Nearby Shops", Toast.LENGTH_SHORT).show();

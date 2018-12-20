@@ -8,7 +8,7 @@ public class eventGeneric implements Serializable{
     private String description;
     private String startTime;
     private String endTime;
-    private Place location;
+    private LocationObject location;
 
     public eventGeneric(String title, String eventType)
     {
