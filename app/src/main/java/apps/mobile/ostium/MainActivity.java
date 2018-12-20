@@ -26,11 +26,16 @@ import apps.mobile.ostium.Module.CalendarProviderIntentService;
 import apps.mobile.ostium.Module.CardObject;
 import apps.mobile.ostium.Module.EventGeneric;
 import apps.mobile.ostium.Module.LocationObject;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.abs;
+
 
 //        Main Activity
 //        Home Activity
@@ -61,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
 
+    private GoogleApiClient googleApiClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
 
         selectedEvent = null;
 
@@ -117,6 +123,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
+
+        // get the user to sign into there google account
+        GoogleSignInOptions SIO = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, null)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, SIO)
+                .build();
     }
 
     //region Drawer Methods
@@ -290,17 +306,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    protected void onStop() {
-        Log.w(TAG, "App stopped");
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        Log.w(TAG, "App destroyed");
-
-        super.onDestroy();
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        if (requestCode == 111) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            try {
+                GoogleSignInResult res = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private class CalendarResultReceiver extends ResultReceiver {

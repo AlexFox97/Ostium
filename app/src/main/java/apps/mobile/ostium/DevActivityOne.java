@@ -1,5 +1,7 @@
 package apps.mobile.ostium;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.Manifest;
@@ -8,8 +10,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Handler;
-import android.os.ResultReceiver;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,10 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import Objects.Request.GetLocationRequest;
-import apps.mobile.ostium.Module.CalendarProviderIntentService;
 import apps.mobile.ostium.Module.GPSModule;
-
-import java.util.ArrayList;
+import apps.mobile.ostium.Module.NotificationModule;
 
 public class DevActivityOne extends AppCompatActivity
 {
@@ -31,10 +29,10 @@ public class DevActivityOne extends AppCompatActivity
     private final int GPSPingTime = 2000;
     private final int GPSDistance = 0;
 
-
-
     private TextView t;
     private GPSModule GPS;
+
+    private NotificationModule notification;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -45,11 +43,8 @@ public class DevActivityOne extends AppCompatActivity
         t = findViewById(R.id.textView);
 
         initializeGPS();
-        //initializeCal();
+        notification = new NotificationModule((NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE), this);
     }
-
-
-
 
     private void initializeGPS()
     {
@@ -61,6 +56,7 @@ public class DevActivityOne extends AppCompatActivity
             public void onLocationChanged(Location location)
             {
                 t.append("\n " + location.getLongitude() + " " + location.getLatitude());
+                notification.pushNotification("New Location!!!", location.getLongitude() + " " + location.getLatitude());
             }
 
             @Override
