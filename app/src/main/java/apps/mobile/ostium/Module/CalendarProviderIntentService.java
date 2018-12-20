@@ -38,16 +38,14 @@ public class CalendarProviderIntentService extends IntentService
     {
         // Get ResultReceiver from the Intent passed to service
         final ResultReceiver receiver = intent.getParcelableExtra("receiver");
-
+        final ArrayList<Integer> calendars = (ArrayList) intent.getSerializableExtra("calendars");
 
 
         // Create bundle to store data to send back
         Bundle bundle = new Bundle();
 
-        ArrayList<String> tempIn = new ArrayList<>();
-        tempIn.add("4");
 
-        ArrayList<eventGeneric> events = getEvents(tempIn);
+        ArrayList<eventGeneric> events = getEvents(calendars);
 
         bundle.putSerializable("events", events);
 
@@ -59,7 +57,7 @@ public class CalendarProviderIntentService extends IntentService
     }
 
     @SuppressLint("MissingPermission")
-    private ArrayList getEvents(ArrayList<String> calendarIDs)
+    private ArrayList getEvents(ArrayList<Integer> calendarIDs)
     {
 
         ArrayList<eventGeneric> returnList = new ArrayList<>();
@@ -79,7 +77,7 @@ public class CalendarProviderIntentService extends IntentService
 
         Uri uri = CalendarContract.Events.CONTENT_URI;
 
-        for(String item : calendarIDs) {
+        for(Integer item : calendarIDs) {
             //Suppressing check for permissions here, all permissions should be granted before this function is called
             cur = cr.query(uri, mProjection, CalendarContract.Events.CALENDAR_ID + " =  '" + item + "'", null, null);
 
@@ -111,13 +109,13 @@ public class CalendarProviderIntentService extends IntentService
 
         for(eventGeneric item: new ArrayList<>(returnList))
         {
-
-            if( Double.parseDouble( item.getStartTime()) < timeNow)
-                returnList.remove(item);
-            else {
+//
+//            if( Double.parseDouble( item.getStartTime()) < timeNow)
+//                returnList.remove(item);
+//            else {
                 item.setStartTime(dateFormat.format(new Date(Long.parseLong(item.getStartTime()))));
                 item.setEndTime(dateFormat.format(new Date(Long.parseLong(item.getEndTime()))));
-            }
+//            }
         }
 
 

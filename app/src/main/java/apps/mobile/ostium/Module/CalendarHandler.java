@@ -25,7 +25,7 @@ public class CalendarHandler {
 
                 };
 
-        Uri uri = CalendarContract.Events.CONTENT_URI;
+        Uri uri = CalendarContract.Calendars.CONTENT_URI;
 
         //Suppressing check for permissions here, all permissions should be granted before this function is called
         cur = cr.query(uri, mProjection, null, null, null);
@@ -34,7 +34,7 @@ public class CalendarHandler {
 
         while (cur.moveToNext())
         {
-            String value = cur.getString(cur.getColumnIndex(CalendarContract.Calendars._ID)) + " : " + cur.getString(cur.getColumnIndex(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME));
+            String value = cur.getString(cur.getColumnIndex(CalendarContract.Calendars._ID)) + ": " + cur.getString(cur.getColumnIndex(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME));
             if(!calendars.contains(value))
             {
                 calendars.add(value);

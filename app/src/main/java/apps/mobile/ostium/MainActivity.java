@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public ArrayList<eventGeneric> userCalendarEvents = new ArrayList<>();
 
+    public static ArrayList<Integer> calendarID = new ArrayList<>();
+
     CalendarResultReceiver calendarResultHandler;
 
     @Override
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        getEventList();
+
         selectedEvent = null;
 
         // region CardRecycler - onCreate
@@ -181,6 +183,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return result;
     }
 
+    protected void onResume()
+    {
+        getEventList();
+    }
+
 
     private List<TagInfo> createTagList(int size) {
 
@@ -197,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     {
         //On click of text in main activity
         //TODO: Show AlertDialog to select an event and then set location and return
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -256,6 +264,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Intent startIntent = new Intent(this, CalendarProviderIntentService.class);
         startIntent.putExtra("receiver", calendarResultHandler);
+        startIntent.putExtra("calendars", calendarID);
         startService(startIntent);
 
     }
