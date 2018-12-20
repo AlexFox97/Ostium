@@ -9,45 +9,45 @@ import apps.mobile.ostium.Module.CardObject;
 
 import java.util.List;
 
-public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ContactViewHolder> {
+public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder> {
 
-    private List<CardObject> contactList;
+    private List<CardObject> events;
 
-    public CardAdapter(List<CardObject> contactList) {
-        this.contactList = contactList;
+    public CardAdapter(List<CardObject> events) {
+        this.events = events;
     }
 
 
     @Override
     public int getItemCount() {
-        return contactList.size();
+        return events.size();
     }
 
     @Override
-    public void onBindViewHolder(ContactViewHolder contactViewHolder, int i) {
-        CardObject ci = contactList.get(i);
-        contactViewHolder.vTitle.setText(ci.title);
-        contactViewHolder.vDetails.setText(ci.details);
-        contactViewHolder.vDate.setText(ci.date);
+    public void onBindViewHolder(CardViewHolder cardViewHolder, int i) {
+        CardObject ci = events.get(i);
+        cardViewHolder.vTitle.setText(ci.title);
+        cardViewHolder.vDetails.setText(ci.details);
+        cardViewHolder.vDate.setText(ci.date);
         //contactViewHolder.vTitle.setText(ci.name + " " + ci.surname);
     }
 
     @Override
-    public ContactViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public CardViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
                 inflate(R.layout.card_layout_ostium, viewGroup, false);
 
-        return new ContactViewHolder(itemView);
+        return new CardViewHolder(itemView);
     }
 
-    public static class ContactViewHolder extends RecyclerView.ViewHolder {
+    public static class CardViewHolder extends RecyclerView.ViewHolder {
 
         protected TextView vTitle;
         protected TextView vDetails;
         protected TextView vDate;
 
-        public ContactViewHolder(View v) {
+        public CardViewHolder(View v) {
             super(v);
             vTitle = (TextView) v.findViewById(R.id.title);
             vDetails = (TextView) v.findViewById(R.id.details);

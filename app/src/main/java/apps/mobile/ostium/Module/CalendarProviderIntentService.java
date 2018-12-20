@@ -1,18 +1,14 @@
 package apps.mobile.ostium.Module;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.IntentService;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.provider.CalendarContract;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -45,7 +41,7 @@ public class CalendarProviderIntentService extends IntentService
         Bundle bundle = new Bundle();
 
 
-        ArrayList<eventGeneric> events = getEvents(calendars);
+        ArrayList<EventGeneric> events = getEvents(calendars);
 
         bundle.putSerializable("events", events);
 
@@ -60,7 +56,7 @@ public class CalendarProviderIntentService extends IntentService
     private ArrayList getEvents(ArrayList<Integer> calendarIDs)
     {
 
-        ArrayList<eventGeneric> returnList = new ArrayList<>();
+        ArrayList<EventGeneric> returnList = new ArrayList<>();
 
         Cursor cur;
         ContentResolver cr = getContentResolver();
@@ -92,7 +88,7 @@ public class CalendarProviderIntentService extends IntentService
                 String end = cur.getString(cur.getColumnIndex(CalendarContract.Events.DTEND));
 
 
-                eventGeneric event = new eventGeneric(title, accountType);
+                EventGeneric event = new EventGeneric(title, accountType);
                 event.setDescription(desc);
                 event.setStartTime(start);
                 event.setEndTime(end);
@@ -107,7 +103,7 @@ public class CalendarProviderIntentService extends IntentService
 
         double timeNow = System.currentTimeMillis();
 
-        for(eventGeneric item: new ArrayList<>(returnList))
+        for (EventGeneric item : new ArrayList<>(returnList))
         {
 //
 //            if( Double.parseDouble( item.getStartTime()) < timeNow)

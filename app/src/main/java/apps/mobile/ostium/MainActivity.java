@@ -24,11 +24,13 @@ import android.view.MenuItem;
 import android.view.View;
 import apps.mobile.ostium.Module.CalendarProviderIntentService;
 import apps.mobile.ostium.Module.CardObject;
+import apps.mobile.ostium.Module.EventGeneric;
 import apps.mobile.ostium.Module.LocationObject;
-import apps.mobile.ostium.Module.eventGeneric;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.Math.abs;
 
 //        Main Activity
 //        Home Activity
@@ -44,11 +46,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String LogTagClass = MainActivity.class.getSimpleName();
     private static final int PermissionCorrect = 1;
     private static final String TAG = "main activity";
-    public static eventGeneric selectedEvent;
-    public static ArrayList<eventGeneric> userSelectedEvents = new ArrayList<>();
+    public static EventGeneric selectedEvent;
+    public static ArrayList<EventGeneric> userSelectedEvents = new ArrayList<>();
     public static ArrayList<Integer> calendarID = new ArrayList<>();
     public static ArrayList<LocationObject> savedLocations = new ArrayList<>();
-    public ArrayList<eventGeneric> userCalendarEvents = new ArrayList<>();
+    public static ArrayList<CardObject> cardList = new ArrayList<>();
+    private static CardAdapter ca;
+    public ArrayList<EventGeneric> userCalendarEvents = new ArrayList<>();
     CalendarResultReceiver calendarResultHandler;
     private DrawerLayout dl;
     private ActionBarDrawerToggle t;
@@ -77,6 +81,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         selectedEvent = null;
 
+        //region Sample Cards
+        if (userSelectedEvents.size() == 0) {
+            userSelectedEvents.add(new EventGeneric("Sample1", "Sample1"));
+            userSelectedEvents.add(new EventGeneric("Sample2", "Sample2"));
+            userSelectedEvents.add(new EventGeneric("Sample3", "Sample3"));
+        }
+
         // region CardRecycler - onCreate
         RecyclerView recCardList = (RecyclerView) findViewById(R.id.cardList);
         recCardList.setHasFixedSize(true);
@@ -84,7 +95,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         llmCard.setOrientation(LinearLayoutManager.VERTICAL);
         recCardList.setLayoutManager(llmCard);
 
-        CardAdapter ca = new CardAdapter(createCardList(8));
+        cardList = createCardList();
+        ca = new CardAdapter(cardList);
         recCardList.setAdapter(ca);
 
         // region ListRecycler - onCreate
@@ -154,24 +166,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //endregion Drawer
 
 
-    private List<CardObject> createCardList(int size) {
+    private ArrayList<CardObject> createCardList() {
 
-        List<CardObject> result = new ArrayList<CardObject>();
-        for (eventGeneric item : userSelectedEvents) {
-            CardObject ci = new CardObject();
-//            ci.name = (CardInfo.NAME_PREFIX) + " title " + i;
-//            ci.surname = CardInfo.SURNAME_PREFIX + ""+ i;
-//            ci.email = CardInfo.EMAIL_PREFIX + "other "+i + "@test.com";
+        cardList = new ArrayList<CardObject>();
+        for (EventGeneric item : userSelectedEvents) {
+            CardObject ci = new CardObject(item);
 
             ci.title = item.getTitle();
             ci.details = item.getDescription();
 
             ci.date = item.getStartTime();
-            result.add(ci);
-
+            cardList.add(ci);
         }
-
-        return result;
+        return cardList;
     }
 
     protected void onResume() {
@@ -203,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ArrayList<String> eventTitlesTemp = new ArrayList<>();
 
 
-        for (eventGeneric event : userCalendarEvents) {
+        for (EventGeneric event : userCalendarEvents) {
             eventTitlesTemp.add(event.getTitle());
         }
 
@@ -214,9 +221,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         builder.setPositiveButton("Add Event", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                selectedEvent = userCalendarEvents.get(which);
-                dialog.dismiss();
-
+                //todo alex fix this
+                selectedEvent = userCalendarEvents.get(abs(which));
+                userSelectedEvents.add(0, selectedEvent);
+                cardList.add(0, new CardObject(selectedEvent));
+                ca.notifyItemInserted(0);
                 //TODO: Handle selected event
 
             }
