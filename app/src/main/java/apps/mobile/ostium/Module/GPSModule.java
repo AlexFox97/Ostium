@@ -1,9 +1,12 @@
 package apps.mobile.ostium.Module;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
+
 import Objects.Request.GetLocationRequest;
 import Objects.Result.ResultStatus;
 
