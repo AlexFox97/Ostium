@@ -276,20 +276,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //This will be updated when "adding a location" functionality is completed
     public void setUpPlacesList() {
         //Places to add to list
-        LocationObject cantorBuilding = new LocationObject("Cantor", 53.3769219, -1.4677611345050374, "Work");
-        LocationObject aldiSheffield = new LocationObject("Aldi Sheffield", 53.372670, -1.475285, "Shop");
-        LocationObject tescoExpress = new LocationObject("Tesco Express", 53.379121, -1.467388, "Shop");
-        LocationObject asdaQueensRoad = new LocationObject("Asda Queens Road", 53.368411, -1.463179, "Shop");
-        LocationObject moorMarket = new LocationObject("Moor Market", 53.375677, -1.472894, "Shop");
-        LocationObject owenBuilding = new LocationObject("Owen Building", 53.379564, -1.465743, "Place");
-
-
-        MainActivity.savedLocations.add(aldiSheffield);
-        MainActivity.savedLocations.add(cantorBuilding);
-        MainActivity.savedLocations.add(tescoExpress);
-        MainActivity.savedLocations.add(moorMarket);
-        MainActivity.savedLocations.add(owenBuilding);
-        MainActivity.savedLocations.add(asdaQueensRoad);
 //
 //        savedLocations.add(0, cantorBuilding);
 //        savedLocations.add(1, aldiSheffield);

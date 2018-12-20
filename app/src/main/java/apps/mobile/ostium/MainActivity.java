@@ -133,6 +133,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .enableAutoManage(this, null)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, SIO)
                 .build();
+
+        LocationObject cantorBuilding = new LocationObject("Cantor", 53.3769219, -1.4677611345050374, "Work");
+        LocationObject aldiSheffield = new LocationObject("Aldi Sheffield", 53.372670, -1.475285, "Shop");
+        LocationObject tescoExpress = new LocationObject("Tesco Express", 53.379121, -1.467388, "Shop");
+        LocationObject asdaQueensRoad = new LocationObject("Asda Queens Road", 53.368411, -1.463179, "Shop");
+        LocationObject moorMarket = new LocationObject("Moor Market", 53.375677, -1.472894, "Shop");
+        LocationObject owenBuilding = new LocationObject("Owen Building", 53.379564, -1.465743, "Place");
+
+
+        savedLocations.add(aldiSheffield);
+        savedLocations.add(cantorBuilding);
+        savedLocations.add(tescoExpress);
+        savedLocations.add(moorMarket);
+        savedLocations.add(owenBuilding);
+        savedLocations.add(asdaQueensRoad);
     }
 
     //region Drawer Methods
@@ -242,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 userSelectedEvents.add(0, selectedEvent);
                 cardList.add(0, new CardObject(selectedEvent));
                 ca.notifyItemInserted(0);
+                selectedEvent = null;
                 //TODO: Handle selected event
 
             }
