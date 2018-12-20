@@ -26,6 +26,52 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         this.events = events;
     }
 
+    public static void addLocationTags(View v) {
+        final Context context = v.getContext();
+        ArrayList<String> locationTitlesTemp = new ArrayList<>();
+        final Boolean checkedLocations[];
+        checkedLocations = new Boolean[savedLocations.size()];
+        Arrays.fill(checkedLocations, false);
+        for (LocationObject location : savedLocations) {
+            locationTitlesTemp.add(location.getTitle());
+        }
+
+        final String[] locationTitles = GetStringArray(locationTitlesTemp);
+        final List<String> locationList = Arrays.asList(locationTitles);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        DialogInterface.OnMultiChoiceClickListener multiListener = new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+
+                // Update the current focused item's checked status
+                checkedLocations[which] = isChecked;
+
+                // Get the current focused item
+                String currentItem = locationList.get(which);
+
+                // Notify the current action
+                Toast.makeText(context, currentItem + " " + isChecked, Toast.LENGTH_SHORT).show();
+            }
+        };
+        builder.setMultiChoiceItems(locationTitles, null, multiListener);
+        // Specify the dialog is not cancelable
+        builder.setCancelable(false);
+
+        // Set a title for alert dialog
+        builder.setTitle("Tag some locations?");
+
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //TODO: Handle selected event
+
+            }
+        });
+
+        AlertDialog addEventAlert = builder.create();
+        addEventAlert.show();
+    }
+
     private static String[] GetStringArray(ArrayList<String> arr) {
 
         // declaration and initialise String Array
@@ -78,48 +124,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             view.setOnClickListener(new View.OnClickListener() {  // <--- here
                 @Override
                 public void onClick(View v) {
-                    final Context context = v.getContext();
-                    final boolean[] checkedLocations = new boolean[]{};
-                    ArrayList<String> locationTitlesTemp = new ArrayList<>();
-
-                    for (LocationObject location : savedLocations) {
-                        locationTitlesTemp.add(location.getTitle());
-                    }
-
-                    final String[] locationTitles = GetStringArray(locationTitlesTemp);
-                    final List<String> locationList = Arrays.asList(locationTitles);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-                    builder.setMultiChoiceItems(locationTitles, checkedLocations, new DialogInterface.OnMultiChoiceClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-
-                            // Update the current focused item's checked status
-                            checkedLocations[which] = isChecked;
-
-                            // Get the current focused item
-                            String currentItem = locationList.get(which);
-
-                            // Notify the current action
-                            Toast.makeText(context, currentItem + " " + isChecked, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    // Specify the dialog is not cancelable
-                    builder.setCancelable(false);
-
-                    // Set a title for alert dialog
-                    builder.setTitle("Tag some locations?");
-
-                    builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //TODO: Handle selected event
-
-                        }
-                    });
-
-                    AlertDialog addEventAlert = builder.create();
-                    addEventAlert.show();
+                    addLocationTags(v);
                 }
             });
         }
