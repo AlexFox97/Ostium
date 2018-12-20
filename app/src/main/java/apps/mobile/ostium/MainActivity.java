@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return str;
     }
 
-    private void getEventList()
+    public void getEventList()
     {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)
         {
