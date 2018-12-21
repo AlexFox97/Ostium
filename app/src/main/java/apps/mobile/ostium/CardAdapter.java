@@ -51,6 +51,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
                 // Notify the current action
                 Toast.makeText(context, currentItem + " " + isChecked, Toast.LENGTH_SHORT).show();
+
             }
         };
         builder.setMultiChoiceItems(locationTitles, null, multiListener);
@@ -63,7 +64,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //TODO: Handle selected event
+                //TODO: Current card
 
             }
         });
@@ -98,6 +99,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         cardViewHolder.vTitle.setText(ci.title);
         cardViewHolder.vDetails.setText(ci.details);
         cardViewHolder.vDate.setText(ci.date);
+        String s = ci.getLocationsToString();
+        cardViewHolder.vTags.setText(s);
+        //cardViewHolder.vTags.setAdapter();
     }
 
     @Override
@@ -115,12 +119,16 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         protected TextView vTitle;
         protected TextView vDetails;
         protected TextView vDate;
+        protected TextView vTags;
+        // protected RecyclerView vTags;
 
         public CardViewHolder(final View view) {
             super(view);
             vTitle = (TextView) view.findViewById(R.id.title);
             vDetails = (TextView) view.findViewById(R.id.details);
             vDate = (TextView) view.findViewById(R.id.date);
+            vTags = view.findViewById(R.id.tagList);
+            //vTags = (RecyclerView) view.findViewById(R.id.tagList);
             view.setOnClickListener(new View.OnClickListener() {  // <--- here
                 @Override
                 public void onClick(View v) {

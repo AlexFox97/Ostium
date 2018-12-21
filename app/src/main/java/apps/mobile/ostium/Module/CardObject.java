@@ -18,7 +18,7 @@ public class CardObject {
         this.date = date;
         this.sourceName = sourceName;
         this.sourceColour = sourceColour;
-        Locations = locations;
+        this.Locations = locations;
     }
 
     public CardObject(EventGeneric event) {
@@ -28,7 +28,7 @@ public class CardObject {
         this.date = event.getStartTime();
 //        this.sourceName = event.getSourceName;
 //        this.sourceColour = event.getSourceColour;
-        Locations = event.getLocationTags();
+        this.Locations = event.getLocationTags();
     }
 
     public int getCardID() {
@@ -89,5 +89,16 @@ public class CardObject {
 
     public void addLocation(LocationObject location) {
         Locations.add(location);
+    }
+
+    public String getLocationsToString() {
+        StringBuilder s = new StringBuilder();
+        if (Locations != null) {
+            for (LocationObject loc : Locations) {
+                s.append(loc.getTitle() + "     ");
+            }
+            return s.toString();
+        } else
+            return "error";
     }
 }
