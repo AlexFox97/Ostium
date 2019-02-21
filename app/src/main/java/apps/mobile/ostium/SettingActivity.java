@@ -1,6 +1,7 @@
 package apps.mobile.ostium;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.Toast;
 import apps.mobile.ostium.Module.CalendarHandler;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import static apps.mobile.ostium.MainActivity.calendarID;
@@ -123,6 +125,7 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewAd
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
 
 }
 

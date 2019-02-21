@@ -2,6 +2,7 @@ package apps.mobile.ostium;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -31,6 +32,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String LogTagClass = MainActivity.class.getSimpleName();
     private static final int PermissionCorrect = 1;
     private static final String TAG = "main activity";
+    public static final String settingsFileName = "usersettings";
     public static EventGeneric selectedEvent;
     public static ArrayList<EventGeneric> userSelectedEvents = new ArrayList<>();
     public static ArrayList<Integer> calendarID = new ArrayList<>();
@@ -148,6 +154,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         savedLocations.add(moorMarket);
         savedLocations.add(owenBuilding);
         savedLocations.add(asdaQueensRoad);
+
+        loadCalendarId();
     }
 
     //region Drawer Methods
@@ -360,4 +368,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+
+        try {
+            FileOutputStream fos = openFileOutput(MainActivity.settingsFileName, Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(calendarID);
+            os.close();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private void loadCalendarId()
+    {
+        super.onStart();
+
+
+        try {
+            FileInputStream fis = openFileInput(MainActivity.settingsFileName);
+            ObjectInputStream is = new ObjectInputStream(fis);
+            calendarID = (ArrayList) is.readObject();
+            is.close();
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 }
