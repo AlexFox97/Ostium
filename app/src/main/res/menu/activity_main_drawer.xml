@@ -2,31 +2,31 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/nav_location"
+            android:id="@+id/nav_location"
 
-        android:title="@string/locationScreenName" />
-
-    <item
-        android:id="@+id/nav_map"
-
-        android:title="@string/mapScreenName" />
+            android:title="@string/locationScreenName"/>
 
     <item
-        android:id="@+id/nav_settings"
+            android:id="@+id/nav_map"
 
-        android:title="@string/settingsScreenName" />
+            android:title="@string/mapScreenName"/>
 
     <item
-        android:id="@+id/nav_dev_one"
+            android:id="@+id/nav_settings"
 
-        android:title="@string/devOneScreenName" />
-    <item
-        android:id="@+id/nav_dev_two"
+            android:title="@string/settingsScreenName"/>
 
-        android:title="@string/devTwoScreenName" />
-    <item
-        android:id="@+id/nav_dev_three"
+    <!--<item-->
+    <!--android:id="@+id/nav_dev_one"-->
 
-        android:title="@string/devThreeScreenName" />
+    <!--android:title="@string/devOneScreenName" />-->
+    <!--<item-->
+    <!--android:id="@+id/nav_dev_two"-->
+
+    <!--android:title="@string/devTwoScreenName" />-->
+    <!--<item-->
+    <!--android:id="@+id/nav_dev_three"-->
+
+    <!--android:title="@string/devThreeScreenName" />-->
 
 </menu>

@@ -1,5 +1,6 @@
 package apps.mobile.ostium.Module;
 
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -15,13 +16,13 @@ public class NotificationModule
 {
     private NotificationManager manager;
     private String notificationChannelId;
-    private MainActivity mainActivity;
+    private Activity activity;
 
-    public NotificationModule(NotificationManager notificationManager, MainActivity mainActivity)
+    public NotificationModule(NotificationManager notificationManager, Activity activity)
     {
         manager = notificationManager;
-        this.mainActivity = mainActivity;
-        createNotificationChannel(mainActivity.getApplicationContext());
+        this.activity = activity;
+        notificationChannelId = createNotificationChannel(activity.getApplicationContext());
     }
 
     public void pushNotification(String title, String message)
@@ -31,7 +32,7 @@ public class NotificationModule
         // but doesn't seem to work for me
         // Bean
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mainActivity.getApplicationContext(), "channelID");
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(activity.getApplicationContext(), notificationChannelId);
         notificationBuilder.setContentTitle(title);
         notificationBuilder.setContentText(message);
 
@@ -41,11 +42,11 @@ public class NotificationModule
 
         // what to do when you click on the notification
         // this just take the user back to the app
-        Intent intent = new Intent(mainActivity.getApplicationContext(), mainActivity.getClass());
+        Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());
         intent.setAction(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(mainActivity.getApplicationContext(), 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
         notificationBuilder.setContentIntent(pendingIntent);
 
         manager.notify(0, notificationBuilder.build());
