@@ -150,14 +150,14 @@
     </style>
 
     <style name = "page_background_red">
-        <item name = "android:background">@color/red</item>
-        <item name = "android:paddingLeft">@dimen/activity_horizontal_padding</item>
-        <item name = "android:paddingRight">@dimen/activity_horizontal_padding</item>
+        <item name = "android:background">@color/accent1</item>
+        <item name = "android:paddingLeft">@color/accent1</item>
+        <item name = "android:paddingRight">@color/accent1</item>
     </style>
 
     <style name = "Ostium_Light_2" parent = "Theme.AppCompat.Light.NoActionBar">
-        <item name = "android:colorPrimary">@color/primary_material_light</item>
-        <item name = "android:colorPrimaryDark">@color/primary_dark_material_light</item>
+        <item name = "android:colorPrimary">@color/accent1</item>
+        <item name = "android:colorPrimaryDark">@color/accent1</item>
     </style>
 </resources>
 

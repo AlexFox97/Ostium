@@ -7,6 +7,7 @@
     android:id = "@+id/relativeLayout"
     android:layout_height = "match_parent"
     android:layout_width = "match_parent"
+    android:focusable="true"
     >
 
     <android.support.design.widget.AppBarLayout
@@ -69,6 +70,7 @@
         android:layout_marginStart = "8dp"
         android:layout_marginTop = "8dp"
         android:layout_width = "0dp"
+        android:contentDescription="@string/mapScreenName"
         android:name = "com.google.android.gms.maps.SupportMapFragment"
         tools:context = ".MapActivity"
         map:cameraBearing = "112.5"
