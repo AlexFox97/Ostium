@@ -7,16 +7,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
 import org.w3c.dom.Text;
 
 public class DevActivityThree extends AppCompatActivity {
 
     String selectedColour;
+    TextView e = findViewById(R.id.txtColourPickerValue);
+    ColorPickerView z = findViewById(R.id.color_picker_view);
+
+    public static final String SHARED_PREFS = "sharedPrefs";
+    public static final String COLOUR = "colour";
+
+    private int col;
+    private Button applyTextButton;
+    public int colourPickerColour;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,18 +37,17 @@ public class DevActivityThree extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ColorPickerView s = findViewById(R.id.color_picker_view);
 
-        selectedColour = s.getSelectedColor()+"";
-        TextView e = findViewById(R.id.colourTextview);
-        s.getSelectedColor();
+        selectedColour = z.getSelectedColor()+"";
 
-        s.setOnClickListener(new View.OnClickListener() {
+        e.setText("Selected Colour: "+selectedColour);
+
+        z.getSelectedColor();
+
+        z.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ColorPickerView z = findViewById(R.id.color_picker_view);
                 selectedColour = z.getSelectedColor()+"";
-                TextView e = findViewById(R.id.colourTextview);
                 e.setText(selectedColour);
             }
         });
@@ -51,26 +61,24 @@ public class DevActivityThree extends AppCompatActivity {
     }
 
     //Shared Preferences Code
+    public void saveInfo() {
+        saveData();
+    }
+
+    //Shared Preferences Code
     public void saveData() {
         //No other app can change our shared preferences
-        /*SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putString(TEXT, textView.getText().toString());
-        editor.putBoolean(SWITCH1, switch_1.isChecked());
+        editor.putInt(COLOUR, colourPickerColour);
 
         editor.apply();
-        Toast.makeText(this, "Data saved", Toast.LENGTH_SHORT);*/
+        Toast.makeText(this, "Data saved", Toast.LENGTH_SHORT);
     }
 
     public void loadData(){
-        /*SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        text = sharedPreferences.getString(TEXT, "");
-        switchOnOff = sharedPreferences.getBoolean(SWITCH1, false);*/
-    }
-
-    public void updateViews(){
-        /*textView.setText(text);
-        switch_1.setChecked(switchOnOff);*/
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        col = sharedPreferences.getInt(COLOUR, 0);
     }
 }

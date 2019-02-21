@@ -25,6 +25,36 @@
         <!--<item name="spinner">@style/spinner_wh</item>-->
     </style>
 
+    <style name="Theme.Ostium.Deuteranopia" parent = "Theme.AppCompat.NoActionBar">
+        <item name = "android:colorPrimary">@color/brilliant_blues_5</item>
+        <item name = "android:colorPrimaryDark">@color/primary_dark2</item>
+        <item name = "android:colorAccent">@color/accent2</item>
+        <item name = "android:textColorPrimary">@color/brilliant_blues_1</item>
+        <item name = "android:textColorSecondary">@color/brilliant_blues_2</item>
+        <item name = "android:icon">@color/icons2</item>
+        <item name = "android:divider">@color/divider2</item>
+    </style>
+
+    <style name="Theme.Ostium.Protanopia" parent = "Theme.AppCompat.NoActionBar">
+        <item name = "android:colorPrimary">@color/primary2</item>
+        <item name = "android:colorPrimaryDark">@color/primary_dark2</item>
+        <item name = "android:colorAccent">@color/accent2</item>
+        <item name = "android:textColorPrimary">@color/primary_text2</item>
+        <item name = "android:textColorSecondary">@color/secondary_text2</item>
+        <item name = "android:icon">@color/icons2</item>
+        <item name = "android:divider">@color/divider2</item>
+    </style>
+
+    <style name="Theme.Ostium.Tritanopia" parent = "Theme.AppCompat.NoActionBar">
+        <item name = "android:colorPrimary">@color/primary2</item>
+        <item name = "android:colorPrimaryDark">@color/primary_dark2</item>
+        <item name = "android:colorAccent">@color/accent2</item>
+        <item name = "android:textColorPrimary">@color/primary_text2</item>
+        <item name = "android:textColorSecondary">@color/secondary_text2</item>
+        <item name = "android:icon">@color/icons2</item>
+        <item name = "android:divider">@color/divider2</item>
+    </style>
+
     <style name = "Theme.Ostium_Light" parent = "Theme.AppCompat.NoActionBar">
         <!--<item name = "windowActionBar">false</item>-->
         <!--<item name = "windowNoTitle">false</item>-->

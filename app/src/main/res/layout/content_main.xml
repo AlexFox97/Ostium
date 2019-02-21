@@ -60,7 +60,7 @@
         app:elevation = "6dp"
         app:layout_constraintBottom_toBottomOf = "@+id/cardList"
         app:layout_constraintEnd_toStartOf = "@+id/guideline3"
-
+        android:contentDescription="Add new task"
         app:srcCompat = "@drawable/ic_add_black_24dp"
         />
 

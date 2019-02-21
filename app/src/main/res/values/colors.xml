@@ -57,4 +57,23 @@
     <color name = "primary_material_light">#00adb5</color>
     <color name = "primary_dark_material_light">#00adb5</color>
 
+    <color name = "brilliant_blues_1">#37AFA9</color>
+    <color name = "brilliant_blues_2">#2D8E87</color>
+    <color name = "brilliant_blues_3">#0C695D</color>
+    <color name = "brilliant_blues_4">#F0F2F2</color>
+    <color name = "brilliant_blues_5">#152329</color>
+
+    <color name = "classic_1">#CA3542</color>
+    <color name = "classic_2">#27647B</color>
+    <color name = "classic_3">#849FAD</color>
+    <color name = "classic_4">#AECBC9</color>
+    <color name = "classic_5">#57575F</color>
+
+    <color name = "sunny_1">#DA5526</color>
+    <color name = "sunny_2">#F6893D</color>
+    <color name = "sunny_3">#FEBC38</color>
+    <color name = "sunny_4">#D8C684</color>
+    <color name = "sunny_5">#697F98</color>
+
+
 </resources>
