@@ -37,6 +37,8 @@ public class TaskModule
     private Activity activity;
     GoogleSignInResult res;
 
+    public ArrayList<Task> allTasks;
+
     public TaskModule(Activity a, GoogleApiClient googleApiClient)
     {
         activity = a;
@@ -54,10 +56,13 @@ public class TaskModule
     {
         final AccountManager manager = AccountManager.get(activity.getApplicationContext());
         final Bundle options = new Bundle();
-        if (res.isSuccess())
+        allTasks = new ArrayList<>();
+
+        if (res != null && res.isSuccess())
         {
             account = res.getSignInAccount();
             final String AUTH_TOKEN_TYPE = "Manage your tasks";
+
             @SuppressLint("StaticFieldLeak")
             AsyncTask task = new AsyncTask()
             {
@@ -85,9 +90,9 @@ public class TaskModule
                                             // is stored in the constant AccountManager.KEY_AUTHTOKEN.
                                             //String token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
                                             final String[] scopes = {TasksScopes.TASKS};
-                                            GetAllTaskDetails(GoogleAccountCredential.usingOAuth2(activity.getApplicationContext(), Arrays.asList(scopes))
-                                                    .setBackOff(new ExponentialBackOff())
-                                                    .setSelectedAccount(account.getAccount()));
+                                            allTasks = GetAllTaskDetails(GoogleAccountCredential.usingOAuth2(activity.getApplicationContext(), Arrays.asList(scopes))
+                                                                        .setBackOff(new ExponentialBackOff())
+                                                                        .setSelectedAccount(account.getAccount()));
                                         }
                                         catch (Exception e)
                                         {
@@ -105,6 +110,10 @@ public class TaskModule
             };
             task.execute();
         }
+        Task t = new Task();
+        t.setTitle("Testing Task");
+        t.setNotes("This is a task used in testing");
+        allTasks.add(t);
     }
 
     private ArrayList<Task> GetAllTaskDetails(GoogleAccountCredential credential)
