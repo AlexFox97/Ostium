@@ -1,4 +1,4 @@
-package Objects;
+package apps.mobile.ostium.Objects;
 
 /*
     Generic type for tasks in order to standardise across different API calls

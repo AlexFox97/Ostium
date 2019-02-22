@@ -32,7 +32,7 @@
             android:value="@integer/google_play_services_version"
             />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,64 +40,64 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingActivity"
+            android:name=".Activity.SettingActivity"
             android:label="SettingsActivity"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".Activity.MainActivity"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="apps.mobile.ostium.MainActivity"
+                android:value="apps.mobile.ostium.Activity.MainActivity"
                 />
         </activity>
         <activity
-            android:name=".LocationActivity"
+            android:name=".Activity.LocationActivity"
             android:label="LocationActivity"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".Activity.MainActivity"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="apps.mobile.ostium.MainActivity"
+                android:value="apps.mobile.ostium.Activity.MainActivity"
                 />
         </activity>
         <activity
-            android:name=".DevActivityOne"
+            android:name=".Activity.DevActivityOne"
             android:label="DevActivityOne"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".Activity.MainActivity"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="apps.mobile.ostium.MainActivity"
+                android:value="apps.mobile.ostium.Activity.MainActivity"
                 />
         </activity>
         <activity
-            android:name=".DevActivityTwo"
+            android:name=".Activity.DevActivityTwo"
             android:label="DevActivityTwo"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".Activity.MainActivity"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="apps.mobile.ostium.MainActivity"
+                android:value="apps.mobile.ostium.Activity.MainActivity"
                 />
         </activity>
         <activity
-            android:name=".DevActivityThree"
+            android:name=".Activity.DevActivityThree"
             android:label="DevActivityThree"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".Activity.MainActivity"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="apps.mobile.ostium.MainActivity"
+                android:value="apps.mobile.ostium.Activity.MainActivity"
                 />
         </activity>
         <activity
-            android:name=".MapActivity"
+            android:name=".Activity.MapActivity"
 
             android:label="MapActivity"
-            android:parentActivityName=".LocationActivity"
+            android:parentActivityName=".Activity.LocationActivity"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="apps.mobile.ostium.LocationActivity"
+                android:value="apps.mobile.ostium.Activity.LocationActivity"
                 />
         </activity>
 

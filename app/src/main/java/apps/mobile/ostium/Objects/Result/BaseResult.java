@@ -1,4 +1,4 @@
-package Objects.Result;
+package apps.mobile.ostium.Objects.Result;
 
 public class BaseResult
 {

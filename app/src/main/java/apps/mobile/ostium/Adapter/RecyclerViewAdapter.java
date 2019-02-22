@@ -1,4 +1,4 @@
-package apps.mobile.ostium;
+package apps.mobile.ostium.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import apps.mobile.ostium.Module.LocationObject;
+import apps.mobile.ostium.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +22,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public RecyclerViewAdapter(Context context, ArrayList<LocationObject> locations) {
         this.mInflater = LayoutInflater.from(context);
         ArrayList<String> titles = new ArrayList<>();
-        for (LocationObject temp : locations
-                ) {
+        for (LocationObject temp : locations)
+        {
             titles.add(temp.getTitle());
 
         }
@@ -31,7 +32,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public RecyclerViewAdapter(ArrayList<String> data, Context context) {
         this.mInflater = LayoutInflater.from(context);
-        ArrayList<String> titles = new ArrayList<>();
         this.mData = data;
     }
 
@@ -56,7 +56,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     // convenience method for getting data at click position
-    String getItem(int id) {
+    public String getItem(int id) {
         return mData.get(id);
     }
 

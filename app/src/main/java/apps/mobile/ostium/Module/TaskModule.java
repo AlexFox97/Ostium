@@ -86,9 +86,7 @@ public class TaskModule
                                             // Get the result of the operation from the AccountManagerFuture.
                                             Bundle bundle = result.getResult();
 
-                                            // The token is a named value in the bundle. The name of the value
-                                            // is stored in the constant AccountManager.KEY_AUTHTOKEN.
-                                            //String token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+                                            // The token is a named value in the bundle.
                                             final String[] scopes = {TasksScopes.TASKS};
                                             allTasks = GetAllTaskDetails(GoogleAccountCredential.usingOAuth2(activity.getApplicationContext(), Arrays.asList(scopes))
                                                                         .setBackOff(new ExponentialBackOff())
@@ -126,7 +124,8 @@ public class TaskModule
                 .setApplicationName("Google Tasks API Android Quickstart")
                 .build();
 
-        @SuppressLint("StaticFieldLeak") final AsyncTask task = new AsyncTask()
+        @SuppressLint("StaticFieldLeak")
+        final AsyncTask task = new AsyncTask()
         {
             @Override
             protected Object doInBackground(Object... objects)
@@ -146,6 +145,7 @@ public class TaskModule
                 {
                     e.printStackTrace();
                 }
+
                 return null;
             }
         };

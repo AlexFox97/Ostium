@@ -3,7 +3,8 @@ package apps.mobile.ostium.Module;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class EventGeneric implements Serializable {
+public class EventGeneric implements Serializable
+{
     public ArrayList<LocationObject> locationTags;
     private String title;
     private String eventType;
@@ -13,7 +14,8 @@ public class EventGeneric implements Serializable {
     private String calendarName;
     private LocationObject location;
 
-    public EventGeneric(String title, String eventType) {
+    public EventGeneric(String title, String eventType)
+    {
         this.title = title;
         this.eventType = eventType;
     }

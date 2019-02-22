@@ -1,4 +1,4 @@
-package apps.mobile.ostium;
+package apps.mobile.ostium.Activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -10,11 +10,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
+import apps.mobile.ostium.Adapter.RecyclerViewAdapter;
 import apps.mobile.ostium.Module.CalendarHandler;
+import apps.mobile.ostium.R;
 
 import java.util.ArrayList;
 
-import static apps.mobile.ostium.MainActivity.calendarID;
+import static apps.mobile.ostium.Activity.MainActivity.calendarID;
 
 public class SettingActivity extends AppCompatActivity implements RecyclerViewAdapter.ItemClickListener {
 
@@ -25,13 +27,10 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewAd
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        //region Layout
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //endregion Layout
 
-        //region Main
         // data to populate the RecyclerView with
         ArrayList<String> listData = new ArrayList<>();
         listData.add("Home");
@@ -40,17 +39,13 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewAd
         listData.add("Uni");
         listData.add("Shop");
 
-        // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.SettingsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new RecyclerViewAdapter(listData, this);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
-        //endregion Main
-
     }
 
-    //region Layout Methods
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -62,12 +57,10 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewAd
     public void onItemClick(View view, int position) {
         Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
     }
-    //endregion Layout
 
     public void selectCalendars(View view)
     {
         calendarSelection();
-
     }
 
     private void calendarSelection()
@@ -76,16 +69,13 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewAd
 
         //Create DialogBuilder and set title
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
         final ArrayList<Integer> selectedItems = new ArrayList<>();
 
         //Retrieve list of calendars and convert to pass to AlertDialog
         ArrayList tempCal =  CalendarHandler.getCalendarList(getApplicationContext());
         final CharSequence[] calendars = (CharSequence[]) tempCal.toArray(new CharSequence[tempCal.size()]);
 
-
-        builder.setTitle("Please select your used calendars:");
-
+        builder.setTitle("Please select your calendars:");
         builder.setMultiChoiceItems(calendars,null ,new DialogInterface.OnMultiChoiceClickListener()
         {
             public void onClick(DialogInterface dialog, int item, boolean isChecked)
@@ -123,7 +113,4 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewAd
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
 }
-
-

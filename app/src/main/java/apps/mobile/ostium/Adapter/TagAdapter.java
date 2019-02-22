@@ -1,10 +1,12 @@
-package apps.mobile.ostium;
+package apps.mobile.ostium.Adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import apps.mobile.ostium.R;
+import apps.mobile.ostium.TagInfo;
 
 import java.util.List;
 
@@ -15,7 +17,6 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
     public TagAdapter(List<TagInfo> tagList) {
         this.tagList = tagList;
     }
-
 
     @Override
     public int getItemCount() {
@@ -38,7 +39,6 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
     }
 
     public static class TagViewHolder extends RecyclerView.ViewHolder {
-
         protected TextView vLocationName;
 
         public TagViewHolder(View v) {

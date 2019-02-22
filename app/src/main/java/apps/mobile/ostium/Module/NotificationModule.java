@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
-import apps.mobile.ostium.MainActivity;
 import apps.mobile.ostium.R;
 
 public class NotificationModule
@@ -27,11 +26,6 @@ public class NotificationModule
 
     public void pushNotification(String title, String message)
     {
-        // TODO
-        // made this work for R26 > but for R26 < needs to take a channelId in the builder
-        // but doesn't seem to work for me
-        // Bean
-
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(activity.getApplicationContext(), notificationChannelId);
         notificationBuilder.setContentTitle(title);
         notificationBuilder.setContentText(message);

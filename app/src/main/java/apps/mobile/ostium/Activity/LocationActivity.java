@@ -1,4 +1,4 @@
-package apps.mobile.ostium;
+package apps.mobile.ostium.Activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,35 +8,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
+import apps.mobile.ostium.R;
+import apps.mobile.ostium.Adapter.RecyclerViewAdapter;
 
-import java.util.ArrayList;
-
-import static apps.mobile.ostium.MainActivity.savedLocations;
+import static apps.mobile.ostium.Activity.MainActivity.savedLocations;
 
 public class LocationActivity extends AppCompatActivity implements RecyclerViewAdapter.ItemClickListener {
 
     RecyclerViewAdapter adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
 
-        //region Layout
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //endregion Layout
-
-        //region Main
-        // data to populate the RecyclerView with
-        ArrayList<String> locationSampleNames = new ArrayList<>();
-        locationSampleNames.add("Home");
-        locationSampleNames.add("Work");
-        locationSampleNames.add("Gym");
-        locationSampleNames.add("Uni");
-        locationSampleNames.add("Shop");
-
 
         // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.LocationList);
@@ -44,8 +33,6 @@ public class LocationActivity extends AppCompatActivity implements RecyclerViewA
         adapter = new RecyclerViewAdapter(this, savedLocations);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
-        //endregion Main
-
     }
 
     //region Layout Methods
@@ -57,7 +44,8 @@ public class LocationActivity extends AppCompatActivity implements RecyclerViewA
     }
 
     @Override
-    public void onItemClick(View view, int position) {
+    public void onItemClick(View view, int position)
+    {
         Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
     }
     //endregion Layout

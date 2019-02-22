@@ -1,9 +1,9 @@
-package Objects.Request;
+package apps.mobile.ostium.Objects.Request;
 
 import android.location.Location;
 
-import Objects.Result.BaseResult;
-import Objects.Result.ResultStatus;
+import apps.mobile.ostium.Objects.Result.BaseResult;
+import apps.mobile.ostium.Objects.Result.ResultStatus;
 
 public class GetLocationRequest extends BaseResult
 {

@@ -1,4 +1,4 @@
-package apps.mobile.ostium;
+package apps.mobile.ostium.Activity;
 
 import android.app.NotificationManager;
 import android.content.Context;
@@ -19,9 +19,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import Objects.Request.GetLocationRequest;
+import apps.mobile.ostium.Objects.Request.GetLocationRequest;
 import apps.mobile.ostium.Module.GPSModule;
 import apps.mobile.ostium.Module.NotificationModule;
+import apps.mobile.ostium.R;
 
 public class DevActivityOne extends AppCompatActivity
 {

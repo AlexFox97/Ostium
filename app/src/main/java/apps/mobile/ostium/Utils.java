@@ -18,8 +18,8 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.provider.Settings;
 
-
-public class Utils {
+public class Utils
+{
     private static int sTheme;
 
     public final static int OSTIUM = 0;
@@ -27,16 +27,18 @@ public class Utils {
     public final static int OSTIUM_TWO = 2;
     public final static int OSTIUM_DARK_TWO= 3;
 
-    public static void changeToTheme(Activity activity, int theme) {
+    public static void changeToTheme(Activity activity, int theme)
+    {
         sTheme = theme;
         activity.finish();
         activity.startActivity(new Intent(activity, activity.getClass()));
-        activity.overridePendingTransition(android.R.anim.fade_in,
-                android.R.anim.fade_out);
+        activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
-    public static void onActivityCreateSetTheme(Activity activity) {
-        switch (sTheme) {
+    public static void onActivityCreateSetTheme(Activity activity)
+    {
+        switch (sTheme)
+        {
             default:
             case OSTIUM:
                 activity.setTheme(R.style.Theme_Ostium);
