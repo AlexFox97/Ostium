@@ -1,20 +1,19 @@
 package apps.mobile.ostium.Module;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.IntentService;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.provider.CalendarContract;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class CalendarProviderIntentService extends IntentService
 {
@@ -35,11 +34,16 @@ public class CalendarProviderIntentService extends IntentService
     {
         // Get ResultReceiver from the Intent passed to service
         final ResultReceiver receiver = intent.getParcelableExtra("receiver");
-
+        final ArrayList<Integer> calendars = (ArrayList) intent.getSerializableExtra("calendars");
 
 
         // Create bundle to store data to send back
         Bundle bundle = new Bundle();
+
+
+        ArrayList<EventGeneric> events = getEvents(calendars);
+
+        bundle.putSerializable("events", events);
 
         /*
          * Send data back to UI
@@ -52,7 +56,7 @@ public class CalendarProviderIntentService extends IntentService
     private ArrayList getEvents(ArrayList<Integer> calendarIDs)
     {
 
-        ArrayList<eventGeneric> returnList = new ArrayList<>();
+        ArrayList<EventGeneric> returnList = new ArrayList<>();
 
         Cursor cur;
         ContentResolver cr = getContentResolver();
@@ -84,7 +88,7 @@ public class CalendarProviderIntentService extends IntentService
                 String end = cur.getString(cur.getColumnIndex(CalendarContract.Events.DTEND));
 
 
-                eventGeneric event = new eventGeneric(title, accountType);
+                EventGeneric event = new EventGeneric(title, accountType);
                 event.setDescription(desc);
                 event.setStartTime(start);
                 event.setEndTime(end);
@@ -95,7 +99,22 @@ public class CalendarProviderIntentService extends IntentService
 
         System.out.print(1);
 
-        //TODO: Sort returnList by start time
+        DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy hh:mm:ss");
+
+        double timeNow = System.currentTimeMillis();
+
+        for (EventGeneric item : new ArrayList<>(returnList))
+        {
+//
+//            if( Double.parseDouble( item.getStartTime()) < timeNow)
+//                returnList.remove(item);
+//            else {
+                item.setStartTime(dateFormat.format(new Date(Long.parseLong(item.getStartTime()))));
+                item.setEndTime(dateFormat.format(new Date(Long.parseLong(item.getEndTime()))));
+//            }
+        }
+
+
 
         return returnList;
 
