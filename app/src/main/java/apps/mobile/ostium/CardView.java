@@ -47,6 +47,7 @@ public class CardView extends View
 
         mString = a.getString(R.styleable.CardView_exampleString);
         mColor = a.getColor(R.styleable.CardView_exampleColor, mColor);
+
         // Use getDimensionPixelSize or getDimensionPixelOffset when dealing with
         // values that should fall on pixel boundaries.
         mDimension = a.getDimension(R.styleable.CardView_exampleDimension, mDimension);
@@ -110,7 +111,6 @@ public class CardView extends View
         return mString;
     }
 
-
     public void setString(String exampleString)
     {
         mString = exampleString;
@@ -125,11 +125,6 @@ public class CardView extends View
     {
         mColor = exampleColor;
         invalidateTextPaintAndMeasurements();
-    }
-
-    public float getExampleDimension()
-    {
-        return mDimension;
     }
 
     public void setDimension(float exampleDimension)

@@ -1,4 +1,4 @@
-package Objects.Result;
+package apps.mobile.ostium.Objects.Result;
 
 import android.os.Bundle;
 import android.os.Handler;

@@ -20,11 +20,13 @@ public class CalendarProviderIntentService extends IntentService
     public static final int RETRIEVE_SUCCESS = 2;
     public static final int RETRIEVE_ERROR = 3;
 
-    public CalendarProviderIntentService(String name) {
+    public CalendarProviderIntentService(String name)
+    {
         super(name);
     }
 
-    public CalendarProviderIntentService() {
+    public CalendarProviderIntentService()
+    {
         super("CalendarProviderIntentService");
     }
 
@@ -36,13 +38,9 @@ public class CalendarProviderIntentService extends IntentService
         final ResultReceiver receiver = intent.getParcelableExtra("receiver");
         final ArrayList<Integer> calendars = (ArrayList) intent.getSerializableExtra("calendars");
 
-
         // Create bundle to store data to send back
         Bundle bundle = new Bundle();
-
-
         ArrayList<EventGeneric> events = getEvents(calendars);
-
         bundle.putSerializable("events", events);
 
         /*
@@ -55,9 +53,7 @@ public class CalendarProviderIntentService extends IntentService
     @SuppressLint("MissingPermission")
     private ArrayList getEvents(ArrayList<Integer> calendarIDs)
     {
-
         ArrayList<EventGeneric> returnList = new ArrayList<>();
-
         Cursor cur;
         ContentResolver cr = getContentResolver();
 
@@ -73,20 +69,18 @@ public class CalendarProviderIntentService extends IntentService
 
         Uri uri = CalendarContract.Events.CONTENT_URI;
 
-        for(Integer item : calendarIDs) {
+        for(Integer item : calendarIDs)
+        {
             //Suppressing check for permissions here, all permissions should be granted before this function is called
             cur = cr.query(uri, mProjection, CalendarContract.Events.CALENDAR_ID + " =  '" + item + "'", null, null);
 
-
-
-            while (cur.moveToNext()) {
-
+            while (cur.moveToNext())
+            {
                 String title = cur.getString(cur.getColumnIndex(CalendarContract.Events.TITLE));
                 String accountType = cur.getString(cur.getColumnIndex(CalendarContract.Events.CALENDAR_ID));
                 String desc = cur.getString(cur.getColumnIndex(CalendarContract.Events.DESCRIPTION));
                 String start = cur.getString(cur.getColumnIndex(CalendarContract.Events.DTSTART));
                 String end = cur.getString(cur.getColumnIndex(CalendarContract.Events.DTEND));
-
 
                 EventGeneric event = new EventGeneric(title, accountType);
                 event.setDescription(desc);
@@ -97,11 +91,7 @@ public class CalendarProviderIntentService extends IntentService
             }
         }
 
-        System.out.print(1);
-
         DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy hh:mm:ss");
-
-        double timeNow = System.currentTimeMillis();
 
         for (EventGeneric item : new ArrayList<>(returnList))
         {
@@ -114,11 +104,6 @@ public class CalendarProviderIntentService extends IntentService
 //            }
         }
 
-
-
         return returnList;
-
     }
-
-
 }

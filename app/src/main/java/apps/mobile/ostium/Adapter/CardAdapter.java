@@ -1,4 +1,4 @@
-package apps.mobile.ostium;
+package apps.mobile.ostium.Adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -11,35 +11,40 @@ import android.widget.TextView;
 import android.widget.Toast;
 import apps.mobile.ostium.Module.CardObject;
 import apps.mobile.ostium.Module.LocationObject;
+import apps.mobile.ostium.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static apps.mobile.ostium.MainActivity.savedLocations;
+import static apps.mobile.ostium.Activity.MainActivity.savedLocations;
 
-public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder> {
-
+public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder>
+{
     private List<CardObject> events;
 
     public CardAdapter(List<CardObject> events) {
         this.events = events;
     }
 
-    public static void addLocationTags(View v) {
+    public static void addLocationTags(View v)
+    {
         final Context context = v.getContext();
-        ArrayList<String> locationTitlesTemp = new ArrayList<>();
         final Boolean checkedLocations[];
+        ArrayList<String> locationTitlesTemp = new ArrayList<>();
+
         checkedLocations = new Boolean[savedLocations.size()];
         Arrays.fill(checkedLocations, false);
-        for (LocationObject location : savedLocations) {
+        for (LocationObject location : savedLocations)
+        {
             locationTitlesTemp.add(location.getTitle());
         }
 
         final String[] locationTitles = GetStringArray(locationTitlesTemp);
         final List<String> locationList = Arrays.asList(locationTitles);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        DialogInterface.OnMultiChoiceClickListener multiListener = new DialogInterface.OnMultiChoiceClickListener() {
+        DialogInterface.OnMultiChoiceClickListener multiListener = new DialogInterface.OnMultiChoiceClickListener()
+        {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
 
@@ -54,13 +59,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
             }
         };
+
         builder.setMultiChoiceItems(locationTitles, null, multiListener);
+
         // Specify the dialog is not cancelable
         builder.setCancelable(false);
 
         // Set a title for alert dialog
         builder.setTitle("Tag some locations?");
-
         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -68,13 +74,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
             }
         });
-
         AlertDialog addEventAlert = builder.create();
         addEventAlert.show();
     }
 
-    private static String[] GetStringArray(ArrayList<String> arr) {
-
+    private static String[] GetStringArray(ArrayList<String> arr)
+    {
         // declaration and initialise String Array
         String str[] = new String[arr.size()];
 
@@ -94,7 +99,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     }
 
     @Override
-    public void onBindViewHolder(CardViewHolder cardViewHolder, int position) {
+    public void onBindViewHolder(CardViewHolder cardViewHolder, int position)
+    {
         CardObject ci = events.get(position);
         cardViewHolder.vTitle.setText(ci.title);
         cardViewHolder.vDetails.setText(ci.details);
@@ -105,7 +111,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     }
 
     @Override
-    public CardViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public CardViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
+    {
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
                 inflate(R.layout.card_layout_ostium, viewGroup, false);
@@ -113,7 +120,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         return new CardViewHolder(itemView);
     }
 
-    public static class CardViewHolder extends RecyclerView.ViewHolder {
+    public static class CardViewHolder extends RecyclerView.ViewHolder
+    {
 
         public View view;
         protected TextView vTitle;
@@ -122,7 +130,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         protected TextView vTags;
         // protected RecyclerView vTags;
 
-        public CardViewHolder(final View view) {
+        public CardViewHolder(final View view)
+        {
             super(view);
             vTitle = (TextView) view.findViewById(R.id.title);
             vDetails = (TextView) view.findViewById(R.id.details);

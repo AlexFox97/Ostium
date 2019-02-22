@@ -1,9 +1,10 @@
-package apps.mobile.ostium;
+package apps.mobile.ostium.Activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import apps.mobile.ostium.R;
 
 public class DevActivityTwo extends AppCompatActivity {
 

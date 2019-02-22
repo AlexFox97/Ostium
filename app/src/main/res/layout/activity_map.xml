@@ -94,7 +94,7 @@
             map:uiTiltGestures="true"
             map:uiZoomControls="true"
             map:uiZoomGestures="true"
-            tools:context=".MapActivity" />
+            tools:context=".Activity.MapActivity" />
     </FrameLayout>
     <Button
         android:id = "@+id/B_places"

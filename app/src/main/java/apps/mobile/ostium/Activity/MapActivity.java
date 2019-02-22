@@ -1,6 +1,6 @@
-package apps.mobile.ostium;
+package apps.mobile.ostium.Activity;
 
-import Objects.Request.GetLocationRequest;
+import apps.mobile.ostium.Objects.Request.GetLocationRequest;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,7 +9,6 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.*;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -23,12 +22,12 @@ import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import apps.mobile.ostium.Module.GPSModule;
 import apps.mobile.ostium.Module.LocationObject;
+import apps.mobile.ostium.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -44,32 +43,24 @@ import java.util.List;
 import java.util.Locale;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
-    //Dialog
-    final Context context = this;
     private final int GPSPingTime = 2000;
     private final int GPSDistance = 0;
     public ArrayList<LocationObject> savedLocations;
     public ArrayList<Marker> Markers = new ArrayList<>();
     public Marker tempMarker;
-    boolean showSavedPlaces = false;
-    boolean showShops = false;
-    boolean showWork = false;
-    boolean search = false;
-    boolean onLongClickActive = false;
-    LatLng longClickPoint;
+    public boolean showSavedPlaces = false;
+    public boolean showShops = false;
+    public boolean showWork = false;
+    public boolean search = false;
+    public boolean onLongClickActive = false;
+    public LatLng longClickPoint;
     private GoogleMap mMap;
     private GPSModule GPS;
-    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
-        //region Dialog
-
-
-        //endregion dialog
 
         //region Layout
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -82,13 +73,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
-        //endregion Layout
 
-        //region Map
         SupportMapFragment mapFragment = SupportMapFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.map_container, mapFragment).commit();
-//
+
 //        MapFragment map;
 //        map = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -106,7 +95,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
         //endregion Map
-        intializeGPS();
+        initializesGPS();
     }
 
 
@@ -130,6 +119,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             longClickPoint = point;
             AlertDialog dialog;
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
             // Get the layout inflater
             LayoutInflater inflater = this.getLayoutInflater();
 
@@ -137,8 +127,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             builder.setView(view);
             final EditText userInput = (EditText) view.findViewById(R.id.locationName);
 
-            builder
-                    .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             String value = userInput.getText().toString().trim();
@@ -158,8 +147,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         } else
             onLongClickActive = false;
-
-
     }
 
     //region Layout Methods
@@ -172,7 +159,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //endregion
 
     // region Map
-    private void intializeGPS() {
+    private void initializesGPS() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         LocationListener listener = new LocationListener() {
@@ -182,7 +169,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 GetLocationRequest l = GPS.GetLocationNow();
                 //String locationStats = "Latitude: " + l.location.getLatitude() + " Longitude: " + l.location.getLongitude();
                 LatLng currentLocation = new LatLng(l.location.getLatitude(), l.location.getLongitude());
-
                 String s = getCompleteAddressString(l.location.getLatitude(), l.location.getLongitude()); //new
 
                 if (showSavedPlaces) {
@@ -209,7 +195,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         }
                     }
                 }
-
 
                 if (search) {
                     //iterate through savedLocations array where type is house
@@ -250,7 +235,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         };
 
         GPS = new GPSModule(locationManager, listener);
-        checkPermissions();
     }
 
     public void changeType(View view) {
@@ -259,30 +243,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         } else {
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         }
-    }
-
-    private void checkPermissions() {
-        // check for permissions
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // if below ver 23 don't need to ask for permissions
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            }
-            return;
-        }
-        // then get the location
-        GPS.StartLocationUpdates(GPSPingTime, GPSDistance);
-    }
-
-    //This will be updated when "adding a location" functionality is completed
-    public void setUpPlacesList() {
-        //Places to add to list
-//
-//        savedLocations.add(0, cantorBuilding);
-//        savedLocations.add(1, aldiSheffield);
-//        savedLocations.add(2, tescoExpress);
-//        savedLocations.add(3, moorMarket);
-//        savedLocations.add(4, owenBuilding);
-//        savedLocations.add(5, asdaQueensRoad);
     }
 
     /**
@@ -299,16 +259,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap = googleMap;
         mMap.setOnMapLongClickListener(MapActivity.this); //new
 
-        setUpPlacesList();
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+
             return;
         }
         mMap.setMyLocationEnabled(true);
@@ -350,15 +302,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     public void onSearch(View view) {
         if (!search) {
-
             EditText location_tf = findViewById(R.id.TF_location);
             String location = location_tf.getText().toString();
             Toast.makeText(MapActivity.this, location, Toast.LENGTH_SHORT).show();
+
             for (int i = 0; i < savedLocations.size(); i++) {
                 if (savedLocations.get(i).getTitle().contains(location)) {
                     mMap.addMarker(new MarkerOptions().position(new LatLng(savedLocations.get(i).getLat(), savedLocations.get(i).getLongt())).title(savedLocations.get(i).getTitle()));
                 }
             }
+
             Toast.makeText(MapActivity.this, "Showing Searched Place", Toast.LENGTH_SHORT).show();
             search = true;
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -406,6 +359,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     for (int i = 0; i < savedLocations.size(); i++) {
                         mMap.addMarker(new MarkerOptions().position(new LatLng(savedLocations.get(i).getLat(), savedLocations.get(i).getLongt())).title(savedLocations.get(i).getTitle()));
                     }
+
                     Toast.makeText(MapActivity.this, "Showing Nearby Saved Places", Toast.LENGTH_SHORT).show();
                     showSavedPlaces = true;
                 } else {
@@ -414,6 +368,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     showSavedPlaces = false;
                 }
                 break;
+
             case R.id.B_work:
                 mMap.clear();
                 if (!showWork) {
@@ -430,6 +385,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     showWork = false;
                 }
                 break;
+
             case R.id.B_shops:
                 mMap.clear();
                 if (!showShops) {
@@ -448,7 +404,4 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 break;
         }
     }
-
-    // endregion Map
-
 }

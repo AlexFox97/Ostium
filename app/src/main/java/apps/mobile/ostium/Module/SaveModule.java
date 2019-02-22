@@ -56,7 +56,7 @@ public class SaveModule
             FileInputStream fin = activity.getApplicationContext().openFileInput(FileName);
             InputStreamReader isr = new InputStreamReader(fin);
             BufferedReader bufferedReader = new BufferedReader(isr);
-            String line = "";
+            String line;
 
             while ((line = bufferedReader.readLine()) != null)
             {

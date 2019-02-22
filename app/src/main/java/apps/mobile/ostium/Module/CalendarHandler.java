@@ -19,10 +19,9 @@ public class CalendarHandler {
 
         String[] mProjection =
                 {
-                        "_id",
-                        CalendarContract.Calendars._ID,
-                        CalendarContract.Calendars.CALENDAR_DISPLAY_NAME
-
+                    "_id",
+                    CalendarContract.Calendars._ID,
+                    CalendarContract.Calendars.CALENDAR_DISPLAY_NAME
                 };
 
         Uri uri = CalendarContract.Calendars.CONTENT_URI;
@@ -43,6 +42,4 @@ public class CalendarHandler {
 
         return calendars;
     }
-
-
 }
