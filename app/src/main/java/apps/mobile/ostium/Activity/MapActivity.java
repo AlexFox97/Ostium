@@ -1,5 +1,6 @@
 package apps.mobile.ostium.Activity;
 
+import android.os.Environment;
 import apps.mobile.ostium.Objects.Request.GetLocationRequest;
 import android.Manifest;
 import android.content.Context;
@@ -37,15 +38,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static apps.mobile.ostium.Activity.MainActivity.savedLocations;
+
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
     private final int GPSPingTime = 2000;
     private final int GPSDistance = 0;
-    public ArrayList<LocationObject> savedLocations;
     public ArrayList<Marker> Markers = new ArrayList<>();
     public Marker tempMarker;
     public boolean showSavedPlaces = false;
@@ -94,19 +96,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 return false;
             }
         });
-        //endregion Map
+
         initializesGPS();
     }
 
-
     @Override
-    public void onMapLongClick(final LatLng point) {
-        if (!onLongClickActive) {
+    public void onMapLongClick(final LatLng point)
+    {
+        if (!onLongClickActive)
+        {
+            onLongClickActive = true;
             String address = getCompleteAddressString(point.latitude, point.longitude);
-//            mMap.addMarker(new MarkerOptions()
-//                    .position(point)
-//                    .title(address)
-//                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
 
             tempMarker = mMap.addMarker(new MarkerOptions()
                     .position(point)
@@ -115,7 +115,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             Markers.add(tempMarker);
 
-            onLongClickActive = true;
             longClickPoint = point;
             AlertDialog dialog;
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -131,7 +130,26 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             String value = userInput.getText().toString().trim();
-                            MainActivity.savedLocations.add(new LocationObject(value, point.latitude, point.longitude, "userCreated"));
+                            savedLocations.add(new LocationObject(value, point.latitude, point.longitude, "userCreated"));
+
+                            // save the locations to disk
+                            File outFile = null;
+                            try
+                            {
+                                outFile = new File(Environment.getExternalStorageDirectory(), "savedLocations.data");
+                                outFile.delete();
+                                outFile.getParentFile().mkdirs();
+                                outFile.createNewFile();
+
+                                ObjectOutputStream out;
+                                out = new ObjectOutputStream(new FileOutputStream(outFile));
+                                out.writeObject(savedLocations);
+                                out.close();
+                            }
+                            catch (IOException e)
+                            {
+                                e.printStackTrace();
+                            }
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -141,24 +159,28 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     })
                     .setCancelable(false)
             ;
-//                builder.create();
+
             dialog = builder.create();
             dialog.show();
 
-        } else
+
+
             onLongClickActive = false;
+
+        }
+        else
+        {
+            onLongClickActive = false;
+        }
     }
 
-    //region Layout Methods
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         //getMenuInflater().inflate(R.menu.activity_map_toolbar, menu);
         return true;
     }
-    //endregion
 
-    // region Map
     private void initializesGPS() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 

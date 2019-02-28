@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.design.widget.NavigationView;
@@ -35,6 +36,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +50,6 @@ import static java.lang.Math.abs;
 //        Dev Activity One
 //        Dev Activity Two
 //        Dev Activity Three
-
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
@@ -82,8 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -137,12 +137,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         LocationObject moorMarket = new LocationObject("Moor Market", 53.375677, -1.472894, "Shop");
         LocationObject owenBuilding = new LocationObject("Owen Building", 53.379564, -1.465743, "Place");
 
-        savedLocations.add(aldiSheffield);
-        savedLocations.add(cantorBuilding);
-        savedLocations.add(tescoExpress);
-        savedLocations.add(moorMarket);
-        savedLocations.add(owenBuilding);
-        savedLocations.add(asdaQueensRoad);
+        // try to load the locations
+        try
+        {
+            File inFile = new File(Environment.getExternalStorageDirectory(), "savedLocations.data");
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(inFile));
+
+            Object x = in.readObject();
+            if(x == null)
+            {
+                savedLocations.add(aldiSheffield);
+                savedLocations.add(cantorBuilding);
+                savedLocations.add(tescoExpress);
+                savedLocations.add(moorMarket);
+                savedLocations.add(owenBuilding);
+                savedLocations.add(asdaQueensRoad);
+            }
+            else
+            {
+                savedLocations = (ArrayList<LocationObject>) x;
+            }
+
+            in.close();
+        } catch (Exception e) {
+
+            savedLocations.add(aldiSheffield);
+            savedLocations.add(cantorBuilding);
+            savedLocations.add(tescoExpress);
+            savedLocations.add(moorMarket);
+            savedLocations.add(owenBuilding);
+            savedLocations.add(asdaQueensRoad);
+            e.printStackTrace();
+        }
+
 
         GetPermissions();
         SetupNotifications();
@@ -150,9 +177,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void GetPermissions()
     {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
         {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION))
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
             {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
@@ -165,7 +192,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                                                   Manifest.permission.ACCESS_NETWORK_STATE,
                                                                   Manifest.permission.INTERNET,
                                                                   Manifest.permission.GET_ACCOUNTS,
-                                                                  Manifest.permission.READ_CALENDAR
+                                                                  Manifest.permission.READ_CALENDAR,
+                                                                  Manifest.permission.READ_EXTERNAL_STORAGE,
+                                                                  Manifest.permission.WRITE_EXTERNAL_STORAGE
                                                     }, 111);
             }
         }
@@ -250,7 +279,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void goToMap(View view) {
         Log.d(LogTagClass, "Button Map clicked!");
-        startActivity(new Intent(this, MapActivity.class));
+        Intent go = new Intent(this, MapActivity.class);
+        go.putExtra("locations", savedLocations);
+        startActivity(go);
     }
 
     public void goToDevOne(View view) {
