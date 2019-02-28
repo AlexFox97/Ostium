@@ -56,14 +56,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String LogTagClass = MainActivity.class.getSimpleName();
     private static final int PermissionCorrect = 1;
     private static final String TAG = "main activity";
-    public static final String settingsFileName = "usersettings";
+    public static final String calendarSettingsFileName = "cal_settings";
+    public static final String locationSettingsFileName = "loc_settings";
+    public static final String eventSettingsFileName = "evn_settings";
+
     public static EventGeneric selectedEvent;
-    public static ArrayList<EventGeneric> userSelectedEvents = new ArrayList<>();
+
+    public static ArrayList<EventGeneric> userEvents = new ArrayList<>();
     public static ArrayList<Integer> calendarID = new ArrayList<>();
     public static ArrayList<LocationObject> savedLocations = new ArrayList<>();
+
     public static ArrayList<CardObject> cardList = new ArrayList<>();
     private static CardAdapter ca;
+
     public ArrayList<EventGeneric> userCalendarEvents = new ArrayList<>();
+
     CalendarResultReceiver calendarResultHandler;
     private DrawerLayout dl;
     private ActionBarDrawerToggle t;
@@ -94,10 +101,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         selectedEvent = null;
 
         //region Sample Cards
-        if (userSelectedEvents.size() == 0) {
-            userSelectedEvents.add(new EventGeneric("Sample1", "Sample1"));
-            userSelectedEvents.add(new EventGeneric("Sample2", "Sample2"));
-            userSelectedEvents.add(new EventGeneric("Sample3", "Sample3"));
+        if (userEvents.size() == 0) {
+            userEvents.add(new EventGeneric("No items found.", "No items found."));
         }
 
         // region CardRecycler - onCreate
@@ -208,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ArrayList<CardObject> createCardList() {
 
         cardList = new ArrayList<CardObject>();
-        for (EventGeneric item : userSelectedEvents) {
+        for (EventGeneric item : userEvents) {
             CardObject ci = new CardObject(item);
 
             ci.title = item.getTitle();
@@ -239,8 +244,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void addEvent(View v) {
         //On click of text in main activity
-        //TODO: Show AlertDialog to select an event and then set location and return
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -258,13 +261,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         builder.setSingleChoiceItems(eventsTitles, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //todo alex fix this
+
                 selectedEvent = userCalendarEvents.get(abs(which));
-                userSelectedEvents.add(0, selectedEvent);
+                userEvents.add(0, selectedEvent);
                 cardList.add(0, new CardObject(selectedEvent));
                 ca.notifyItemInserted(0);
                 selectedEvent = null;
-                //TODO: Handle selected event
 
                 dialog.dismiss();
             }
@@ -373,9 +375,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onDestroy() {
         super.onDestroy();
 
+        saveCalendarId();
 
+
+    }
+
+    private void saveCalendarId()
+    {
         try {
-            FileOutputStream fos = openFileOutput(MainActivity.settingsFileName, Context.MODE_PRIVATE);
+            FileOutputStream fos = openFileOutput(MainActivity.calendarSettingsFileName, Context.MODE_PRIVATE);
             ObjectOutputStream os = new ObjectOutputStream(fos);
             os.writeObject(calendarID);
             os.close();
@@ -383,17 +391,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 
     private void loadCalendarId()
     {
-        super.onStart();
-
-
-        try {
-            FileInputStream fis = openFileInput(MainActivity.settingsFileName);
+         try {
+            FileInputStream fis = openFileInput(MainActivity.calendarSettingsFileName);
             ObjectInputStream is = new ObjectInputStream(fis);
             calendarID = (ArrayList) is.readObject();
             is.close();
@@ -402,7 +405,58 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
 
+    }
+
+    private void saveLocations()
+    {
+        try {
+            FileOutputStream fos = openFileOutput(MainActivity.locationSettingsFileName, Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(savedLocations);
+            os.close();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadLocations()
+    {
+        try {
+            FileInputStream fis = openFileInput(MainActivity.locationSettingsFileName);
+            ObjectInputStream is = new ObjectInputStream(fis);
+            savedLocations = (ArrayList) is.readObject();
+            is.close();
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveEvents()
+    {
+        try {
+            FileOutputStream fos = openFileOutput(MainActivity.eventSettingsFileName, Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(userEvents);
+            os.close();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
+    private void loadEvents()
+    {
+        try {
+            FileInputStream fis = openFileInput(MainActivity.eventSettingsFileName);
+            ObjectInputStream is = new ObjectInputStream(fis);
+            userEvents = (ArrayList) is.readObject();
+            is.close();
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
