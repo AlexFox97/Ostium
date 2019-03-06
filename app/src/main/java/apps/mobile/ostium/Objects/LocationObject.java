@@ -1,4 +1,4 @@
-package apps.mobile.ostium.Module;
+package apps.mobile.ostium.Objects;
 
 import java.io.Serializable;
 

@@ -31,6 +31,9 @@ import android.view.View;
 import apps.mobile.ostium.*;
 import apps.mobile.ostium.Adapter.CardAdapter;
 import apps.mobile.ostium.Module.*;
+import apps.mobile.ostium.Objects.CardObject;
+import apps.mobile.ostium.Objects.LocationObject;
+import apps.mobile.ostium.Objects.TaskedLocation;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static ArrayList<EventGeneric> userSelectedEvents = new ArrayList<>();
     public static ArrayList<Integer> calendarID = new ArrayList<>();
     public static ArrayList<LocationObject> savedLocations = new ArrayList<>();
+    public static ArrayList<TaskedLocation> taskLocations = new ArrayList<>();
     public static ArrayList<CardObject> cardList = new ArrayList<>();
 
     public ArrayList<EventGeneric> userCalendarEvents = new ArrayList<>();
@@ -173,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         GetPermissions();
         SetupNotifications();
+        loadTaskedLocations();
     }
 
     private void GetPermissions()
@@ -224,14 +229,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             {
                 for(int i = 0; i < savedLocations.size(); i++)
                 {
-                    if(location.getLongitude() + 0.01 == savedLocations.get(i).getLongt() || location.getLongitude() - 0.01 == savedLocations.get(i).getLongt())
+                    if(location.getLongitude() + 0.1 > taskLocations.get(i).Location.getLongt() && location.getLongitude() - 0.1 < taskLocations.get(i).Location.getLongt())
                     {
-                        if (location.getLatitude() + 0.01 == savedLocations.get(i).getLat() || location.getLatitude() - 0.01 == savedLocations.get(i).getLat())
+                        if (location.getLatitude() + 0.1 > taskLocations.get(i).Location.getLat() && location.getLatitude() - 0.1 < taskLocations.get(i).Location.getLat())
                         {
-                            // were in a known location make a notification
-                            if(task.allTasks.size() > 0)
+                            // we're in a known location make a notification
+                            // if it has a task attached
+                            if(taskLocations.get(i).task != null)
                             {
-                                Notification.pushNotification(task.allTasks.get(0).getTitle(), task.allTasks.get(0).getNotes());
+                                Notification.pushNotification(taskLocations.get(i).task.getTitle(), taskLocations.get(i).task.getNotes());
                             }
                         }
                     }
@@ -251,6 +257,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         GPSModule gps = new GPSModule((LocationManager)getSystemService(LOCATION_SERVICE), listener);
         gps.StartLocationUpdates(1000, 10);
+    }
+
+    private void loadTaskedLocations()
+    {
+        // load task objects
+        // try to load the locations
+        try
+        {
+            File inFile = new File(Environment.getExternalStorageDirectory(), "savedTaskedLocations.data");
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(inFile));
+            Object x = in.readObject();
+            taskLocations = (ArrayList<TaskedLocation>)x;
+            in.close();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     //region Drawer Methods

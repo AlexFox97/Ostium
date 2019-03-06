@@ -1,5 +1,7 @@
 package apps.mobile.ostium.Module;
 
+import apps.mobile.ostium.Objects.LocationObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 

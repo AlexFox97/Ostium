@@ -27,7 +27,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import apps.mobile.ostium.Module.GPSModule;
-import apps.mobile.ostium.Module.LocationObject;
+import apps.mobile.ostium.Objects.LocationObject;
 import apps.mobile.ostium.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

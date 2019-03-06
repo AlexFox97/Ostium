@@ -1,4 +1,7 @@
-package apps.mobile.ostium.Module;
+package apps.mobile.ostium.Objects;
+
+import apps.mobile.ostium.Module.EventGeneric;
+import apps.mobile.ostium.Objects.LocationObject;
 
 import java.util.ArrayList;
 
