@@ -1,95 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
 
-    xmlns:android = "http://schemas.android.com/apk/res/android"
-    xmlns:app = "http://schemas.android.com/apk/res-auto"
-    xmlns:tools = "http://schemas.android.com/tools"
-    android:layout_height = "match_parent"
-    android:layout_width = "match_parent"
-    tools:context = ".Activity.MainActivity"
-    >
+        xmlns:android = "http://schemas.android.com/apk/res/android"
+        xmlns:app = "http://schemas.android.com/apk/res-auto"
+        xmlns:tools = "http://schemas.android.com/tools"
+        android:layout_height = "match_parent"
+        android:layout_width = "match_parent"
+        tools:context = ".Activity.MainActivity"
+>
 
     <TextView
-        android:gravity = "center"
-        android:id = "@+id/cardssource"
-        android:inputType = "none"
-        android:layout_height = "wrap_content"
-        android:layout_marginTop = "8dp"
-        android:layout_width = "0dp"
-        android:selectAllOnFocus = "false"
-        android:singleLine = "true"
-        android:text = "Card Source"
-        android:textSize = "24sp"
-        app:layout_constraintEnd_toEndOf = "@+id/cardList"
-        app:layout_constraintHorizontal_bias = "0.0"
-        app:layout_constraintStart_toStartOf = "@+id/cardList"
-        app:layout_constraintTop_toTopOf = "@+id/guideline4"
-        />
+            android:gravity="center"
+            android:id="@+id/cardssource"
+            android:inputType="none"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_width="0dp"
+            android:selectAllOnFocus="false"
+            android:singleLine="true"
+            android:text="To do"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="@+id/cardList"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/cardList"
+            app:layout_constraintTop_toTopOf="@+id/guideline4"
+    />
 
     <android.support.constraint.Guideline
-        android:id = "@+id/guideline2"
-        android:layout_height = "wrap_content"
-        android:layout_width = "wrap_content"
-        android:orientation = "vertical"
-        app:layout_constraintGuide_percent = "0.2"
-        />
-
-    <android.support.constraint.Guideline
-        android:id = "@+id/guideline3"
-        android:layout_height = "wrap_content"
-        android:layout_width = "wrap_content"
-        android:orientation = "vertical"
-        app:layout_constraintGuide_percent = "0.8"
-        />
-
-    <android.support.constraint.Guideline
-        android:id = "@+id/guideline"
-        android:layout_height = "wrap_content"
-        android:layout_width = "wrap_content"
-        android:orientation = "horizontal"
-        app:layout_constraintGuide_percent = "0.20"
-        />
+            android:id = "@+id/guideline"
+            android:layout_height = "wrap_content"
+            android:layout_width = "wrap_content"
+            android:orientation = "horizontal"
+            app:layout_constraintGuide_percent = "0.20"
+    />
 
     <android.support.design.widget.FloatingActionButton
-        android:id = "@+id/fab"
-        android:layout_gravity = "bottom|end"
-        android:layout_height = "60dp"
-        android:layout_marginBottom = "24dp"
-        android:layout_marginEnd = "24dp"
-        android:layout_width = "wrap_content"
-        app:elevation = "6dp"
-        app:layout_constraintBottom_toBottomOf = "@+id/cardList"
-        app:layout_constraintEnd_toStartOf = "@+id/guideline3"
+            android:id="@+id/fab"
+            android:layout_gravity="bottom|end"
+            android:layout_height="60dp"
+            android:layout_width="wrap_content"
+            app:elevation="6dp"
 
-        app:srcCompat = "@drawable/ic_add_black_24dp"
-        android:onClick="addEvent"
-        />
+            app:srcCompat="@drawable/ic_add_black_24dp"
+            android:onClick="addEvent"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/cardList" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/cardList" app:backgroundTint="@color/accent1"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id = "@+id/cardList"
-        android:layout_height = "0dp"
+            android:id="@+id/cardList"
+            android:layout_height="0dp"
 
-        android:layout_marginEnd = "@dimen/component_padding"
-        android:layout_marginStart = "@dimen/component_padding"
-        android:layout_marginTop = "@dimen/component_padding"
-        android:layout_width = "0dp"
-        tools:itemCount = "8"
-        tools:listitem = "@layout/card_layout_ostium"
-        app:layout_constraintBottom_toBottomOf = "parent"
-        app:layout_constraintEnd_toStartOf = "@+id/guideline3"
-        app:layout_constraintStart_toStartOf = "@+id/guideline2"
-        app:layout_constraintTop_toBottomOf = "@+id/cardssource"
-        >
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="@dimen/component_padding"
+            android:layout_width="0dp"
+            tools:itemCount="8"
+            tools:listitem="@layout/card_layout_ostium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardssource"
+            app:layout_constraintEnd_toEndOf="parent">
 
     </android.support.v7.widget.RecyclerView>
 
     <android.support.constraint.Guideline
-        android:id = "@+id/guideline4"
-        android:layout_height = "wrap_content"
-        android:layout_width = "wrap_content"
-        android:orientation = "horizontal"
-        app:layout_constraintGuide_begin = "58dp"
-        />
+            android:id = "@+id/guideline4"
+            android:layout_height = "wrap_content"
+            android:layout_width = "wrap_content"
+            android:orientation = "horizontal"
+            app:layout_constraintGuide_begin = "58dp"
+    />
 
     <!--<android.support.v7.widget.RecyclerView-->
     <!--android:id="@+id/cardList4"-->

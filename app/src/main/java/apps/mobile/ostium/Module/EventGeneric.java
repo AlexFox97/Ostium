@@ -16,10 +16,15 @@ public class EventGeneric implements Serializable
     private String calendarName;
     private LocationObject location;
 
-    public EventGeneric(String title, String eventType)
+    public EventGeneric(String title, String eventType, LocationObject taskLocation, String taskDescription)
     {
         this.title = title;
         this.eventType = eventType;
+        this.startTime = "05/10/18 11:00";
+        this.endTime = "05/10/18 16:00";
+        this.location = taskLocation; //new LocationObject("Uni", 53.3769219, -1.4677611345050374, "Work");
+        this.description = taskDescription; // "Generic Description of what I'm doing";
+        this.calendarName = "CalendarName";
     }
 
     public ArrayList<LocationObject> getLocationTags() {

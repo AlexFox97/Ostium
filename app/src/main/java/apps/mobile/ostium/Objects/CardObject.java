@@ -46,8 +46,8 @@ public class CardObject
             {
                 s.append(loc.getTitle() + "     ");
             }
-
-            return s.toString();
+            //TODO: Need to get this working properly (currently displaying error)
+            return "Home"; //s.toString();
         }
         else
         {
