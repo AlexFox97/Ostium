@@ -27,9 +27,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import apps.mobile.ostium.*;
 import apps.mobile.ostium.Adapter.CardAdapter;
 import apps.mobile.ostium.Module.*;
+import apps.mobile.ostium.R;
+import apps.mobile.ostium.TagInfo;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -98,6 +99,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             userSelectedEvents.add(new EventGeneric("Sample1", "Sample1"));
             userSelectedEvents.add(new EventGeneric("Sample2", "Sample2"));
             userSelectedEvents.add(new EventGeneric("Sample3", "Sample3"));
+            userSelectedEvents.add(new EventGeneric("Sample4", "Sample4"));
+            userSelectedEvents.add(new EventGeneric("Sample5", "Sample5"));
+            userSelectedEvents.add(new EventGeneric("Sample6", "Sample6"));
+            userSelectedEvents.add(new EventGeneric("Sample7", "Sample7"));
+            userSelectedEvents.add(new EventGeneric("Sample8", "Sample8"));
+            userSelectedEvents.add(new EventGeneric("Sample9", "Sample9"));
+            userSelectedEvents.add(new EventGeneric("Sample10", "Sample10"));
+            userSelectedEvents.add(new EventGeneric("Sample11", "Sample11"));
+            userSelectedEvents.add(new EventGeneric("Sample12", "Sample12"));
+            userSelectedEvents.add(new EventGeneric("Sample13", "Sample13"));
+            userSelectedEvents.add(new EventGeneric("Sample14", "Sample14"));
         }
 
         // region CardRecycler - onCreate

@@ -33,11 +33,11 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewAd
 
         // data to populate the RecyclerView with
         ArrayList<String> listData = new ArrayList<>();
-        listData.add("Home");
-        listData.add("Work");
-        listData.add("Gym");
-        listData.add("Uni");
-        listData.add("Shop");
+        listData.add("Setting1");
+        listData.add("Setting2");
+        listData.add("Setting3");
+        listData.add("Setting4");
+        listData.add("Setting5");
 
         RecyclerView recyclerView = findViewById(R.id.SettingsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -49,13 +49,15 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewAd
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.activity_settings_toolbar, menu);
+        getMenuInflater().inflate(R.menu.activity_settings_toolbar, menu);
         return true;
     }
 
     @Override
     public void onItemClick(View view, int position) {
         Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+//        Intent myIntent = new Intent(SettingActivity.this, ThemeActivity.class);
+//        SettingActivity.this.startActivity(myIntent);
     }
 
     public void selectCalendars(View view)

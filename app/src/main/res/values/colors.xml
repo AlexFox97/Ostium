@@ -7,7 +7,7 @@
     <color name="primary1">#673AB7</color>
     <color name="primary_dark1">#512DA8</color>
     <color name="primary_light1">#D1C4E9</color>
-    <color name="accent1">#7C4DFF</color>
+    <color name="accent1">#7c4dff</color>
     <color name="primary_text1">#212121</color>
     <color name="secondary_text1">#757575</color>
     <color name="icons1">#FFFFFF</color>
@@ -56,5 +56,6 @@
     <color name="red">#ff0000</color>
     <color name = "primary_material_light">#ff1744</color>
     <color name = "primary_dark_material_light">#c4001d</color>
+    <color name="accent_material_dark">#ffcf40</color>
 
 </resources>
