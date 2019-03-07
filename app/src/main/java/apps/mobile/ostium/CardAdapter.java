@@ -29,8 +29,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     public static void addLocationTags(View v) {
         final Context context = v.getContext();
         ArrayList<String> locationTitlesTemp = new ArrayList<>();
-        final Boolean checkedLocations[];
-        checkedLocations = new Boolean[savedLocations.size()];
+        final Boolean checkedLocations[] = new Boolean[savedLocations.size()];
         Arrays.fill(checkedLocations, false);
         for (LocationObject location : savedLocations) {
             locationTitlesTemp.add(location.getTitle());
@@ -38,6 +37,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
         final String[] locationTitles = GetStringArray(locationTitlesTemp);
         final List<String> locationList = Arrays.asList(locationTitles);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         DialogInterface.OnMultiChoiceClickListener multiListener = new DialogInterface.OnMultiChoiceClickListener() {
             @Override
@@ -50,7 +50,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
                 String currentItem = locationList.get(which);
 
                 // Notify the current action
-                Toast.makeText(context, currentItem + " " + isChecked, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, currentItem + " " + isChecked, Toast.LENGTH_SHORT).show();
 
             }
         };

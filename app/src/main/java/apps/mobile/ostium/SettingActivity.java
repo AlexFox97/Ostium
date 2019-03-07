@@ -124,6 +124,8 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewAd
         //Show AlertDialog
         AlertDialog dialog = builder.create();
         dialog.show();
+
+        Toast.makeText(getApplicationContext(), "Previously selected calendars have been cleared.", Toast.LENGTH_SHORT).show();
     }
 
 

@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void addEvent(View v) {
-        //On click of text in main activity
+        //Add calendar event from list of events from selected characters
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
