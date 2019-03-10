@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import apps.mobile.ostium.Module.CardObject;
-import apps.mobile.ostium.Module.LocationObject;
+import apps.mobile.ostium.Objects.CardObject;
+import apps.mobile.ostium.Objects.LocationObject;
 import apps.mobile.ostium.R;
 
 import java.util.ArrayList;
