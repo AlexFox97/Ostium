@@ -1,5 +1,7 @@
 package apps.mobile.ostium.Module;
 
+import com.google.api.services.tasks.model.Task;
+
 import apps.mobile.ostium.Objects.LocationObject;
 
 import java.io.Serializable;
@@ -8,13 +10,14 @@ import java.util.ArrayList;
 public class EventGeneric implements Serializable
 {
     public ArrayList<LocationObject> locationTags;
-    private String title;
-    private String eventType;
-    private String description;
-    private String startTime;
-    private String endTime;
-    private String calendarName;
-    private LocationObject location;
+    public String title;
+    public String eventType;
+    public String description;
+    public String startTime;
+    public String endTime;
+    public String calendarName;
+    public LocationObject location;
+    public Task Task;
 
     public EventGeneric(String title, String eventType, LocationObject taskLocation, String taskDescription)
     {
@@ -31,29 +34,8 @@ public class EventGeneric implements Serializable
         return locationTags;
     }
 
-    public void setLocationTags(ArrayList<LocationObject> locationTags) {
-        this.locationTags = locationTags;
-    }
-
-    public String getCalendarName() {
-        return calendarName;
-    }
-
-    public void setCalendarName(String calendarName) {
-        this.calendarName = calendarName;
-    }
-
-    public void setLocation(double lati, double longi) {
-        //Set location in place
-        location.setPlace(lati, longi);
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public String getEventType() {
-        return eventType;
     }
 
     public String getDescription() {

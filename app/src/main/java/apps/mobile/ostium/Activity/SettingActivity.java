@@ -77,7 +77,7 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewAd
 
         //Retrieve list of calendars and convert to pass to AlertDialog
         ArrayList tempCal =  CalendarHandler.getCalendarList(getApplicationContext());
-        final CharSequence[] calendars = (CharSequence[]) tempCal.toArray(new CharSequence[tempCal.size()]);
+        final CharSequence[] calendars = (CharSequence[]) tempCal.toArray(new CharSequence[0]);
 
         builder.setTitle("Please select your calendars:");
         builder.setMultiChoiceItems(calendars,null ,new DialogInterface.OnMultiChoiceClickListener()

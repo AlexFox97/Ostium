@@ -16,7 +16,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.ResultReceiver;
 
@@ -37,27 +36,17 @@ import android.view.View;
 import apps.mobile.ostium.Adapter.CardAdapter;
 import apps.mobile.ostium.Module.*;
 import apps.mobile.ostium.R;
-import apps.mobile.ostium.TagInfo;
-
-import apps.mobile.ostium.*;
-import apps.mobile.ostium.Adapter.CardAdapter;
-import apps.mobile.ostium.Module.*;
+import apps.mobile.ostium.Objects.TagInfo;
 
 import android.text.InputType;
-import android.util.EventLog;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import apps.mobile.ostium.*;
-import apps.mobile.ostium.Adapter.CardAdapter;
-import apps.mobile.ostium.Module.*;
+
 import apps.mobile.ostium.Objects.CardObject;
 import apps.mobile.ostium.Objects.LocationObject;
-import apps.mobile.ostium.Objects.TaskedLocation;
+
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -70,15 +59,6 @@ import java.util.List;
 
 import static java.lang.Math.abs;
 
-//        Main Activity
-//        Home Activity
-//        Settings Activity
-//        Location Activity
-//        Map Activity
-//        Dev Activity One
-//        Dev Activity Two
-//        Dev Activity Three
-
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
     private static final String LogTagClass = MainActivity.class.getSimpleName();
@@ -88,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String calendarSettingsFileName = "cal_settings";
     public static final String locationSettingsFileName = "loc_settings";
     public static final String eventSettingsFileName = "evn_settings";
+
+    private String m_Text = "";
 
     public static EventGeneric selectedEvent;
 
@@ -109,8 +91,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private GoogleApiClient googleApiClient;
     NotificationModule Notification;
-
-    private String m_Text = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -252,22 +232,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onLocationChanged(Location location)
             {
-                /*for(int i = 0; i < savedLocations.size(); i++)
+                for(int i = 0; i < userEvents.size(); i++)
                 {
-                    if(location.getLongitude() + 0.1 > taskLocations.get(i).Location.getLongt() && location.getLongitude() - 0.1 < taskLocations.get(i).Location.getLongt())
+                    for (LocationObject loc : userEvents.get(i).locationTags)
                     {
-                        if (location.getLatitude() + 0.1 > taskLocations.get(i).Location.getLat() && location.getLatitude() - 0.1 < taskLocations.get(i).Location.getLat())
+                        if(location.getLongitude() + 0.01 > loc.getLongt() && location.getLongitude() - 0.01 < loc.getLongt())
                         {
-                            // we're in a known location make a notification
-                            // if it has a task attached
-                            if(taskLocations.get(i).task != null)
+                            if (location.getLatitude() + 0.01 > loc.getLat() && location.getLatitude() - 0.01 < loc.getLat())
                             {
-                                Notification.pushNotification(taskLocations.get(i).task.getTitle(), taskLocations.get(i).task.getNotes());
+                                // we're in a known location make a notification
+                                // if it has a task attached
+                                if(userEvents.get(i).Task != null)
+                                {
+                                    Notification.pushNotification(userEvents.get(i).Task.getTitle(), userEvents.get(i).Task.getNotes());
+                                }
                             }
-                        }
+                    }
                     }
 
-                }*/
+                }
             }
 
             @Override
@@ -449,8 +432,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         AlertDialog addEventAlert = builder.create();
         addEventAlert.show();
-
-
     }
 
     public void addDate() {
@@ -564,7 +545,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         locationTypeTitlesTemp.add("Work");
         locationTypeTitlesTemp.add("Places");
 
-
         final String[] locationTypeTitles = GetStringArray(locationTypeTitlesTemp);
         final List<String> locationTypeList = Arrays.asList(locationTypeTitles);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -608,17 +588,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         addEventAlert.show();
     }
 
-    private void addCard() {
+    private void addCard()
+    {
         //int index = userSelectedEvents.size();
         //userSelectedEvents.add(new EventGeneric("Go to Mobile Apps", "Uni"));
         //userSelectedEvents.clear();
         //ca.notifyDataSetChanged();
         //ca.notifyItemInserted(index);
-
     }
 
-    private String[] GetStringArray(ArrayList<String> arr) {
-
+    private String[] GetStringArray(ArrayList<String> arr)
+    {
         // declaration and initialise String Array
         String str[] = new String[arr.size()];
 
@@ -632,7 +612,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return str;
     }
 
-    public void getEventList() {
+    public void getEventList()
+    {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, PermissionCorrect);
         }

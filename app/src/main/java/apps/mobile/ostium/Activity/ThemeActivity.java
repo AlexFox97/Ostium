@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import apps.mobile.ostium.R;
-import apps.mobile.ostium.ThemeApplication;
+import apps.mobile.ostium.Objects.ThemeApplication;
 import apps.mobile.ostium.Utils;
 
 import java.util.ArrayList;

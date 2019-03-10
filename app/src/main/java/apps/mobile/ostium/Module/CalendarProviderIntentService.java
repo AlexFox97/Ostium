@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.provider.CalendarContract;
-import android.text.format.Time;
 import apps.mobile.ostium.Objects.LocationObject;
 
 import java.text.DateFormat;
@@ -38,7 +37,7 @@ public class CalendarProviderIntentService extends IntentService
     {
         // Get ResultReceiver from the Intent passed to service
         final ResultReceiver receiver = intent.getParcelableExtra("receiver");
-        final ArrayList<Integer> calendars = (ArrayList) intent.getSerializableExtra("calendars");
+        final ArrayList<Integer> calendars = (ArrayList<Integer>) intent.getSerializableExtra("calendars");
 
         // Create bundle to store data to send back
         Bundle bundle = new Bundle();
@@ -50,10 +49,11 @@ public class CalendarProviderIntentService extends IntentService
          * TODO: Implement success and fail cases for receiver.send
          * */
         receiver.send(RETRIEVE_SUCCESS, bundle);
+
     }
 
     @SuppressLint("MissingPermission")
-    private ArrayList getEvents(ArrayList<Integer> calendarIDs)
+    private ArrayList<EventGeneric> getEvents(ArrayList<Integer> calendarIDs)
     {
         ArrayList<EventGeneric> returnList = new ArrayList<>();
         Cursor cur;

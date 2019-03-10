@@ -1,4 +1,4 @@
-package apps.mobile.ostium;
+package apps.mobile.ostium.Objects;
 
 public class TagInfo {
     public String locationName;
