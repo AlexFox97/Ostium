@@ -17,9 +17,11 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class SettingActivity extends AppCompatActivity implements recyclerViewAdapter.ItemClickListener {
+import apps.mobile.ostium.Adapter.RecyclerViewAdapter;
 
-    recyclerViewAdapter adapter;
+public class SettingActivity extends AppCompatActivity implements RecyclerViewAdapter.ItemClickListener {
+
+    RecyclerViewAdapter adapter;
 
     SwitchCompat switch_1, switch_2, switch_3, switch_4;
     boolean stateSwitch1, stateSwitch2, stateSwitch3, stateSwitch4;
@@ -57,7 +59,7 @@ public class SettingActivity extends AppCompatActivity implements recyclerViewAd
         // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.SettingsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new recyclerViewAdapter(this, listData);
+        adapter = new RecyclerViewAdapter(listData,this);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
         //endregion Main
@@ -183,7 +185,4 @@ public class SettingActivity extends AppCompatActivity implements recyclerViewAd
         textView.setText(text);
         switch_1.setChecked(switchOnOff);
     }
-
 }
-
-

@@ -4,7 +4,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.Manifest;
@@ -24,16 +23,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import apps.mobile.ostium.Objects.Request.GetLocationRequest;
-import com.flask.colorpicker.ColorPickerPreference;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorChangedListener;
 import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
-import org.w3c.dom.Text;
 
-import Objects.Request.GetLocationRequest;
 import apps.mobile.ostium.Module.GPSModule;
 import apps.mobile.ostium.Module.NotificationModule;
 import apps.mobile.ostium.R;

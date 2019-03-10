@@ -78,10 +78,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         SupportMapFragment mapFragment = SupportMapFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.map_container, mapFragment).commit();
+                .add(R.id.map, mapFragment).commit();
 
-//        MapFragment map;
-//        map = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         EditText edit_txt = (EditText) findViewById(R.id.TF_location);

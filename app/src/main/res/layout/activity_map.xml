@@ -85,35 +85,8 @@
         map:uiScrollGestures = "false"
         map:uiTiltGestures = "true"
         map:uiZoomControls = "true"
-        map:uiZoomGestures = "true"
-        />
+        map:uiZoomGestures = "true"        />
 
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:map="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            map:cameraBearing="112.5"
-            map:cameraTilt="30"
-            map:cameraZoom="17"
-            map:layout_constraintBottom_toBottomOf="parent"
-            map:layout_constraintEnd_toEndOf="parent"
-            map:layout_constraintStart_toStartOf="parent"
-            map:layout_constraintTop_toBottomOf="@+id/TF_location"
-            map:mapType="normal"
-            map:uiRotateGestures="true"
-            map:uiScrollGestures="false"
-            map:uiTiltGestures="true"
-            map:uiZoomControls="true"
-            map:uiZoomGestures="true"
-            tools:context=".Activity.MapActivity" />
-    </FrameLayout>
     <Button
         android:id = "@+id/B_places"
         android:layout_height = "wrap_content"
