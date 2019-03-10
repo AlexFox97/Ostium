@@ -95,13 +95,13 @@ public class CalendarProviderIntentService extends IntentService
 
         for (EventGeneric item : new ArrayList<>(returnList))
         {
-//
-//            if( Double.parseDouble( item.getStartTime()) < timeNow)
-//                returnList.remove(item);
-//            else {
+
+            if( Double.parseDouble( item.getStartTime()) < timeNow)
+                returnList.remove(item);
+            else {
                 item.setStartTime(dateFormat.format(new Date(Long.parseLong(item.getStartTime()))));
                 item.setEndTime(dateFormat.format(new Date(Long.parseLong(item.getEndTime()))));
-//            }
+            }
         }
 
         return returnList;

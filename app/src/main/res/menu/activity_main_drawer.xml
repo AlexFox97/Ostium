@@ -1,20 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_more"
+        android:icon="@drawable/ic_menu_white_24dp"
+        android:title=""
+        app:showAsAction="always">
+        <menu>
     <item
             android:id="@+id/nav_location"
-
-            android:title="@string/locationScreenName"/>
+            android:icon="@drawable/ic_location_on_black_24dp"
+            android:title="@string/locationScreenName"
+            app:showAsAction="ifRoom"/>
 
     <item
             android:id="@+id/nav_map"
-
-            android:title="@string/mapScreenName"/>
+            android:icon="@drawable/ic_map_black_24dp"
+            android:title="@string/mapScreenName"
+            app:showAsAction="ifRoom"/>
 
     <item
             android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/settingsScreenName"
+            app:showAsAction="ifRoom" />
 
-            android:title="@string/settingsScreenName"/>
+    <item
+            android:id="@+id/nav_dev_three"
+            android:icon="@drawable/ic_color_lens_black_24dp"
+            android:title="Colour Picker"
+            app:showAsAction="ifRoom"/>
 
     <!--<item-->
     <!--android:id="@+id/nav_dev_one"-->
@@ -28,5 +42,6 @@
     <!--android:id="@+id/nav_dev_three"-->
 
     <!--android:title="@string/devThreeScreenName" />-->
-
+        </menu>
+    </item>
 </menu>

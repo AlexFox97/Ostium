@@ -3,17 +3,22 @@ package apps.mobile.ostium.Activity;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
+
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -24,17 +29,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+
 import apps.mobile.ostium.*;
 import apps.mobile.ostium.Adapter.CardAdapter;
 import apps.mobile.ostium.Module.*;
+
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,16 +67,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String LogTagClass = MainActivity.class.getSimpleName();
     private static final int PermissionCorrect = 1;
     private static CardAdapter ca;
+    private static final String TAG = "main activity";
+    public static final String calendarSettingsFileName = "cal_settings";
+    public static final String locationSettingsFileName = "loc_settings";
+    public static final String eventSettingsFileName = "evn_settings";
 
     public static EventGeneric selectedEvent;
-    public static ArrayList<EventGeneric> userSelectedEvents = new ArrayList<>();
+
+    public static ArrayList<EventGeneric> userEvents = new ArrayList<>();
     public static ArrayList<Integer> calendarID = new ArrayList<>();
     public static ArrayList<LocationObject> savedLocations = new ArrayList<>();
+
     public static ArrayList<CardObject> cardList = new ArrayList<>();
 
     public ArrayList<EventGeneric> userCalendarEvents = new ArrayList<>();
     public CalendarResultReceiver calendarResultHandler;
 
+    private DrawerLayout dl;
+    private ActionBarDrawerToggle t;
+    private NavigationView nv;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
@@ -93,11 +114,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         selectedEvent = null;
 
         //region Sample Cards
+        /*
         if (userSelectedEvents.size() == 0)
         {
             userSelectedEvents.add(new EventGeneric("Sample1", "Sample1"));
             userSelectedEvents.add(new EventGeneric("Sample2", "Sample2"));
             userSelectedEvents.add(new EventGeneric("Sample3", "Sample3"));
+        }
+        */
+        
+        if (userEvents.size() == 0) {
+            userEvents.add(new EventGeneric("No items found.", "No items found."));
         }
 
         // region CardRecycler - onCreate
@@ -143,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         savedLocations.add(moorMarket);
         savedLocations.add(owenBuilding);
         savedLocations.add(asdaQueensRoad);
-
+        loadCalendarId();
         GetPermissions();
         SetupNotifications();
     }
@@ -221,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         };
 
         GPSModule gps = new GPSModule((LocationManager)getSystemService(LOCATION_SERVICE), listener);
-        gps.StartLocationUpdates(1000, 10);
+        gps.StartLocationUpdates(1000, 10);        
     }
 
     //region Drawer Methods
@@ -271,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ArrayList<CardObject> createCardList() {
 
         cardList = new ArrayList<CardObject>();
-        for (EventGeneric item : userSelectedEvents)
+        for (EventGeneric item : userEvents)
         {
             CardObject ci = new CardObject(item);
             ci.title = item.getTitle();
@@ -301,6 +328,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void addEvent(View v) {
         //On click of text in main activity
+        //Add calendar event from list of events from selected characters
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Please select an event:");
@@ -317,13 +345,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         builder.setSingleChoiceItems(eventsTitles, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //todo alex fix this
+
                 selectedEvent = userCalendarEvents.get(abs(which));
-                userSelectedEvents.add(0, selectedEvent);
+                userEvents.add(0, selectedEvent);
                 cardList.add(0, new CardObject(selectedEvent));
                 ca.notifyItemInserted(0);
                 selectedEvent = null;
-                //TODO: Handle selected event
 
                 dialog.dismiss();
             }
@@ -411,12 +438,98 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case CalendarProviderIntentService.RETRIEVE_SUCCESS:
                     if (resultData != null)
                         userCalendarEvents = ((ArrayList) resultData.getSerializable("events"));
-
                     break;
                 case CalendarProviderIntentService.RETRIEVE_ERROR:
                     //TODO: Handle failure
             }
             super.onReceiveResult(resultCode, resultData);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        saveCalendarId();
+    }
+
+    private void saveCalendarId()
+    {
+        try {
+            FileOutputStream fos = openFileOutput(MainActivity.calendarSettingsFileName, Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(calendarID);
+            os.close();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadCalendarId()
+    {
+         try {
+            FileInputStream fis = openFileInput(MainActivity.calendarSettingsFileName);
+            ObjectInputStream is = new ObjectInputStream(fis);
+            calendarID = (ArrayList) is.readObject();
+            is.close();
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void saveLocations()
+    {
+        try {
+            FileOutputStream fos = openFileOutput(MainActivity.locationSettingsFileName, Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(savedLocations);
+            os.close();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadLocations()
+    {
+        try {
+            FileInputStream fis = openFileInput(MainActivity.locationSettingsFileName);
+            ObjectInputStream is = new ObjectInputStream(fis);
+            savedLocations = (ArrayList) is.readObject();
+            is.close();
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveEvents()
+    {
+        try {
+            FileOutputStream fos = openFileOutput(MainActivity.eventSettingsFileName, Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(userEvents);
+            os.close();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void loadEvents()
+    {
+        try {
+            FileInputStream fis = openFileInput(MainActivity.eventSettingsFileName);
+            ObjectInputStream is = new ObjectInputStream(fis);
+            userEvents = (ArrayList) is.readObject();
+            is.close();
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
