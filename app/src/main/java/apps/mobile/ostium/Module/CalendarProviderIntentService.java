@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.provider.CalendarContract;
+import android.text.format.Time;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -92,10 +93,11 @@ public class CalendarProviderIntentService extends IntentService
         }
 
         DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy hh:mm:ss");
+        Date d = new Date();
+        double timeNow = d.getTime();
 
         for (EventGeneric item : new ArrayList<>(returnList))
         {
-
             if( Double.parseDouble( item.getStartTime()) < timeNow)
                 returnList.remove(item);
             else {
