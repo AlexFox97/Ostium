@@ -111,13 +111,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        LocationObject cantorBuilding = new LocationObject("Cantor", 53.3769219, -1.4677611345050374, "Work");
-        LocationObject aldiSheffield = new LocationObject("Aldi Sheffield", 53.372670, -1.475285, "Shop");
-        LocationObject tescoExpress = new LocationObject("Tesco Express", 53.379121, -1.467388, "Shop");
-        LocationObject asdaQueensRoad = new LocationObject("Asda Queens Road", 53.368411, -1.463179, "Shop");
-        LocationObject moorMarket = new LocationObject("Moor Market", 53.375677, -1.472894, "Shop");
-        LocationObject owenBuilding = new LocationObject("Owen Building", 53.379564, -1.465743, "Place");
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -134,27 +127,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         selectedEvent = null;
 
-        //region Sample Cards
-        /*
-        if (userSelectedEvents.size() == 0)
+        // try to load stuff
+        loadLocations();
+        loadEvents();
+        loadCalendarId();
+
+        // check/get permission and setup stuff
+        GetPermissions();
+        SetupNotifications();
+
+        LocationObject cantorBuilding = new LocationObject("Cantor", 53.3769219, -1.4677611345050374, "Work");
+        LocationObject aldiSheffield = new LocationObject("Aldi Sheffield", 53.372670, -1.475285, "Shop");
+        LocationObject tescoExpress = new LocationObject("Tesco Express", 53.379121, -1.467388, "Shop");
+        LocationObject asdaQueensRoad = new LocationObject("Asda Queens Road", 53.368411, -1.463179, "Shop");
+        LocationObject moorMarket = new LocationObject("Moor Market", 53.375677, -1.472894, "Shop");
+        LocationObject owenBuilding = new LocationObject("Owen Building", 53.379564, -1.465743, "Place");
+
+        //default data if nothing in save files
+        if (userEvents.size() == 0)
         {
-            userSelectedEvents.add(new EventGeneric("Finish uni assignment", "Work", cantorBuilding, "Stuff to do"));
-            userSelectedEvents.add(new EventGeneric("Get food for tonight", "Shops", cantorBuilding, "Stuff to do"));
-            userSelectedEvents.add(new EventGeneric("Meeting", "Places", cantorBuilding, "Go over work done in last tutorial"));
-            userSelectedEvents.add(new EventGeneric("Get present for Mother's Day", "Shops", asdaQueensRoad, "Stuff to do"));
-            userSelectedEvents.add(new EventGeneric("Meeting with supervisor", "Work", cantorBuilding, "Stuff to do"));
-            userSelectedEvents.add(new EventGeneric("Do x y z", "Places", owenBuilding, "Stuff to do"));
-            userSelectedEvents.add(new EventGeneric("Post Parcel", "Places", moorMarket, "Go to post office near moor market"));
-            userSelectedEvents.add(new EventGeneric("Mobile Apps Tutorial", "Work", cantorBuilding, "Stuff to do"));
-            userSelectedEvents.add(new EventGeneric("Mobile Apps Deadline", "Work", cantorBuilding, "Stuff to do"));
-            userSelectedEvents.add(new EventGeneric("Finish uni assignment", "Work", cantorBuilding, "Stuff to do"));
-            userSelectedEvents.add(new EventGeneric("Get food for tonight", "Shops", tescoExpress, "Remember to get bread and milk!"));
-            userSelectedEvents.add(new EventGeneric("Buy laundry detergent", "Places", aldiSheffield, "Go to Aldi to get this"));
+            userEvents.add(new EventGeneric("Finish uni assignment", "Work", cantorBuilding, "Stuff to do"));
+            userEvents.add(new EventGeneric("Get food for tonight", "Shops", cantorBuilding, "Stuff to do"));
+            userEvents.add(new EventGeneric("Meeting", "Places", cantorBuilding, "Go over work done in last tutorial"));
+            userEvents.add(new EventGeneric("Get present for Mother's Day", "Shops", asdaQueensRoad, "Stuff to do"));
+            userEvents.add(new EventGeneric("Meeting with supervisor", "Work", cantorBuilding, "Stuff to do"));
+            userEvents.add(new EventGeneric("Do x y z", "Places", owenBuilding, "Stuff to do"));
+            userEvents.add(new EventGeneric("Post Parcel", "Places", moorMarket, "Go to post office near moor market"));
+            userEvents.add(new EventGeneric("Mobile Apps Tutorial", "Work", cantorBuilding, "Stuff to do"));
+            userEvents.add(new EventGeneric("Mobile Apps Deadline", "Work", cantorBuilding, "Stuff to do"));
+            userEvents.add(new EventGeneric("Finish uni assignment", "Work", cantorBuilding, "Stuff to do"));
+            userEvents.add(new EventGeneric("Get food for tonight", "Shops", tescoExpress, "Remember to get bread and milk!"));
+            userEvents.add(new EventGeneric("Buy laundry detergent", "Places", aldiSheffield, "Go to Aldi to get this"));
         }
-        */
-        
-        if (userEvents.size() == 0) {
-            userEvents.add(new EventGeneric("No items found.", "No items found."));
+
+        if(savedLocations.size() == 0)
+        {
+            savedLocations.add(aldiSheffield);
+            savedLocations.add(cantorBuilding);
+            savedLocations.add(tescoExpress);
+            savedLocations.add(moorMarket);
+            savedLocations.add(owenBuilding);
+            savedLocations.add(asdaQueensRoad);
         }
 
         // region CardRecycler - onCreate
@@ -186,44 +199,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
-
-        // try to load the locations
-        try
-        {
-            File inFile = new File(Environment.getExternalStorageDirectory(), "savedLocations.data");
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(inFile));
-
-            Object x = in.readObject();
-            if(x == null)
-            {
-                savedLocations.add(aldiSheffield);
-                savedLocations.add(cantorBuilding);
-                savedLocations.add(tescoExpress);
-                savedLocations.add(moorMarket);
-                savedLocations.add(owenBuilding);
-                savedLocations.add(asdaQueensRoad);
-            }
-            else
-            {
-                savedLocations = (ArrayList<LocationObject>) x;
-            }
-
-            in.close();
-        } catch (Exception e) {
-
-            savedLocations.add(aldiSheffield);
-            savedLocations.add(cantorBuilding);
-            savedLocations.add(tescoExpress);
-            savedLocations.add(moorMarket);
-            savedLocations.add(owenBuilding);
-            savedLocations.add(asdaQueensRoad);
-            e.printStackTrace();
-        }
-
-
-        GetPermissions();
-        SetupNotifications();
-        loadTaskedLocations();
     }
 
     private void GetPermissions()
@@ -305,23 +280,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         gps.StartLocationUpdates(1000, 10);        
     }
 
-    private void loadTaskedLocations()
-    {
-        // load task objects
-        // try to load the locations
-        try
-        {
-            File inFile = new File(Environment.getExternalStorageDirectory(), "savedTaskedLocations.data");
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(inFile));
-            Object x = in.readObject();
-            taskLocations = (ArrayList<TaskedLocation>)x;
-            in.close();
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
     //region Drawer Methods
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -370,7 +328,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private ArrayList<CardObject> createCardList() {
 
-        cardList = new ArrayList<CardObject>();
+        cardList = new ArrayList<>();
         for (EventGeneric item : userEvents)
         {
             CardObject ci = new CardObject(item);
@@ -530,8 +488,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         builder.show();
     }
-
-
 
     public void addTask() {
 
@@ -725,29 +681,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private class CalendarResultReceiver extends ResultReceiver {
-        public CalendarResultReceiver(Handler handler) {
-            super(handler);
-        }
-
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-            switch (resultCode) {
-                case CalendarProviderIntentService.RETRIEVE_SUCCESS:
-                    if (resultData != null)
-                        userCalendarEvents = ((ArrayList) resultData.getSerializable("events"));
-                    break;
-                case CalendarProviderIntentService.RETRIEVE_ERROR:
-                    //TODO: Handle failure
-            }
-            super.onReceiveResult(resultCode, resultData);
-        }
-    }
-
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
         saveCalendarId();
+        saveLocations();
+        saveEvents();
+        super.onDestroy();
     }
 
     private void saveCalendarId()
@@ -795,7 +734,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try {
             FileInputStream fis = openFileInput(MainActivity.locationSettingsFileName);
             ObjectInputStream is = new ObjectInputStream(fis);
-            savedLocations = (ArrayList) is.readObject();
+            savedLocations = (ArrayList<LocationObject>) is.readObject();
             is.close();
             fis.close();
         } catch (Exception e) {
@@ -822,11 +761,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try {
             FileInputStream fis = openFileInput(MainActivity.eventSettingsFileName);
             ObjectInputStream is = new ObjectInputStream(fis);
-            userEvents = (ArrayList) is.readObject();
+            userEvents = (ArrayList<EventGeneric>) is.readObject();
             is.close();
             fis.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private class CalendarResultReceiver extends ResultReceiver
+    {
+        public CalendarResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            switch (resultCode) {
+                case CalendarProviderIntentService.RETRIEVE_SUCCESS:
+                    if (resultData != null)
+                        userCalendarEvents = ((ArrayList) resultData.getSerializable("events"));
+                    break;
+                case CalendarProviderIntentService.RETRIEVE_ERROR:
+                    //TODO: Handle failure
+            }
+            super.onReceiveResult(resultCode, resultData);
         }
     }
 }
