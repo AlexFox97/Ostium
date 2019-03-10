@@ -1,4 +1,4 @@
-package apps.mobile.ostium.Module;
+package apps.mobile.ostium.Objects;
 
 import java.io.Serializable;
 
@@ -9,9 +9,9 @@ public class LocationObject implements Serializable
     public String title;
     public String placeType; //savedPlace, shop, work
 
-    public LocationObject(String t, double lat, double longt, String pType)
+    public LocationObject(String title, double lat, double longt, String pType)
     {
-        title = t;
+        this.title = title;
         latitude = lat;
         longitude = longt;
         placeType = pType;

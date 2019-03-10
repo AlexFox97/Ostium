@@ -1,6 +1,7 @@
 package apps.mobile.ostium.Activity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import apps.mobile.ostium.Adapter.RecyclerViewAdapter;
 import apps.mobile.ostium.Module.CalendarHandler;
 import apps.mobile.ostium.R;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import static apps.mobile.ostium.Activity.MainActivity.calendarID;
@@ -114,5 +116,7 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewAd
         //Show AlertDialog
         AlertDialog dialog = builder.create();
         dialog.show();
+
+        Toast.makeText(getApplicationContext(), "Previously selected calendars have been cleared.", Toast.LENGTH_SHORT).show();
     }
 }

@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import apps.mobile.ostium.Module.LocationObject;
+import apps.mobile.ostium.Objects.LocationObject;
 import apps.mobile.ostium.R;
 
 import java.util.ArrayList;

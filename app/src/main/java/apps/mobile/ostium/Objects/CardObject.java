@@ -1,4 +1,7 @@
-package apps.mobile.ostium.Module;
+package apps.mobile.ostium.Objects;
+
+import apps.mobile.ostium.Module.EventGeneric;
+import apps.mobile.ostium.Objects.LocationObject;
 
 import java.util.ArrayList;
 
@@ -43,8 +46,8 @@ public class CardObject
             {
                 s.append(loc.getTitle() + "     ");
             }
-
-            return s.toString();
+            //TODO: Need to get this working properly (currently displaying error)
+            return "Home"; //s.toString();
         }
         else
         {
