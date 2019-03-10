@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.provider.CalendarContract;
+import apps.mobile.ostium.Objects.LocationObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -82,7 +83,9 @@ public class CalendarProviderIntentService extends IntentService
                 String start = cur.getString(cur.getColumnIndex(CalendarContract.Events.DTSTART));
                 String end = cur.getString(cur.getColumnIndex(CalendarContract.Events.DTEND));
 
-                EventGeneric event = new EventGeneric(title, accountType);
+                LocationObject cantorBuilding = new LocationObject("Cantor", 53.3769219, -1.4677611345050374, "Work");
+
+                EventGeneric event = new EventGeneric(title, accountType, cantorBuilding, desc);
                 event.setDescription(desc);
                 event.setStartTime(start);
                 event.setEndTime(end);
