@@ -232,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onLocationChanged(Location location)
             {
+                // TODO: Fix me so I don't crash pls
                 for(int i = 0; i < userEvents.size(); i++)
                 {
                     if(userEvents.get(i).locationTags.size() > 0) {
