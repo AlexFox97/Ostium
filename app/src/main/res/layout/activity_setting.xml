@@ -41,16 +41,5 @@
             app:layout_constraintTop_toBottomOf="@+id/nav_location_toolbar"
             app:layout_constraintVertical_bias="0.006"
     />
-    <Button
-            android:text="Select Calendars"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:id="@+id/calendarSelectBtn" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="@+id/nav_location_toolbar" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.071"
-            app:layout_constraintVertical_bias="0.961"
-            android:onClick="selectCalendars"/>
 
 </android.support.constraint.ConstraintLayout>

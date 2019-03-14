@@ -120,7 +120,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         GetPermissions();
         SetupNotifications();
 
-        LocationObject cantorBuilding = new LocationObject("Cantor", 53.3769219, -1.4677611345050374, "Work");
+        
+
+        /*LocationObject cantorBuilding = new LocationObject("Cantor", 53.3769219, -1.4677611345050374, "Work");
         LocationObject aldiSheffield = new LocationObject("Aldi Sheffield", 53.372670, -1.475285, "Shop");
         LocationObject tescoExpress = new LocationObject("Tesco Express", 53.379121, -1.467388, "Shop");
         LocationObject asdaQueensRoad = new LocationObject("Asda Queens Road", 53.368411, -1.463179, "Shop");
@@ -152,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             savedLocations.add(moorMarket);
             savedLocations.add(owenBuilding);
             savedLocations.add(asdaQueensRoad);
-        }
+        }*/
 
         // region CardRecycler - onCreate
         recCardList = (RecyclerView) findViewById(R.id.cardList);
@@ -232,18 +234,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onLocationChanged(Location location)
             {
-                // TODO: Fix me so I don't crash pls
 
                 for(int i = 0; i < userEvents.size(); i++)
                 {
-                    if(userEvents.get(i).locationTags.size() > 0) {
-                        for (LocationObject loc : userEvents.get(i).locationTags) {
-                            if (location.getLongitude() + 0.01 > loc.getLongt() && location.getLongitude() - 0.01 < loc.getLongt()) {
-                                if (location.getLatitude() + 0.01 > loc.getLat() && location.getLatitude() - 0.01 < loc.getLat()) {
-                                    // we're in a known location make a notification
-                                    // if it has a task attached
-                                    if (userEvents.get(i).Task != null) {
-                                        Notification.pushNotification(userEvents.get(i).Task.getTitle(), userEvents.get(i).Task.getNotes());
+                    if(userEvents.get(i).locationTags != null) {
+                        if (userEvents.get(i).locationTags.size() > 0) {
+                            for (LocationObject loc : userEvents.get(i).locationTags) {
+                                if (location.getLongitude() + 0.01 > loc.getLongt() && location.getLongitude() - 0.01 < loc.getLongt()) {
+                                    if (location.getLatitude() + 0.01 > loc.getLat() && location.getLatitude() - 0.01 < loc.getLat()) {
+                                        // we're in a known location make a notification
+                                        // if it has a task attached
+                                        if (userEvents.get(i).Task != null) {
+                                            Notification.pushNotification(userEvents.get(i).Task.getTitle(), userEvents.get(i).Task.getNotes());
+                                        }
                                     }
                                 }
                             }
@@ -667,11 +670,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onStop() {
         saveCalendarId();
         saveLocations();
         saveEvents();
-        super.onDestroy();
+        super.onStop();
     }
 
     private void saveCalendarId()
