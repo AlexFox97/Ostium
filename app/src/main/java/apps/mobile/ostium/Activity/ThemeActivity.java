@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import apps.mobile.ostium.R;
-import apps.mobile.ostium.ThemeApplication;
+import apps.mobile.ostium.Objects.ThemeApplication;
 import apps.mobile.ostium.Utils;
 
 import java.util.ArrayList;
@@ -41,6 +41,7 @@ public class ThemeActivity extends AppCompatActivity
                                        int position, long id) {
                 if (ThemeApplication.currentPosition != position) {
                     Utils.changeToTheme(ThemeActivity.this, position);
+
                 }
                 ThemeApplication.currentPosition = position;
             }

@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import apps.mobile.ostium.R;
-import apps.mobile.ostium.TagInfo;
+import apps.mobile.ostium.Objects.TagInfo;
 
 import java.util.List;
 

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.provider.CalendarContract;
+import apps.mobile.ostium.Objects.LocationObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -36,7 +37,7 @@ public class CalendarProviderIntentService extends IntentService
     {
         // Get ResultReceiver from the Intent passed to service
         final ResultReceiver receiver = intent.getParcelableExtra("receiver");
-        final ArrayList<Integer> calendars = (ArrayList) intent.getSerializableExtra("calendars");
+        final ArrayList<Integer> calendars = (ArrayList<Integer>) intent.getSerializableExtra("calendars");
 
         // Create bundle to store data to send back
         Bundle bundle = new Bundle();
@@ -48,10 +49,11 @@ public class CalendarProviderIntentService extends IntentService
          * TODO: Implement success and fail cases for receiver.send
          * */
         receiver.send(RETRIEVE_SUCCESS, bundle);
+
     }
 
     @SuppressLint("MissingPermission")
-    private ArrayList getEvents(ArrayList<Integer> calendarIDs)
+    private ArrayList<EventGeneric> getEvents(ArrayList<Integer> calendarIDs)
     {
         ArrayList<EventGeneric> returnList = new ArrayList<>();
         Cursor cur;
@@ -82,7 +84,9 @@ public class CalendarProviderIntentService extends IntentService
                 String start = cur.getString(cur.getColumnIndex(CalendarContract.Events.DTSTART));
                 String end = cur.getString(cur.getColumnIndex(CalendarContract.Events.DTEND));
 
-                EventGeneric event = new EventGeneric(title, accountType);
+                LocationObject cantorBuilding = new LocationObject("Cantor", 53.3769219, -1.4677611345050374, "Work");
+
+                EventGeneric event = new EventGeneric(title, accountType, cantorBuilding, desc);
                 event.setDescription(desc);
                 event.setStartTime(start);
                 event.setEndTime(end);
@@ -92,16 +96,17 @@ public class CalendarProviderIntentService extends IntentService
         }
 
         DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy hh:mm:ss");
+        Date d = new Date();
+        double timeNow = d.getTime();
 
         for (EventGeneric item : new ArrayList<>(returnList))
         {
-//
-//            if( Double.parseDouble( item.getStartTime()) < timeNow)
-//                returnList.remove(item);
-//            else {
+            if( Double.parseDouble( item.getStartTime()) < timeNow)
+                returnList.remove(item);
+            else {
                 item.setStartTime(dateFormat.format(new Date(Long.parseLong(item.getStartTime()))));
                 item.setEndTime(dateFormat.format(new Date(Long.parseLong(item.getEndTime()))));
-//            }
+            }
         }
 
         return returnList;

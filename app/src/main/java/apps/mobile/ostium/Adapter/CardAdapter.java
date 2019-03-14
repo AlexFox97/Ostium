@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import apps.mobile.ostium.Module.CardObject;
-import apps.mobile.ostium.Module.LocationObject;
+import apps.mobile.ostium.Objects.CardObject;
+import apps.mobile.ostium.Objects.LocationObject;
 import apps.mobile.ostium.R;
 
 import java.util.ArrayList;
@@ -30,11 +30,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     public static void addLocationTags(View v)
     {
         final Context context = v.getContext();
-        final Boolean checkedLocations[];
+        final Boolean checkedLocations[] = new Boolean[savedLocations.size()];
         ArrayList<String> locationTitlesTemp = new ArrayList<>();
-
-        checkedLocations = new Boolean[savedLocations.size()];
-        Arrays.fill(checkedLocations, false);
+        
         for (LocationObject location : savedLocations)
         {
             locationTitlesTemp.add(location.getTitle());
@@ -42,6 +40,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
         final String[] locationTitles = GetStringArray(locationTitlesTemp);
         final List<String> locationList = Arrays.asList(locationTitles);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         DialogInterface.OnMultiChoiceClickListener multiListener = new DialogInterface.OnMultiChoiceClickListener()
         {
@@ -55,7 +54,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
                 String currentItem = locationList.get(which);
 
                 // Notify the current action
-                Toast.makeText(context, currentItem + " " + isChecked, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, currentItem + " " + isChecked, Toast.LENGTH_SHORT).show();
 
             }
         };
@@ -101,13 +100,19 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     @Override
     public void onBindViewHolder(CardViewHolder cardViewHolder, int position)
     {
+//        CardObject ci = events.get(position);
+//        cardViewHolder.vTitle.setText(ci.title);
+//        cardViewHolder.vDetails.setText(ci.details);
+//        cardViewHolder.vDate.setText(ci.date);
+//        String s = ci.getLocationsToString();
+//        cardViewHolder.vTags.setText(s);
+
         CardObject ci = events.get(position);
-        cardViewHolder.vTitle.setText(ci.title);
-        cardViewHolder.vDetails.setText(ci.details);
-        cardViewHolder.vDate.setText(ci.date);
+        cardViewHolder.vTitle.setText("Sample title of a calender event");
+        cardViewHolder.vDetails.setText("The description of previouslly mentioned event");
+        cardViewHolder.vDate.setText("10/10/1999");
         String s = ci.getLocationsToString();
-        cardViewHolder.vTags.setText(s);
-        //cardViewHolder.vTags.setAdapter();
+        cardViewHolder.vTags.setText("Home");
     }
 
     @Override

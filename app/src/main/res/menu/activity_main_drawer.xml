@@ -1,32 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-            android:id="@+id/nav_location"
+        android:id="@+id/action_more"
+        android:icon="@drawable/ic_menu_white_24dp"
+        android:title=""
+        app:showAsAction="always">
+        <menu>
 
-            android:title="@string/locationScreenName"/>
+            <item
+                android:id="@+id/nav_location"
+                android:icon="@drawable/ic_location_on_black_24dp"
+                android:title="@string/locationScreenName"
+                app:showAsAction="ifRoom"/>
 
-    <item
-            android:id="@+id/nav_map"
+            <item
+                android:id="@+id/nav_map"
+                android:icon="@drawable/ic_map_black_24dp"
+                android:title="@string/mapScreenName"
+                app:showAsAction="ifRoom" />
 
-            android:title="@string/mapScreenName"/>
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_settings_black_24dp"
+                android:title="@string/settingsScreenName"
+                app:showAsAction="ifRoom"/>
 
-    <item
-            android:id="@+id/nav_settings"
+            <item
+                android:id="@+id/nav_dev_one"
+                android:icon="@drawable/ic_color_lens_black_24dp"
+                android:title="Colour Picker"
+                app:showAsAction="ifRoom"/>
+            <item
+                android:id="@+id/nav_dev_two"
+                android:icon="@drawable/ic_list_black_24dp"
+                android:title="@string/devTwoScreenName"
+                app:showAsAction="ifRoom"/>
+            <item
+                android:id="@+id/nav_dev_three"
+                android:icon="@drawable/ic_list_black_24dp"
+                android:title="@string/devThreeScreenName"
+                app:showAsAction="ifRoom"/>
 
-            android:title="@string/settingsScreenName"/>
-
-    <!--<item-->
-    <!--android:id="@+id/nav_dev_one"-->
-
-    <!--android:title="@string/devOneScreenName" />-->
-    <!--<item-->
-    <!--android:id="@+id/nav_dev_two"-->
-
-    <!--android:title="@string/devTwoScreenName" />-->
-    <!--<item-->
-    <!--android:id="@+id/nav_dev_three"-->
-
-    <!--android:title="@string/devThreeScreenName" />-->
-
+        </menu>
+    </item>
 </menu>
