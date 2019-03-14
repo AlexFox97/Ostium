@@ -35,19 +35,18 @@
     />
 
     <android.support.design.widget.FloatingActionButton
-        android:id = "@+id/fab"
-        android:layout_gravity = "bottom|end"
-        android:layout_height = "60dp"
-        android:layout_marginBottom = "16dp"
-        android:layout_marginEnd = "32dp"
-        android:layout_width = "wrap_content"
-        app:elevation = "6dp"
-        app:layout_constraintBottom_toBottomOf = "@+id/cardList"
-        app:layout_constraintEnd_toStartOf = "@+id/guideline3"
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
         android:contentDescription="Add new task"
         android:onClick="addEvent"
-        app:srcCompat = "@drawable/ic_add_black_24dp"
-        />
+        app:elevation="6dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cardList"
+        app:layout_constraintEnd_toEndOf="@+id/cardList"
+        app:srcCompat="@drawable/ic_add_black_24dp" />
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/cardList"

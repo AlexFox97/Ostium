@@ -5,12 +5,12 @@
     xmlns:tools = "http://schemas.android.com/tools"
     android:layout_height = "match_parent"
     android:layout_width = "match_parent"
-    tools:context = ".DevActivityOne"
+    tools:context=".Activity.SelectThemeActivity"
     android:focusable="true"
     >
 
     <android.support.design.widget.AppBarLayout
-        android:id = "@+id/nav_dev_two_toolbar"
+        android:id="@+id/nav_theme_toolbar"
         android:layout_height = "wrap_content"
         android:layout_width = "match_parent"
         >

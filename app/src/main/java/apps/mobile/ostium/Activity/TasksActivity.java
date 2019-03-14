@@ -6,12 +6,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import apps.mobile.ostium.R;
 
-public class DevActivityTwo extends AppCompatActivity {
+public class TasksActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dev_two);
+        setContentView(R.layout.activity_tasks);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

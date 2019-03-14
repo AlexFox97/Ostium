@@ -1,17 +1,17 @@
 package apps.mobile.ostium.Activity;
 
+import android.Manifest;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.os.Build;
-import android.os.Bundle;
-import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,20 +21,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import apps.mobile.ostium.Module.GPSModule;
+import apps.mobile.ostium.Module.NotificationModule;
 import apps.mobile.ostium.Objects.Request.GetLocationRequest;
+import apps.mobile.ostium.R;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorChangedListener;
 import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
-
-import apps.mobile.ostium.Module.GPSModule;
-import apps.mobile.ostium.Module.NotificationModule;
-import apps.mobile.ostium.R;
-
-public class DevActivityOne extends AppCompatActivity
+public class SelectThemeActivity extends AppCompatActivity
 {
     private static final int PermissionCorrect = 1;
     private final int GPSPingTime = 2000;
@@ -56,7 +53,7 @@ public class DevActivityOne extends AppCompatActivity
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dev_one);
+        setContentView(R.layout.activity_select_theme);
 
         t = findViewById(R.id.textView);
         s = findViewById(R.id.colourTextview);

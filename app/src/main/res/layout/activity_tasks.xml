@@ -5,12 +5,12 @@
     xmlns:tools = "http://schemas.android.com/tools"
     android:layout_height = "match_parent"
     android:layout_width = "match_parent"
-    tools:context = ".DevActivityTwo"
+    tools:context=".Activity.TasksActivity"
     android:focusable="true"
     >
 
     <android.support.design.widget.AppBarLayout
-        android:id = "@+id/nav_dev_two_toolbar"
+        android:id="@+id/nav_tasks_toolbar"
         android:layout_height = "wrap_content"
         android:layout_width = "match_parent"
         >
@@ -25,14 +25,6 @@
             app:popupTheme = "@style/ThemeOverlay.AppCompat.Light"
             />
     </android.support.design.widget.AppBarLayout>
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="73dp" />
 
     <Button
         android:id="@+id/button3"

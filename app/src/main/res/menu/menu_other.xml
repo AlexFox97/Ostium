@@ -5,35 +5,35 @@
     <item
         android:id = "@+id/nav_location"
 
-        android:title = "@string/locationScreenName"
+        android:title="@string/screen_name_location"
         />
 
     <item
         android:id = "@+id/nav_map"
 
-        android:title = "@string/mapScreenName"
+        android:title="@string/screen_name_map"
         />
 
     <item
         android:id = "@+id/nav_settings"
 
-        android:title = "@string/settingsScreenName"
+        android:title="@string/screen_name_settings"
         />
 
     <item
-        android:id = "@+id/nav_dev_one"
+        android:id="@+id/nav_change_theme"
 
-        android:title = "@string/devOneScreenName"
+        android:title="@string/screen_name_select_theme"
         />
     <item
-        android:id = "@+id/nav_dev_two"
+        android:id="@+id/nav_add_tasks"
 
-        android:title = "@string/devTwoScreenName"
+        android:title="@string/screen_name_add_tasks"
         />
     <item
-        android:id = "@+id/nav_dev_three"
+        android:id="@+id/nav_add_calendar"
 
-        android:title = "@string/devThreeScreenName"
+        android:title="@string/screen_name_add_calendar"
         />
 
 </menu>

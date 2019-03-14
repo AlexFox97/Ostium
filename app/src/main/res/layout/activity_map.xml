@@ -70,7 +70,7 @@
         android:layout_marginStart = "8dp"
         android:layout_marginTop = "8dp"
         android:layout_width = "0dp"
-        android:contentDescription="@string/mapScreenName"
+        android:contentDescription="@string/screen_name_map"
         android:name = "com.google.android.gms.maps.SupportMapFragment"
         tools:context = ".MapActivity"
         map:cameraBearing = "112.5"

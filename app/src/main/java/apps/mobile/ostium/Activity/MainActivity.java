@@ -3,22 +3,18 @@ package apps.mobile.ostium.Activity;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -29,35 +25,32 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-
+import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import apps.mobile.ostium.Adapter.CardAdapter;
-import apps.mobile.ostium.Module.*;
-import apps.mobile.ostium.R;
-import apps.mobile.ostium.Objects.TagInfo;
-
-import android.text.InputType;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
+import apps.mobile.ostium.Adapter.CardAdapter;
+import apps.mobile.ostium.Module.*;
 import apps.mobile.ostium.Objects.CardObject;
 import apps.mobile.ostium.Objects.LocationObject;
-
+import apps.mobile.ostium.Objects.TagInfo;
+import apps.mobile.ostium.R;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static java.lang.Math.abs;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
@@ -303,17 +296,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void goToDevOne(View view) {
         Log.d(LogTagClass, "Button Dev One clicked!");
-        startActivity(new Intent(this, DevActivityOne.class));
+        startActivity(new Intent(this, SelectThemeActivity.class));
     }
 
     public void goToDevTwo(View view) {
         Log.d(LogTagClass, "Button Dev Two clicked!");
-        startActivity(new Intent(this, DevActivityTwo.class));
+        startActivity(new Intent(this, TasksActivity.class));
     }
 
     public void goToDevThree(View view) {
         Log.d(LogTagClass, "Button Dev Three clicked!");
-        startActivity(new Intent(this, DevActivityThree.class));
+        startActivity(new Intent(this, CalendarActivity.class));
     }
 
     private ArrayList<CardObject> createCardList() {
@@ -640,11 +633,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             goToMap(navigationView);
         } else if (id == R.id.nav_settings) {
             goToSettings(navigationView);
-        } else if (id == R.id.nav_dev_one) {
+        } else if (id == R.id.nav_change_theme) {
             goToDevOne(navigationView);
-        } else if (id == R.id.nav_dev_two) {
+        } else if (id == R.id.nav_add_tasks) {
             goToDevTwo(navigationView);
-        } else if (id == R.id.nav_dev_three) {
+        } else if (id == R.id.nav_add_calendar) {
             goToDevThree(navigationView);
         }
 

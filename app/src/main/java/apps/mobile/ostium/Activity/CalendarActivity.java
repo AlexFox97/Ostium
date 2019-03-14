@@ -9,9 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import apps.mobile.ostium.R;
-
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorChangedListener;
 import com.flask.colorpicker.OnColorSelectedListener;
@@ -19,7 +17,7 @@ import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
 
-public class DevActivityThree extends AppCompatActivity {
+public class CalendarActivity extends AppCompatActivity {
 
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String COLOUR = "colour";
@@ -33,7 +31,7 @@ public class DevActivityThree extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dev_three);
+        setContentView(R.layout.activity_calendar);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -107,7 +105,6 @@ public class DevActivityThree extends AppCompatActivity {
         Button d = (Button) findViewById(R.id.button1);
         d.setBackgroundColor(selectedColour);
 
-        //TextView q = (TextView) findViewById(R.id.nav_dev_two_toolbar);
         //q.setBackgroundColor(selectedColour);
 
         s.append("\n " + "Selected Colour: "+selectedColour);
