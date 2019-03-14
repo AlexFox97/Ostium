@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void SetupNotifications()
     {
-        // get the user to sign into there google account
+        // get the user to sign into their google account
         GoogleSignInOptions SIO = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -233,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onLocationChanged(Location location)
             {
                 // TODO: Fix me so I don't crash pls
+
                 for(int i = 0; i < userEvents.size(); i++)
                 {
                     if(userEvents.get(i).locationTags.size() > 0) {
