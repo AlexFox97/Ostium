@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import apps.mobile.ostium.Objects.CardObject;
 import apps.mobile.ostium.Objects.LocationObject;
 import apps.mobile.ostium.R;
@@ -90,6 +89,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         }
 
         return str;
+        
     }
 
     @Override
