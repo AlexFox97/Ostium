@@ -120,7 +120,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         GetPermissions();
         SetupNotifications();
 
-        LocationObject cantorBuilding = new LocationObject("Cantor", 53.3769219, -1.4677611345050374, "Work");
+        
+
+        /*LocationObject cantorBuilding = new LocationObject("Cantor", 53.3769219, -1.4677611345050374, "Work");
         LocationObject aldiSheffield = new LocationObject("Aldi Sheffield", 53.372670, -1.475285, "Shop");
         LocationObject tescoExpress = new LocationObject("Tesco Express", 53.379121, -1.467388, "Shop");
         LocationObject asdaQueensRoad = new LocationObject("Asda Queens Road", 53.368411, -1.463179, "Shop");
@@ -152,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             savedLocations.add(moorMarket);
             savedLocations.add(owenBuilding);
             savedLocations.add(asdaQueensRoad);
-        }
+        }*/
 
         // region CardRecycler - onCreate
         recCardList = (RecyclerView) findViewById(R.id.cardList);
@@ -217,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return ;
         }
         //else setup the notifications
+        
         // get the user to sign into there google account
         GoogleSignInOptions SIO = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -237,6 +240,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onLocationChanged(Location location)
             {
+
                 for(int i = 0; i < userEvents.size(); i++)
                 {
                     if(userEvents.get(i).locationTags != null) {
@@ -671,11 +675,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onStop() {
         saveCalendarId();
         saveLocations();
         saveEvents();
-        super.onDestroy();
+        super.onStop();
     }
 
     private void saveCalendarId()

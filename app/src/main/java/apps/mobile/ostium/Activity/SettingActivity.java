@@ -35,7 +35,7 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewAd
 
         // data to populate the RecyclerView with
         ArrayList<String> listData = new ArrayList<>();
-        listData.add("Setting1");
+        listData.add("Select Calendar");
         listData.add("Setting2");
         listData.add("Setting3");
         listData.add("Setting4");
@@ -57,7 +57,11 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewAd
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+
+        if(adapter.getItem(position).equals("Select Calendar"))
+            calendarSelection();
+
 //        Intent myIntent = new Intent(SettingActivity.this, ThemeActivity.class);
 //        SettingActivity.this.startActivity(myIntent);
     }

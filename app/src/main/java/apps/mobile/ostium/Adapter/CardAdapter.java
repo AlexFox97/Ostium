@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import apps.mobile.ostium.Objects.CardObject;
 import apps.mobile.ostium.Objects.LocationObject;
 import apps.mobile.ostium.R;
@@ -90,6 +89,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         }
 
         return str;
+        
     }
 
     @Override
@@ -100,19 +100,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     @Override
     public void onBindViewHolder(CardViewHolder cardViewHolder, int position)
     {
-//        CardObject ci = events.get(position);
-//        cardViewHolder.vTitle.setText(ci.title);
-//        cardViewHolder.vDetails.setText(ci.details);
-//        cardViewHolder.vDate.setText(ci.date);
-//        String s = ci.getLocationsToString();
-//        cardViewHolder.vTags.setText(s);
-
         CardObject ci = events.get(position);
-        cardViewHolder.vTitle.setText("Sample title of a calender event");
-        cardViewHolder.vDetails.setText("The description of previouslly mentioned event");
-        cardViewHolder.vDate.setText("10/10/1999");
+        cardViewHolder.vTitle.setText(ci.title);
+        cardViewHolder.vDetails.setText(ci.details);
+        cardViewHolder.vDate.setText(ci.date);
         String s = ci.getLocationsToString();
-        cardViewHolder.vTags.setText("Home");
+        cardViewHolder.vTags.setText(s);
+
     }
 
     @Override

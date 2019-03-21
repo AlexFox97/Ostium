@@ -28,6 +28,7 @@ public class EventGeneric implements Serializable
         this.location = taskLocation; //new LocationObject("Uni", 53.3769219, -1.4677611345050374, "Work");
         this.description = taskDescription; // "Generic Description of what I'm doing";
         this.calendarName = "CalendarName";
+        this.locationTags = new ArrayList<>();
     }
 
     public ArrayList<LocationObject> getLocationTags() {
