@@ -212,6 +212,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void SetupNotifications()
     {
+        if(googleApiClient != null)
+        {
+            return ;
+        }
+        //else setup the notifications
         // get the user to sign into there google account
         GoogleSignInOptions SIO = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -234,20 +239,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             {
                 for(int i = 0; i < userEvents.size(); i++)
                 {
-                    if(userEvents.get(i).locationTags.size() > 0) {
-                        for (LocationObject loc : userEvents.get(i).locationTags) {
-                            if (location.getLongitude() + 0.01 > loc.getLongt() && location.getLongitude() - 0.01 < loc.getLongt()) {
-                                if (location.getLatitude() + 0.01 > loc.getLat() && location.getLatitude() - 0.01 < loc.getLat()) {
-                                    // we're in a known location make a notification
-                                    // if it has a task attached
-                                    if (userEvents.get(i).Task != null) {
-                                        Notification.pushNotification(userEvents.get(i).Task.getTitle(), userEvents.get(i).Task.getNotes());
+                    if(userEvents.get(i).locationTags != null) {
+                        if (userEvents.get(i).locationTags.size() > 0) {
+                            for (LocationObject loc : userEvents.get(i).locationTags) {
+                                if (location.getLongitude() + 0.01 > loc.getLongt() && location.getLongitude() - 0.01 < loc.getLongt()) {
+                                    if (location.getLatitude() + 0.01 > loc.getLat() && location.getLatitude() - 0.01 < loc.getLat()) {
+                                        // we're in a known location make a notification
+                                        // if it has a task attached
+                                        if (userEvents.get(i).Task != null) {
+                                            Notification.pushNotification(userEvents.get(i).Task.getTitle(), userEvents.get(i).Task.getNotes());
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-
                 }
             }
 

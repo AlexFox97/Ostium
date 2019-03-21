@@ -34,6 +34,12 @@ public class GPSModule
     @SuppressLint("MissingPermission")
     public void StartLocationUpdates(int TimePerPing, int distance)
     {
-        manager.requestLocationUpdates("gps", TimePerPing, distance, listener);
+        try
+        {
+            manager.requestLocationUpdates("gps", TimePerPing, distance, listener);
+        }
+        catch (Exception e)
+        {
+        }
     }
 }
