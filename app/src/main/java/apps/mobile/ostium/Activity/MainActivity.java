@@ -308,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void goToDevOne(View view) {
         Log.d(LogTagClass, "Button Dev One clicked!");
-        startActivity(new Intent(this, ThemeSelectActivity.class));
+        startActivity(new Intent(this, DevActivityOne.class));
     }
 
     public void goToDevTwo(View view) {
