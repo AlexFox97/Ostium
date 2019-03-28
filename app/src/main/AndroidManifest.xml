@@ -68,7 +68,7 @@
                 />
         </activity>
         <activity
-            android:name=".Activity.ThemeSelectActivity"
+            android:name=".Activity.DevActivityOne"
             android:label="DevActivityOne"
             android:parentActivityName=".Activity.MainActivity"
             >

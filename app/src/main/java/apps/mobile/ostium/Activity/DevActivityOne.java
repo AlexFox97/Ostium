@@ -34,7 +34,7 @@ import apps.mobile.ostium.Module.GPSModule;
 import apps.mobile.ostium.Module.NotificationModule;
 import apps.mobile.ostium.R;
 
-public class ThemeSelectActivity extends AppCompatActivity
+public class DevActivityOne extends AppCompatActivity
 {
     private static final int PermissionCorrect = 1;
     private final int GPSPingTime = 2000;

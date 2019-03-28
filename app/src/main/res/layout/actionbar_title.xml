@@ -19,7 +19,6 @@
         android:text = "OsTiUm"
         android:textColor = "#ffffff"
         android:textSize = "18dp"
-        android:fontFamily="@font/Starjedi"
         app:layout_constraintBottom_toBottomOf = "parent"
         app:layout_constraintEnd_toEndOf = "parent"
         app:layout_constraintStart_toStartOf = "parent"
