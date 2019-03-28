@@ -28,6 +28,7 @@
         android:id = "@+id/action_title"
         android:orderInCategory = "200"
         android:title = "Ostium"
+        android:fontFamily="@font/Starjedi"
         app:showAsAction = "withText"
         />
 
