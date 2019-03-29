@@ -2,7 +2,6 @@ package apps.mobile.ostium.Activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -26,10 +25,6 @@ public class ThemeActivity extends AppCompatActivity
 
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_theme);
-
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupSpinnerItemSelection();
     }
 
@@ -46,7 +41,7 @@ public class ThemeActivity extends AppCompatActivity
                                        int position, long id) {
                 if (ThemeApplication.currentPosition != position) {
                     Utils.changeToTheme(ThemeActivity.this, position);
-                    //setThemeNow();
+
                 }
                 ThemeApplication.currentPosition = position;
             }
@@ -56,10 +51,5 @@ public class ThemeActivity extends AppCompatActivity
 
             }
         });
-    }
-    public void setThemeNow(int position)
-    {
-        setTheme(position);
-        recreate();
     }
 }
