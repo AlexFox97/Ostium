@@ -26,11 +26,10 @@
     <string name="settingsScreenName">Settings</string>
 
     <string-array name="theme_array">
-        <item>OSTIUM</item>
-        <item>OSTIUM_DARK</item>
-        <item>OSTIUM_TWO</item>
-        <item>OSTIUM_DARK_TWO</item>
-
+        <item>Ostium_Dark</item>
+        <item>Deuteranopia</item>
+        <item>Protanopia</item>
+        <item>Tritanopia</item>
     </string-array>
 
     <string name="settings_text_select_theme">Select Theme:</string>
