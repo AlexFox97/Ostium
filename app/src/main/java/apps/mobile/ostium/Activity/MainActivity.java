@@ -352,7 +352,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(LogTagClass, "Button Dev Two clicked!");
         startActivity(new Intent(this, DevActivityTwo.class));
     }
-
+*/
     private ArrayList<CardObject> createCardList() {
 
         cardList = new ArrayList<>();
@@ -454,7 +454,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(DialogInterface dialog, int which) {
                 //TODO: Current card
                 addCalanderEvent();
-                dialog.dismiss();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -485,6 +484,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(DialogInterface dialog, int which) {
                 selectedEvent = userCalendarEvents.get(abs(which));
                 newEvent.calendarEvent = selectedEvent;
+                dialog.dismiss();
                 addDate();
             }
         });
