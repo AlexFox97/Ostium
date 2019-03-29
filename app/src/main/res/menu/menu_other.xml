@@ -25,15 +25,5 @@
 
         android:title = "@string/devOneScreenName"
         />
-    <item
-        android:id = "@+id/nav_dev_two"
-
-        android:title = "@string/devTwoScreenName"
-        />
-    <item
-        android:id = "@+id/nav_dev_three"
-
-        android:title = "@string/devThreeScreenName"
-        />
 
 </menu>

@@ -38,7 +38,7 @@ public class DevActivityOne extends AppCompatActivity
 {
     private static final int PermissionCorrect = 1;
     private final int GPSPingTime = 2000;
-    private final int GPSDistance = 0;
+    private final int GPSDistance = 20;
 
     private TextView t;
     private TextView s;
@@ -178,7 +178,7 @@ public class DevActivityOne extends AppCompatActivity
             public void onLocationChanged(Location location)
             {
                 t.append("\n " + location.getLongitude() + " " + location.getLatitude());
-                notification.pushNotification("New Location!!!", location.getLongitude() + " " + location.getLatitude());
+                //notification.pushNotification("New Location!!!", location.getLongitude() + " " + location.getLatitude());
             }
 
             @Override

@@ -46,12 +46,12 @@ public class CardObject
             {
                 s.append(loc.getTitle() + "     ");
             }
-            //TODO: Need to get this working properly (currently displaying error)
-            return "Home"; //s.toString();
+
+            return s.toString();
         }
         else
         {
-            return "error";
+            return "";
         }
     }
 }

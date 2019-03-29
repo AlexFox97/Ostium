@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -30,6 +31,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
+import android.util.EventLog;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -69,6 +71,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String locationSettingsFileName = "loc_settings";
     public static final String eventSettingsFileName = "evn_settings";
 
+    private final int GPSPingTime = 2000;
+    private final int GPSDistance = 20;
+
     private String m_Text = "";
 
     public static EventGeneric selectedEvent;
@@ -92,6 +97,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private GoogleApiClient googleApiClient;
     NotificationModule Notification;
 
+    private EventGeneric newEvent;
+
+    private GPSModule GPS;
+    private LocationObject lastLoc;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -112,22 +123,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         selectedEvent = null;
 
         // try to load stuff
-        loadLocations();
-        loadEvents();
-        loadCalendarId();
+        if(savedLocations.size() == 0)
+        {
+            loadLocations();
+        }
+
+        if(userEvents.size() == 0)
+        {
+            loadEvents();
+        }
+
+        if(calendarID.size() == 0)
+        {
+            loadCalendarId();
+        }
 
         // check/get permission and setup stuff
         GetPermissions();
         SetupNotifications();
 
-        
-
-        /*LocationObject cantorBuilding = new LocationObject("Cantor", 53.3769219, -1.4677611345050374, "Work");
+        LocationObject cantorBuilding = new LocationObject("Cantor", 53.3769219, -1.4677611345050374, "Work");
         LocationObject aldiSheffield = new LocationObject("Aldi Sheffield", 53.372670, -1.475285, "Shop");
         LocationObject tescoExpress = new LocationObject("Tesco Express", 53.379121, -1.467388, "Shop");
         LocationObject asdaQueensRoad = new LocationObject("Asda Queens Road", 53.368411, -1.463179, "Shop");
         LocationObject moorMarket = new LocationObject("Moor Market", 53.375677, -1.472894, "Shop");
         LocationObject owenBuilding = new LocationObject("Owen Building", 53.379564, -1.465743, "Place");
+
+        if(savedLocations.size() == 0)
+        {
+            savedLocations.add(aldiSheffield);
+            savedLocations.add(cantorBuilding);
+            savedLocations.add(tescoExpress);
+            savedLocations.add(moorMarket);
+            savedLocations.add(owenBuilding);
+            savedLocations.add(asdaQueensRoad);
+        }
 
         //default data if nothing in save files
         if (userEvents.size() == 0)
@@ -146,15 +176,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             userEvents.add(new EventGeneric("Buy laundry detergent", "Places", aldiSheffield, "Go to Aldi to get this"));
         }
 
-        if(savedLocations.size() == 0)
-        {
-            savedLocations.add(aldiSheffield);
-            savedLocations.add(cantorBuilding);
-            savedLocations.add(tescoExpress);
-            savedLocations.add(moorMarket);
-            savedLocations.add(owenBuilding);
-            savedLocations.add(asdaQueensRoad);
-        }*/
 
         // region CardRecycler - onCreate
         recCardList = (RecyclerView) findViewById(R.id.cardList);
@@ -178,6 +199,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        recTagList.setAdapter(ta);
 
         // endregion Recycler
+
+
+        //getEventList();
 
         int currentOrientation = getResources().getConfiguration().orientation;
         if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE){
@@ -219,7 +243,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return ;
         }
         //else setup the notifications
-        
         // get the user to sign into there google account
         GoogleSignInOptions SIO = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -240,7 +263,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onLocationChanged(Location location)
             {
-
                 for(int i = 0; i < userEvents.size(); i++)
                 {
                     if(userEvents.get(i).locationTags != null) {
@@ -249,9 +271,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 if (location.getLongitude() + 0.01 > loc.getLongt() && location.getLongitude() - 0.01 < loc.getLongt()) {
                                     if (location.getLatitude() + 0.01 > loc.getLat() && location.getLatitude() - 0.01 < loc.getLat()) {
                                         // we're in a known location make a notification
-                                        // if it has a task attached
-                                        if (userEvents.get(i).Task != null) {
-                                            Notification.pushNotification(userEvents.get(i).Task.getTitle(), userEvents.get(i).Task.getNotes());
+                                        if(lastLoc != null)
+                                        {
+                                            // if still in same place dont spam notifications
+                                            if(loc.title != lastLoc.title)
+                                            {
+                                                Notification.pushNotification(userEvents.get(i).title, userEvents.get(i).description);
+                                                break;
+                                            }
+                                        }
+                                        else {
+                                            lastLoc = loc;
+                                            Notification.pushNotification(userEvents.get(i).title, userEvents.get(i).description);
+                                            break;
                                         }
                                     }
                                 }
@@ -271,8 +303,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onProviderDisabled(String s) {}
         };
 
-        GPSModule gps = new GPSModule((LocationManager)getSystemService(LOCATION_SERVICE), listener);
-        gps.StartLocationUpdates(1000, 10);        
+        GPS = new GPSModule((LocationManager)getSystemService(LOCATION_SERVICE), listener);
+        GPS.StartLocationUpdates(GPSPingTime, GPSDistance);
     }
 
     //region Drawer Methods
@@ -310,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(LogTagClass, "Button Dev One clicked!");
         startActivity(new Intent(this, DevActivityOne.class));
     }
-
+/*
     public void goToDevTwo(View view) {
         Log.d(LogTagClass, "Button Dev Two clicked!");
         startActivity(new Intent(this, DevActivityTwo.class));
@@ -320,7 +352,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(LogTagClass, "Button Dev Three clicked!");
         startActivity(new Intent(this, DevActivityThree.class));
     }
-
+*/
     private ArrayList<CardObject> createCardList() {
 
         cardList = new ArrayList<>();
@@ -330,7 +362,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ci.title = item.getTitle();
             ci.details = item.getDescription();
             ci.date = item.getStartTime();
-            ci.Locations = savedLocations;
+            ArrayList<LocationObject> locations = new ArrayList<>();
+
+            if(item.locationTags.size() == 0)
+            {
+                locations.add(item.location);
+            }
+            else
+            {
+                locations = item.locationTags;
+            }
+
+            ci.Locations = locations;
             cardList.add(ci);
         }
         return cardList;
@@ -356,40 +399,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //On click of text in main activity
         //Add calendar event from list of events from selected characters
 
-        //AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        //builder.setTitle("Please select an event:");
-
-        //EventGeneric title = new EventGeneric("Shopping", "Do stuff");
-        //ArrayList<String> eventTitlesTemp = new ArrayList<>();
-
-        /*for (EventGeneric event : userCalendarEvents)
-        {
-            eventTitlesTemp.add(event.getTitle());
-        }
-
-        //Add location here
-        String[] eventsTitles = GetStringArray(eventTitlesTemp);
-
-        builder.setSingleChoiceItems(eventsTitles, 0, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                selectedEvent = userCalendarEvents.get(abs(which));
-                userEvents.add(0, selectedEvent);
-                cardList.add(0, new CardObject(selectedEvent));
-                ca.notifyItemInserted(0);
-                selectedEvent = null;
-
-                dialog.dismiss();
-            }
-        });*/
-
-        //AlertDialog addEventAlert = builder.create();
-        //addEventAlert.show();
-
         final Context context = v.getContext();
         final Boolean checkedLocations[];
+
         ArrayList<String> locationTitlesTemp = new ArrayList<>();
+        newEvent = new EventGeneric();
 
         checkedLocations = new Boolean[savedLocations.size()];
         Arrays.fill(checkedLocations, false);
@@ -400,7 +414,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         final String[] locationTitles = GetStringArray(locationTitlesTemp);
         final List<String> locationList = Arrays.asList(locationTitles);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
         DialogInterface.OnMultiChoiceClickListener multiListener = new DialogInterface.OnMultiChoiceClickListener()
         {
             @Override
@@ -411,7 +427,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 // Get the current focused item
                 String currentItem = locationList.get(which);
-
+                for (int i = 0; i< savedLocations.size(); i++)
+                {
+                    if(savedLocations.get(i).title == currentItem)
+                    {
+                        newEvent.locationTags.add(savedLocations.get(i));
+                        newEvent.location = savedLocations.get(i);
+                        break;
+                    }
+                }
+                // newEvent.locationTags.add();
                 // Notify the current action
                 Toast.makeText(context, currentItem + " " + isChecked, Toast.LENGTH_SHORT).show();
             }
@@ -428,8 +453,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //TODO: Current card
-                addDate();
-
+                addCalanderEvent();
+                dialog.dismiss();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -442,9 +467,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         addEventAlert.show();
     }
 
+    public void addCalanderEvent()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Please select an event:");
+        ArrayList<String> eventTitlesTemp = new ArrayList<>();
+
+        for (EventGeneric event : userCalendarEvents)
+        {
+            eventTitlesTemp.add(event.getTitle());
+        }
+
+        final String[] eventsTitles = GetStringArray(eventTitlesTemp);
+
+        builder.setSingleChoiceItems(eventsTitles, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                selectedEvent = userCalendarEvents.get(abs(which));
+                newEvent.calendarEvent = selectedEvent;
+                addDate();
+            }
+        });
+
+        builder.show();
+    }
+
     public void addDate() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        DatePicker picker = new DatePicker(this);
+        final DatePicker picker = new DatePicker(this);
         picker.setCalendarViewShown(false);
 
         builder.setTitle("Please select a date:");
@@ -453,7 +503,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         builder.setPositiveButton("Next", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //TODO: Current card
+                String date = Integer.toString(picker.getDayOfMonth()) + "/" + Integer.toString(picker.getMonth()) +"/" + Integer.toString(picker.getYear());
+                newEvent.startTime = date;
                 addTime();
             }
         });
@@ -463,7 +514,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void addTime() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        TimePicker picker = new TimePicker(this);
+        final TimePicker picker = new TimePicker(this);
         picker.setIs24HourView(true);
         picker.setEnabled(true);
                // picker.setCalendarViewShown(false);
@@ -474,7 +525,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         builder.setPositiveButton("Next", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //TODO: Current card
+                String dateTime = newEvent.startTime + " " + picker.getHour() + ":" +picker.getMinute() ;
+                newEvent.startTime = dateTime;
                 addTask();
             }
         });
@@ -498,6 +550,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 m_Text = input.getText().toString();
+                newEvent.title = m_Text;
                 addTaskDescription();
             }
         });
@@ -527,6 +580,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 m_Text = input.getText().toString();
+                newEvent.description = m_Text;
                 addTaskType();
             }
         });
@@ -566,6 +620,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 // Get the current focused item
                 String currentItem = locationTypeList.get(which);
+                newEvent.eventType = currentItem;
 
                 // Notify the current action
                 Toast.makeText(context, currentItem + " " + isChecked, Toast.LENGTH_SHORT).show();
@@ -582,7 +637,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         builder.setPositiveButton("Create new task", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //TODO:
                 addCard();
             }
         });
@@ -598,11 +652,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void addCard()
     {
-        //int index = userSelectedEvents.size();
-        //userSelectedEvents.add(new EventGeneric("Go to Mobile Apps", "Uni"));
-        //userSelectedEvents.clear();
-        //ca.notifyDataSetChanged();
-        //ca.notifyItemInserted(index);
+        try
+        {
+            int index = userEvents.size();
+            userEvents.add(newEvent);
+
+            CardObject ci = new CardObject(newEvent);
+            ci.title = newEvent.getTitle();
+            ci.details = newEvent.getDescription();
+            ci.date = newEvent.getStartTime();
+            ci.Locations = newEvent.locationTags;
+
+            newEvent = new EventGeneric();
+            cardList.add(ci);
+
+            ca.notifyDataSetChanged();
+            ca.notifyItemInserted(index);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private String[] GetStringArray(ArrayList<String> arr)
@@ -640,18 +710,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_location) {
-            goToLocation(navigationView);
-        } else if (id == R.id.nav_map) {
+           goToLocation(navigationView);
+        } else
+        if (id == R.id.nav_map) {
             goToMap(navigationView);
         } else if (id == R.id.nav_settings) {
             goToSettings(navigationView);
         } else if (id == R.id.nav_dev_one) {
             goToDevOne(navigationView);
-        } else if (id == R.id.nav_dev_two) {
+        }
+        /*else if (id == R.id.nav_dev_two) {
             goToDevTwo(navigationView);
         } else if (id == R.id.nav_dev_three) {
             goToDevThree(navigationView);
-        }
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -780,4 +852,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.onReceiveResult(resultCode, resultData);
         }
     }
+
 }
