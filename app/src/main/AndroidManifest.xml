@@ -49,7 +49,7 @@
         </activity>
         <activity
             android:name=".Activity.SettingActivity"
-            android:label="Your Settings"
+            android:label="SettingsActivity"
             android:parentActivityName=".Activity.MainActivity"
             >
             <meta-data
@@ -59,7 +59,7 @@
         </activity>
         <activity
             android:name=".Activity.LocationActivity"
-            android:label="Your Saved Locations"
+            android:label="LocationActivity"
             android:parentActivityName=".Activity.MainActivity"
             >
             <meta-data
@@ -68,8 +68,8 @@
                 />
         </activity>
         <activity
-            android:name=".Activity.ColourPickerActivity"
-            android:label="Choose Colours"
+            android:name=".Activity.DevActivityOne"
+            android:label="DevActivityOne"
             android:parentActivityName=".Activity.MainActivity"
             >
             <meta-data
@@ -78,8 +78,8 @@
                 />
         </activity>
         <activity
-            android:name=".Activity.ThemeActivity"
-            android:label="Change Theme"
+            android:name=".Activity.DevActivityTwo"
+            android:label="DevActivityTwo"
             android:parentActivityName=".Activity.MainActivity"
             >
             <meta-data
@@ -100,7 +100,7 @@
         <activity
             android:name=".Activity.MapActivity"
 
-            android:label="Map"
+            android:label="MapActivity"
             android:parentActivityName=".Activity.LocationActivity"
             >
             <meta-data

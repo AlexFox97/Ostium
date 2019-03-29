@@ -10,20 +10,20 @@
     >
 
     <android.support.design.widget.AppBarLayout
-            android:id = "@+id/nav_location_toolbar"
-            android:layout_height = "@dimen/action_bar_height"
-            android:layout_width = "0dp"
-            app:layout_constraintEnd_toEndOf = "parent"
-            app:layout_constraintStart_toStartOf = "parent"
-            app:layout_constraintTop_toTopOf = "parent"
-    >
+        android:id = "@+id/nav_location_toolbar"
+        android:layout_height = "@dimen/action_bar_height"
+        android:layout_width = "0dp"
+        app:layout_constraintEnd_toEndOf = "parent"
+        app:layout_constraintStart_toStartOf = "parent"
+        app:layout_constraintTop_toTopOf = "parent"
+        >
 
         <android.support.v7.widget.Toolbar
-                android:elevation = "4dp"
-                android:id = "@+id/toolbar"
-                android:layout_height = "wrap_content"
-                android:layout_width = "match_parent"
-        />
+            android:elevation = "4dp"
+            android:id = "@+id/toolbar"
+            android:layout_height = "wrap_content"
+            android:layout_width = "match_parent"
+            />
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView

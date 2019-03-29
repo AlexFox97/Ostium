@@ -30,8 +30,6 @@
         <item>Deuteranopia</item>
         <item>Protanopia</item>
         <item>Tritanopia</item>
-
-
     </string-array>
 
     <string name="settings_text_select_theme">Select Theme:</string>
