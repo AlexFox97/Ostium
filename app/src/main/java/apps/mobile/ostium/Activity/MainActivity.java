@@ -306,19 +306,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(go);
     }
 
-    public void goToDevOne(View view) {
-        Log.d(LogTagClass, "Button Dev One clicked!");
-        startActivity(new Intent(this, DevActivityOne.class));
+    public void goToColour(View view) {
+        Log.d(LogTagClass, "Colour Picker clicked!");
+        startActivity(new Intent(this, ColourPickerActivity.class));
+    }
+
+    public void goToTheme(View view) {
+        Log.d(LogTagClass, "Theme Selector clicked!");
+        startActivity(new Intent(this, ThemeActivity.class));
     }
 
     public void goToDevTwo(View view) {
         Log.d(LogTagClass, "Button Dev Two clicked!");
         startActivity(new Intent(this, DevActivityTwo.class));
-    }
-
-    public void goToDevThree(View view) {
-        Log.d(LogTagClass, "Button Dev Three clicked!");
-        startActivity(new Intent(this, DevActivityThree.class));
     }
 
     private ArrayList<CardObject> createCardList() {
@@ -645,13 +645,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             goToMap(navigationView);
         } else if (id == R.id.nav_settings) {
             goToSettings(navigationView);
-        } else if (id == R.id.nav_dev_one) {
-            goToDevOne(navigationView);
-        } else if (id == R.id.nav_dev_two) {
-            goToDevTwo(navigationView);
-        } else if (id == R.id.nav_dev_three) {
-            goToDevThree(navigationView);
         }
+
+        else if (id == R.id.nav_theme) {
+            goToTheme(navigationView);
+        }
+//        else if (id == R.id.nav_colour) {
+//            goToColour(navigationView);
+//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

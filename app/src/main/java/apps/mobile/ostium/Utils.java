@@ -2,30 +2,15 @@ package apps.mobile.ostium;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.app.AlertDialog;
-import android.app.NotificationManager;
-import android.content.DialogInterface;
-import android.os.Build;
-import android.os.Bundle;
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Handler;
-import android.os.ResultReceiver;
-import android.provider.Settings;
 
 public class Utils
 {
     private static int sTheme;
 
-    public final static int OSTIUM = 0;
-    public final static int OSTIUM_DARK= 1;
-    public final static int OSTIUM_TWO = 2;
-    public final static int OSTIUM_DARK_TWO= 3;
+    public final static int Ostium_Dark = 0;
+    public final static int Deuteranopia= 1;
+    public final static int Protanopia = 2;
+    public final static int Tritanopia= 3;
 
     public static void changeToTheme(Activity activity, int theme)
     {
@@ -40,17 +25,17 @@ public class Utils
         switch (sTheme)
         {
             default:
-            case OSTIUM:
-                activity.setTheme(R.style.Theme_Ostium);
-                break;
-            case OSTIUM_DARK:
+            case Ostium_Dark:
                 activity.setTheme(R.style.Theme_Ostium_Dark);
                 break;
-            case OSTIUM_TWO:
-                activity.setTheme(R.style.Theme_Ostium_Two);
+            case Deuteranopia:
+                activity.setTheme(R.style.Theme_Ostium_Deuteranopia);
                 break;
-            case OSTIUM_DARK_TWO:
-                activity.setTheme(R.style.Theme_Ostium_Dark_Two);
+            case Protanopia:
+                activity.setTheme(R.style.Theme_Ostium_Protanopia);
+                break;
+            case Tritanopia:
+                activity.setTheme(R.style.Theme_Ostium_Tritanopia);
                 break;
         }
     }

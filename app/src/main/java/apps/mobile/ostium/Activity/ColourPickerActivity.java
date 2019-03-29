@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -34,7 +35,7 @@ import apps.mobile.ostium.Module.GPSModule;
 import apps.mobile.ostium.Module.NotificationModule;
 import apps.mobile.ostium.R;
 
-public class DevActivityOne extends AppCompatActivity
+public class ColourPickerActivity extends AppCompatActivity
 {
     private static final int PermissionCorrect = 1;
     private final int GPSPingTime = 2000;
@@ -56,21 +57,11 @@ public class DevActivityOne extends AppCompatActivity
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dev_one);
+        setContentView(R.layout.activity_colour);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        t = findViewById(R.id.textView);
-        s = findViewById(R.id.colourTextview);
-
-        initializeGPS();
-        notification = new NotificationModule((NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE), this);
-        //initializeCal();
-
-    }
-
-    //Dialogue
-    public void colourPickerDialogue(View view) {
-        ThemeActivity r = new ThemeActivity();
-        setContentView(R.layout.activity_theme);
     }
 
     public void buttonColourPickerDialogue(View view) {
@@ -119,19 +110,6 @@ public class DevActivityOne extends AppCompatActivity
     private void changeBackgroundColour(int selectedColour)
     {
         Toast.makeText(getApplicationContext(), "Selected Colour: "+selectedColour, Toast.LENGTH_SHORT);
-        //setTheme(R.style.Theme_Ostium_Dark);
-
-        Button r = (Button) findViewById(R.id.button);
-        r.setBackgroundColor(selectedColour);
-
-        Button d = (Button) findViewById(R.id.button1);
-        d.setBackgroundColor(selectedColour);
-
-        //TextView q = (TextView) findViewById(R.id.nav_dev_two_toolbar);
-        //q.setBackgroundColor(selectedColour);
-
-        s.append("\n " + "Selected Colour: "+selectedColour);
-
     }
 
     public void saveInfo() {
@@ -155,49 +133,12 @@ public class DevActivityOne extends AppCompatActivity
         col = sharedPreferences.getInt(COLOUR, 0);
     }
 
-    public void updateViews(){
-        s = findViewById(R.id.colourTextview);
-        s.setText(col);
-    }
-
     private void initializeCal()
     {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, PermissionCorrect);
         }
-    }
-
-    private void initializeGPS()
-    {
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        LocationListener listener = new LocationListener()
-        {
-            @Override
-            public void onLocationChanged(Location location)
-            {
-                t.append("\n " + location.getLongitude() + " " + location.getLatitude());
-                notification.pushNotification("New Location!!!", location.getLongitude() + " " + location.getLatitude());
-            }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {}
-
-            @Override
-            public void onProviderEnabled(String s) {}
-
-            @Override
-            public void onProviderDisabled(String s)
-            {
-                // if gps isn't enable at all send user too setting to enable it
-                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(i);
-            }
-        };
-
-        GPS = new GPSModule(locationManager, listener);
-        checkPermissions();
     }
 
     private void checkPermissions()
@@ -213,38 +154,5 @@ public class DevActivityOne extends AppCompatActivity
         }
         // then get the location
         GPS.StartLocationUpdates(GPSPingTime, GPSDistance);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
-        // TODO
-        // this may break when you try to get the calender permissions,
-        // unless we get all permissions at the same time
-
-        // if it returns expected request code permissions are good
-        if(requestCode == PermissionCorrect)
-        {
-            GPS.StartLocationUpdates(GPSPingTime, GPSDistance);
-        }
-    }
-
-    // when you press the onscreen button
-    public void GetLocationNow(View view)
-    {
-        GetLocationRequest l = GPS.GetLocationNow();
-
-        switch (l.result)
-        {
-            case Success:
-                t.append("\n " + l.location.getLongitude() + " " + l.location.getLatitude());
-                break;
-            case Failed:
-                Toast.makeText(getApplicationContext(), "Error getting last known location!!!", Toast.LENGTH_SHORT);
-                break;
-            default:
-                Toast.makeText(getApplicationContext(), "Problem, an unknown problem has occurred", Toast.LENGTH_SHORT);
-        }
-
     }
 }

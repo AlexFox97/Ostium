@@ -38,8 +38,6 @@ public class DevActivityThree extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        t = findViewById(R.id.textView);
-        s = findViewById(R.id.colourTextview);
     }
 
     @Override
@@ -103,9 +101,6 @@ public class DevActivityThree extends AppCompatActivity {
 
         Button r = (Button) findViewById(R.id.button);
         r.setBackgroundColor(selectedColour);
-
-        Button d = (Button) findViewById(R.id.button1);
-        d.setBackgroundColor(selectedColour);
 
         //TextView q = (TextView) findViewById(R.id.nav_dev_two_toolbar);
         //q.setBackgroundColor(selectedColour);
