@@ -27,16 +27,10 @@
                 app:showAsAction="ifRoom"/>
 
             <item
-                android:id="@+id/nav_theme"
+                android:id="@+id/nav_dev_one"
                 android:icon="@drawable/ic_color_lens_black_24dp"
-                android:title="Theme Selector"
+                android:title="Colour Picker"
                 app:showAsAction="ifRoom"/>
-
         </menu>
     </item>
 </menu>
-        <!--<item-->
-        <!--android:id="@+id/nav_colour"-->
-        <!--android:icon="@drawable/ic_color_lens_black_24dp"-->
-        <!--android:title="Colour Picker"-->
-        <!--app:showAsAction="ifRoom"/>-->
