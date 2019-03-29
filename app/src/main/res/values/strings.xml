@@ -27,7 +27,6 @@
 
     <string-array name="theme_array">
         <item>Ostium_Dark</item>
-        <item>Dsylexia</item>
         <item>Deuteranopia</item>
         <item>Protanopia</item>
         <item>Tritanopia</item>

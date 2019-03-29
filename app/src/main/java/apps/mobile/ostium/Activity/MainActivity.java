@@ -86,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public ArrayList<EventGeneric> userCalendarEvents = new ArrayList<>();
     public CalendarResultReceiver calendarResultHandler;
 
+    public static int themeVar = 0x7f100170;
+
     private DrawerLayout dl;
     private ActionBarDrawerToggle t;
     private NavigationView nv;
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        setTheme(themeVar);
         selectedEvent = null;
 
         // try to load stuff
@@ -347,7 +349,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(LogTagClass, "Theme Selector clicked!");
         startActivity(new Intent(this, ThemeActivity.class));
     }
-/*
+
     public void goToDevTwo(View view) {
         Log.d(LogTagClass, "Button Dev Two clicked!");
         startActivity(new Intent(this, DevActivityTwo.class));

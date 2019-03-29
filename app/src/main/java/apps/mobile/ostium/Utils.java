@@ -12,6 +12,11 @@ public class Utils
     public final static int Protanopia = 2;
     public final static int Tritanopia= 3;
 
+    public static final int Theme_Ostium_Deuteranopia=0x7f10016d;
+    public static final int Theme_Ostium_Protanopia=0x7f10016e;
+    public static final int Theme_Ostium_Tritanopia=0x7f10016f;
+    public static final int Theme_Ostium_Dark=0x7f100170;
+
     public static void changeToTheme(Activity activity, int theme)
     {
         sTheme = theme;

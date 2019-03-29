@@ -46,7 +46,6 @@ public class ThemeActivity extends AppCompatActivity
                                        int position, long id) {
                 if (ThemeApplication.currentPosition != position) {
                     Utils.changeToTheme(ThemeActivity.this, position);
-                    //setThemeNow();
                 }
                 ThemeApplication.currentPosition = position;
             }
@@ -57,9 +56,5 @@ public class ThemeActivity extends AppCompatActivity
             }
         });
     }
-    public void setThemeNow(int position)
-    {
-        setTheme(position);
-        recreate();
-    }
+
 }
