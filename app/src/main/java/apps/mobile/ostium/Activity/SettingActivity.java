@@ -36,10 +36,6 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewAd
         // data to populate the RecyclerView with
         ArrayList<String> listData = new ArrayList<>();
         listData.add("Select Calendar");
-        listData.add("Setting2");
-        listData.add("Setting3");
-        listData.add("Setting4");
-        listData.add("Setting5");
 
         RecyclerView recyclerView = findViewById(R.id.SettingsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
