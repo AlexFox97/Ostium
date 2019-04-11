@@ -45,7 +45,7 @@
         app:layout_constraintBottom_toBottomOf = "@+id/cardList"
         app:layout_constraintEnd_toStartOf = "@+id/guideline3"
         android:contentDescription="Add new task"
-        android:onClick="addEvent"
+        android:onClick="updateEvent"
         app:srcCompat = "@drawable/ic_add_black_24dp"
         />
 

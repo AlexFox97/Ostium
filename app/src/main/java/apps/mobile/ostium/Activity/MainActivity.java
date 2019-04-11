@@ -102,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private GPSModule GPS;
     private LocationObject lastLoc;
 
+    public Boolean permisson = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -139,8 +141,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         // check/get permission and setup stuff
-        GetPermissions();
-        SetupNotifications();
+        if(!permisson)
+        {
+            GetPermissions();
+            SetupNotifications();
+            permisson = true;
+        }
 
         LocationObject cantorBuilding = new LocationObject("Cantor", 53.3769219, -1.4677611345050374, "Work");
         LocationObject aldiSheffield = new LocationObject("Aldi Sheffield", 53.372670, -1.475285, "Shop");
@@ -175,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             userEvents.add(new EventGeneric("Get food for tonight", "Shops", tescoExpress, "Remember to get bread and milk!"));
             userEvents.add(new EventGeneric("Buy laundry detergent", "Places", aldiSheffield, "Go to Aldi to get this"));
         }
-
 
         // region CardRecycler - onCreate
         recCardList = (RecyclerView) findViewById(R.id.cardList);
@@ -395,13 +400,111 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return result;
     }
 
-    public void addEvent(View v) {
-        //On click of text in main activity
+    private int choice = 0;
+    public void updateEvent(View v)
+    {
+        final Context context = v.getContext();
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Please What you Would Like to Do:");
+
+        String[] choices = new String[2];
+        choices[0] = "Add";
+        choices[1] = "Delete";
+        final List<String> choiceList = Arrays.asList(choices);
+
+        builder.setSingleChoiceItems(choices, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                choice = i;
+            }
+        });
+
+        builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                if(choice == 0)
+                {
+                    addEvent();
+                }
+                else
+                {
+                    deleteEvent();
+                    choice = 0;
+                }
+            }
+        });
+
+        builder.show();
+    }
+
+    public void deleteEvent() {
+        ArrayList<String> tmp = new ArrayList<>();
+
+        final Boolean[] events = new Boolean[userEvents.size()];
+        Arrays.fill(events, false);
+
+        for (EventGeneric event : userEvents)
+        {
+            tmp.add(event.getTitle());
+        }
+
+        final String[] eventTitles = GetStringArray(tmp);
+        final List<String> eventList = Arrays.asList(eventTitles);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        DialogInterface.OnMultiChoiceClickListener multiListener = new DialogInterface.OnMultiChoiceClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                events[which] = isChecked;
+            }
+        };
+
+        builder.setMultiChoiceItems(eventTitles, null, multiListener);
+        builder.setCancelable(true);
+
+        // Set a title for alert dialog
+        builder.setTitle("Please select an option:");
+        builder.setPositiveButton("Next", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                try
+                {
+                    for (int i = 0; i < userEvents.size(); i++)
+                    {
+                        if (events[i])
+                        {
+                            userEvents.remove(i);
+                            cardList.remove(i);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+
+                }
+
+                ca.notifyDataSetChanged();
+                saveEvents();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog addEventAlert = builder.create();
+        addEventAlert.show();
+    }
+
+    public void addEvent() {
         //Add calendar event from list of events from selected characters
 
-        final Context context = v.getContext();
         final Boolean checkedLocations[];
-
         ArrayList<String> locationTitlesTemp = new ArrayList<>();
         newEvent = new EventGeneric();
 
@@ -415,7 +518,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final String[] locationTitles = GetStringArray(locationTitlesTemp);
         final List<String> locationList = Arrays.asList(locationTitles);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         DialogInterface.OnMultiChoiceClickListener multiListener = new DialogInterface.OnMultiChoiceClickListener()
         {
@@ -436,9 +539,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         break;
                     }
                 }
-                // newEvent.locationTags.add();
-                // Notify the current action
-                Toast.makeText(context, currentItem + " " + isChecked, Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -457,10 +557,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-           @Override
-           public void onClick(DialogInterface dialog, int which) {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
-           }
+            }
         });
         AlertDialog addEventAlert = builder.create();
         addEventAlert.show();

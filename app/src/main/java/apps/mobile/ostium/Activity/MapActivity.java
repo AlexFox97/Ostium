@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static apps.mobile.ostium.Activity.MainActivity.locationSettingsFileName;
 import static apps.mobile.ostium.Activity.MainActivity.savedLocations;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
@@ -134,7 +135,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             File outFile = null;
                             try
                             {
-                                outFile = new File(Environment.getExternalStorageDirectory(), "savedLocations.data");
+                                outFile = new File(Environment.getExternalStorageDirectory(), locationSettingsFileName);
                                 outFile.delete();
                                 outFile.getParentFile().mkdirs();
                                 outFile.createNewFile();
@@ -160,8 +161,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             dialog = builder.create();
             dialog.show();
-
-
 
             onLongClickActive = false;
 
