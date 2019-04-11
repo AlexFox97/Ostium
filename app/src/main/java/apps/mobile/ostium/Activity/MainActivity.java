@@ -359,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(LogTagClass, "Button Dev Three clicked!");
         startActivity(new Intent(this, DevActivityThree.class));
     }
-*/
+
     private ArrayList<CardObject> createCardList() {
 
         cardList = new ArrayList<>();
