@@ -39,9 +39,9 @@ public class ThemeActivity extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                if (ThemeApplication.currentPosition != position) {
+                if (ThemeApplication.currentPosition != position) 
+                {
                     Utils.changeToTheme(ThemeActivity.this, position);
-
                 }
                 ThemeApplication.currentPosition = position;
             }
