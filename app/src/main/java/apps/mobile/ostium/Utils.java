@@ -2,6 +2,7 @@ package apps.mobile.ostium;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
@@ -16,6 +17,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 
 public class Utils
@@ -42,21 +44,81 @@ public class Utils
 
     public static void onActivityCreateSetTheme(Activity activity)
     {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+
         switch (sTheme)
         {
-            default:
             case OSTIUM:
-                activity.setTheme(R.style.Theme_Ostium);
+                activity.setTheme(Theme_Ostium_Dark);
+                sharedPref.edit().putInt("currentTheme",0).apply();
+               //setTheme(activity, 0);
                 break;
             case OSTIUM_DARK:
-                activity.setTheme(R.style.Theme_Ostium_Dark);
+                activity.setTheme(Theme_Ostium_Deuteranopia);
+                sharedPref.edit().putInt("currentTheme",1).apply();
+               // setTheme(activity, 1);
                 break;
             case OSTIUM_TWO:
-                activity.setTheme(R.style.Theme_Ostium_Two);
+                activity.setTheme(Theme_Ostium_Protanopia);
+                sharedPref.edit().putInt("currentTheme",2 ).apply();
+                //setTheme(activity, 2);
                 break;
             case OSTIUM_DARK_TWO:
-                activity.setTheme(R.style.Theme_Ostium_Dark_Two);
+                activity.setTheme(Theme_Ostium_Tritanopia);
+                sharedPref.edit().putInt("currentTheme",3 ).apply();
+                //setTheme(activity, 3);
                 break;
         }
+        //activity.recreate();
+    }
+
+    public static void setTheme(Activity a, int theme)
+    {
+      if(a == null)
+      {
+          return;
+      }
+      else if(a.getParent() == null)
+      {
+          switch (theme ) {
+              case 0:
+                  a.setTheme(Theme_Ostium_Dark);
+                  break;
+              case 1:
+                  a.setTheme(Theme_Ostium_Deuteranopia);
+                  break;
+              case 2:
+                  a.setTheme(Theme_Ostium_Protanopia);
+                  break;
+              case 3:
+                  a.setTheme(Theme_Ostium_Tritanopia);
+                  break;
+              default:
+                  a.setTheme(R.style.Theme_Ostium);
+          }
+
+         // a.recreate();
+      }
+      else
+      {
+          setTheme(a.getParent(), theme);
+          switch (theme ) {
+              case 0:
+                  a.setTheme(Theme_Ostium_Dark);
+                  break;
+              case 1:
+                  a.setTheme(Theme_Ostium_Deuteranopia);
+                  break;
+              case 2:
+                  a.setTheme(Theme_Ostium_Protanopia);
+                  break;
+              case 3:
+                  a.setTheme(Theme_Ostium_Tritanopia);
+                  break;
+              default:
+                  a.setTheme(R.style.Theme_Ostium);
+          }
+        //  a.recreate();
+      }
     }
 }

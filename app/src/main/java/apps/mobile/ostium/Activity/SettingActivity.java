@@ -10,10 +10,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.Toast;
 import apps.mobile.ostium.Adapter.RecyclerViewAdapter;
 import apps.mobile.ostium.Module.CalendarHandler;
+import apps.mobile.ostium.Objects.ThemeApplication;
 import apps.mobile.ostium.R;
+import apps.mobile.ostium.Utils;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -23,11 +27,17 @@ import static apps.mobile.ostium.Activity.MainActivity.calendarID;
 public class SettingActivity extends AppCompatActivity implements RecyclerViewAdapter.ItemClickListener {
 
     RecyclerViewAdapter adapter;
+    private Spinner spThemes;
+
+    public static ArrayList<String> selectedCalendars;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+
+        Utils.onActivityCreateSetTheme(this);
+        setupSpinnerItemSelection();
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -118,5 +128,30 @@ public class SettingActivity extends AppCompatActivity implements RecyclerViewAd
         dialog.show();
 
         Toast.makeText(getApplicationContext(), "Previously selected calendars have been cleared.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void setupSpinnerItemSelection()
+    {
+        spThemes = (Spinner) findViewById(R.id.spThemes);
+        spThemes.setSelection(ThemeApplication.currentPosition);
+        ThemeApplication.currentPosition = spThemes.getSelectedItemPosition();
+
+        spThemes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                if (ThemeApplication.currentPosition != position)
+                {
+                    Utils.changeToTheme(SettingActivity.this, position);
+                }
+                ThemeApplication.currentPosition = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 }

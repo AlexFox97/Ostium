@@ -59,18 +59,16 @@ public class DevActivityOne extends AppCompatActivity
         setContentView(R.layout.activity_dev_one);
 
         t = findViewById(R.id.textView);
-        s = findViewById(R.id.colourTextview);
 
         initializeGPS();
         notification = new NotificationModule((NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE), this);
         //initializeCal();
-
     }
 
     //Dialogue
-    public void colourPickerDialogue(View view) {
-        ThemeActivity r = new ThemeActivity();
-        setContentView(R.layout.activity_theme);
+    public void colourPickerDialogue(View view)
+    {
+        startActivity( new Intent(this, ThemeActivity.class));
     }
 
     public void buttonColourPickerDialogue(View view) {
@@ -121,9 +119,6 @@ public class DevActivityOne extends AppCompatActivity
         Toast.makeText(getApplicationContext(), "Selected Colour: "+selectedColour, Toast.LENGTH_SHORT);
         //setTheme(R.style.Theme_Ostium_Dark);
 
-        Button r = (Button) findViewById(R.id.button);
-        r.setBackgroundColor(selectedColour);
-
         Button d = (Button) findViewById(R.id.button1);
         d.setBackgroundColor(selectedColour);
 
@@ -156,7 +151,6 @@ public class DevActivityOne extends AppCompatActivity
     }
 
     public void updateViews(){
-        s = findViewById(R.id.colourTextview);
         s.setText(col);
     }
 
@@ -177,7 +171,7 @@ public class DevActivityOne extends AppCompatActivity
             @Override
             public void onLocationChanged(Location location)
             {
-                t.append("\n " + location.getLongitude() + " " + location.getLatitude());
+            //    t.append("\n " + location.getLongitude() + " " + location.getLatitude());
                 //notification.pushNotification("New Location!!!", location.getLongitude() + " " + location.getLatitude());
             }
 

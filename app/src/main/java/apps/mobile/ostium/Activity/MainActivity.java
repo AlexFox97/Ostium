@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -19,6 +20,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -49,6 +51,7 @@ import android.widget.Toast;
 import apps.mobile.ostium.Objects.CardObject;
 import apps.mobile.ostium.Objects.LocationObject;
 
+import apps.mobile.ostium.Utils;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -59,6 +62,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static apps.mobile.ostium.Utils.*;
 import static java.lang.Math.abs;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
@@ -123,7 +127,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
         setTheme(themeVar);
+
+        setTheme(Theme_Ostium_Dark);
         selectedEvent = null;
 
         // try to load stuff
@@ -389,6 +396,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume() {
         super.onResume();
         getEventList();
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        int tmp = sharedPref.getInt("currentTheme", 0);
+
+        switch (tmp ) {
+            case 0:
+                setTheme(Theme_Ostium_Dark);
+                break;
+            case 1:
+                setTheme(Theme_Ostium_Deuteranopia);
+                break;
+            case 2:
+                setTheme(Theme_Ostium_Protanopia);
+                break;
+            case 3:
+                setTheme(Theme_Ostium_Tritanopia);
+                break;
+            default:
+                setTheme(R.style.Theme_Ostium);
+        }
     }
 
     private List<TagInfo> createTagList(int size) {

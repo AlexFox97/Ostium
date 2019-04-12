@@ -39,7 +39,6 @@ public class DevActivityThree extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         t = findViewById(R.id.textView);
-        s = findViewById(R.id.colourTextview);
     }
 
     @Override
@@ -100,9 +99,6 @@ public class DevActivityThree extends AppCompatActivity {
     {
         Toast.makeText(getApplicationContext(), "Selected Colour: "+selectedColour, Toast.LENGTH_SHORT);
         //setTheme(R.style.Theme_Ostium_Dark);
-
-        Button r = (Button) findViewById(R.id.button);
-        r.setBackgroundColor(selectedColour);
 
         Button d = (Button) findViewById(R.id.button1);
         d.setBackgroundColor(selectedColour);

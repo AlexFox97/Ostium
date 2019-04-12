@@ -25,7 +25,6 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.Ostium_Dark"
             tools:ignore="GoogleAppIndexingWarning"
-
     >
 
         <meta-data
@@ -106,6 +105,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="apps.mobile.ostium.Activity.LocationActivity"
                 />
+        </activity>
+        <activity
+                android:name=".Activity.ThemeActivity"
+
+                android:label="ThemeActivity"
+                android:parentActivityName=".Activity.DevActivityOne"
+        >
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="apps.mobile.ostium.Activity.DevActivityOne"
+            />
         </activity>
 
         <service

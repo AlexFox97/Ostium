@@ -2,6 +2,7 @@ package apps.mobile.ostium.Activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -15,6 +16,7 @@ public class ThemeActivity extends AppCompatActivity
 {
     private Spinner spThemes;
     public static ArrayList<String> selectedCalendars;
+
 
     // Here we set the theme for the activity
     // Note `Utils.onActivityCreateSetTheme` must be called before `setContentView`
@@ -34,11 +36,11 @@ public class ThemeActivity extends AppCompatActivity
         spThemes.setSelection(ThemeApplication.currentPosition);
         ThemeApplication.currentPosition = spThemes.getSelectedItemPosition();
 
-        spThemes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
+        spThemes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
                 if (ThemeApplication.currentPosition != position) 
                 {
                     Utils.changeToTheme(ThemeActivity.this, position);
@@ -52,4 +54,5 @@ public class ThemeActivity extends AppCompatActivity
             }
         });
     }
+
 }
